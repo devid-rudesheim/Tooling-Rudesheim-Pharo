@@ -26,8 +26,6 @@ OCMessageNode >> needsExpressionLinesAsAssignmentValueForFormatterRudesheim: aFo
 OCMessageNode >> needsMultilineForFormatterRudesheim: aFormatter [
 	self isKeyword
 		ifTrue: [ ^ true ].
-	(self unaryBinaryChainLengthForFormatterRudesheim: aFormatter) > 1
-		ifTrue: [ ^ true ].
 	^ self receiver needsMultilineForFormatterRudesheim: aFormatter
 ]
 

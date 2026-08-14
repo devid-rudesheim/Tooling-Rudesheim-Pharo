@@ -821,13 +821,10 @@ indent: anIndentLevelInteger [
 			lines := OrderedCollection new.
 
 			lines
-				add:	
-				indentString
-					, aKeywordPart
-					, String tab.
+				add:	indentString , aKeywordPart.
 
 			lines
-				addAll:	
+				addAll:
 				(
 					self
 						formatSubexpressionLines:	aNode
@@ -1352,6 +1349,7 @@ indent: anIndentLevelInteger [
 		receiverLines
 		receiverNeedsParens
 		keepWalking
+		suffix
 	|
 
 	steps := OrderedCollection new.
@@ -1423,43 +1421,42 @@ indent: anIndentLevelInteger [
 					indent:	anIndentLevelInteger.
 			].
 
+	suffix :=
+		String
+			streamContents:
+			[ :out |
+				steps
+					do:
+					[ :step |
+						out space.
+
+						step isBinary
+							ifTrue:
+							[
+								out
+									nextPutAll:
+									step
+										selector
+										asString
+										, ' '
+										, (self formatInline: step arguments first).
+							]
+							ifFalse:
+							[
+								out
+									nextPutAll:	step selector asString.
+							].
+					].
+			].
+
 	lines := OrderedCollection new.
 
 	lines
 		addAll:	receiverLines.
 
-	steps
-		do:
-		[ :step |
-			|
-				stepIndentString
-				stepText
-			|
-
-			stepIndentString :=
-				self
-					indentStringFor:	anIndentLevelInteger + 1.
-
-			stepText :=
-				step isBinary
-					ifTrue:
-					[
-						step
-							selector
-							asString
-							, ' '
-							, (self formatInline: step arguments first).
-					]
-					ifFalse:
-					[
-						step
-							selector
-							asString.
-					].
-
-			lines
-				add:	stepIndentString , stepText.
-		].
+	lines
+		at:	lines size
+		put:	lines last , suffix.
 
 	^ lines.
 ]

@@ -70,9 +70,7 @@ readStreamDo: aReadingBlock
 				]
 					ensure:
 					[
-						processLocalStream
-							stdout
-							close.
+						processLocalStream stdout close.
 					].
 			] fork
 		].
@@ -90,10 +88,7 @@ readStreamDo: aReadingBlock
 		]
 			ensure:
 			[
-				pipeStreams
-					stdout
-					close.
-
+				pipeStreams stdout close.
 				join signal.
 			].
 	] fork.
@@ -170,7 +165,7 @@ FormatterToolingRudesheimTest class >> expectedEnsureProcessingClassNamedTarget 
 		add:	6 -> ('name:' , String tab , 'aClassSymbol;').
 
 	specs
-		add:	6 -> ('traits:' , String tab).
+		add:	6 -> 'traits:'.
 
 	specs
 		add:	6 -> '{'.
@@ -308,7 +303,7 @@ FormatterToolingRudesheimTest >> targetString: aString [
 ]
 
 { #category : 'as yet unclassified' }
-FormatterToolingRudesheimTest >> testChainedUnaryMessagesEachOnOwnLine [
+FormatterToolingRudesheimTest >> testChainedUnaryMessagesStayInline [
 	|
 		formatted
 		expected
@@ -318,7 +313,7 @@ FormatterToolingRudesheimTest >> testChainedUnaryMessagesEachOnOwnLine [
 		self targetClass
 			format:	'run ^ self foo bar'.
 
-	expected := 'run' , String cr , String tab , '^ self' , String cr , String tab , String tab , 'foo' , String cr , String tab , String tab , 'bar.'.
+	expected := 'run' , String cr , String tab , '^ self foo bar.'.
 
 	self
 		assert:	formatted
