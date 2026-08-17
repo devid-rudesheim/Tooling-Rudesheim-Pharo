@@ -1098,7 +1098,7 @@ indent: anIndentLevelInteger [
 	aSequenceNode isNil
 		ifTrue:
 		[
-			^ #().
+			self error: 'aSequenceNode must not be nil'.
 		].
 
 	statements := aSequenceNode statements.
@@ -1470,7 +1470,7 @@ FormatterToolingRudesheim class >> indentStringFor: anInteger [
 	anInteger isNumber
 		ifFalse:
 		[
-			^ ''.
+			self error: 'anInteger must be a number'.
 		].
 
 	count :=
