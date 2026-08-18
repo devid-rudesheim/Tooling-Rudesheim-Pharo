@@ -15,10 +15,10 @@ BaselineOfRudesheimTooling >> baseline: spec [
 		[
 			spec
 				baseline: 'RudesheimKernel'
-				with: [ spec repository: 'github://devid-rudesheim/Kernel-Rudesheim-Pharo:develop' ];
+				with: [ spec repository: 'github://devid-rudesheim/Kernel-Rudesheim-Pharo:main' ];
 
 				baseline: 'RudesheimUtility'
-				with: [ spec repository: 'github://devid-rudesheim/Utility-Rudesheim-Pharo:develop' ];
+				with: [ spec repository: 'github://devid-rudesheim/Utility-Rudesheim-Pharo:main' ];
 
 				project: 'RudesheimUtilityTests'
 				copyFrom: 'RudesheimUtility'
