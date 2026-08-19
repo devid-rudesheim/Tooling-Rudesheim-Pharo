@@ -509,8 +509,7 @@ indent: anIndentLevelInteger [
 							self
 								formatCommentLinesInSource:	anArrayNode source
 								from:	previousEnd + 1
-								to:
-									each sourceInterval first - 1
+								to:	each sourceInterval first - 1
 								indent:	anIndentLevelInteger + 1
 						).
 
@@ -524,8 +523,7 @@ indent: anIndentLevelInteger [
 						[
 							elementLines
 								at:	elementLines size
-								put:
-									elementLines last , '.'.
+								put:	elementLines last , '.'.
 						].
 
 					lines
@@ -1598,25 +1596,20 @@ indent: anIndentLevelInteger [
 			[
 				receiverLines
 					at:	receiverLines size
-					put:
-						receiverLines last , ' ' ,
-						aMessageNode selector asString.
+					put:	receiverLines last , ' ' , aMessageNode selector asString.
 			].
 
 			aMessageNode isBinary
 				ifTrue:
 				[
 					messageAction :=
-					[
-						receiverLines
-							at:	receiverLines size
-							put:
-								receiverLines last , ' ' ,
-								aMessageNode selector asString , ' ' ,
+						[
+							receiverLines
+								at:	receiverLines size
+								put:	receiverLines last , ' ' , aMessageNode selector asString , ' ' ,
 								(
 									self
-										formatInline:
-											aMessageNode arguments first
+										formatInline:	aMessageNode arguments first
 								).
 					].
 				].
@@ -2210,13 +2203,17 @@ indent: anIndentLevelInteger [
 				step isBinary
 					ifTrue:
 					[
-						stepText := step selector asString , ' ' , ( self formatInline: step arguments first ).
+						stepText :=
+							step selector asString , ' ' ,
+							(
+								self
+									formatInline:	step arguments first
+							).
 					].
 
 				lines
 					at:	lines size
-					put:
-						lines last , ' ' , stepText.
+					put:	lines last , ' ' , stepText.
 			].
 
 			step isBinary
@@ -2234,9 +2231,7 @@ indent: anIndentLevelInteger [
 							[
 								lines
 									at:	lines size
-									put:
-										lines last , ' ' ,
-										step selector asString.
+									put:	lines last , ' ' , step selector asString.
 
 								lines
 									addAll:

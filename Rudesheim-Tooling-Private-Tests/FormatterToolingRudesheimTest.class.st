@@ -393,6 +393,24 @@ FormatterToolingRudesheimTest >> testBinaryArgumentKeywordMessageKeepsParenthesi
 ]
 
 { #category : 'tests' }
+FormatterToolingRudesheimTest >> testKeywordArgumentShortBinaryMessageStaysInline [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'sample elementLines at: elementLines size put: elementLines last , ''.'''.
+
+	expected := 'sample' , String cr , String tab , 'elementLines' , String cr , String tab , String tab , 'at:' , String tab , 'elementLines size' , String cr , String tab , String tab , 'put:' , String tab , 'elementLines last , ''.''.'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
 FormatterToolingRudesheimTest >> testKeywordArgumentStartingWithVariableIndentsOneLevelDeeper [
 	|
 		formatted
