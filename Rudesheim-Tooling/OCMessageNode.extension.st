@@ -19,14 +19,21 @@ OCMessageNode >> isBlockStatementForFormatterRudesheim [
 
 { #category : '*Rudesheim-Tooling' }
 OCMessageNode >> needsExpressionLinesAsAssignmentValueForFormatterRudesheim: aFormatter [
-	^ self isKeyword
+	^ self needsMultilineForFormatterRudesheim: aFormatter
 ]
 
 { #category : '*Rudesheim-Tooling' }
 OCMessageNode >> needsMultilineForFormatterRudesheim: aFormatter [
 	self isKeyword
 		ifTrue: [ ^ true ].
-	(self unaryBinaryChainLengthForFormatterRudesheim: aFormatter) > 1
+	(
+		self isBinary
+			and:
+			[
+				self arguments first
+					needsMultilineForFormatterRudesheim:	aFormatter.
+			]
+	)
 		ifTrue: [ ^ true ].
 	^ self receiver needsMultilineForFormatterRudesheim: aFormatter
 ]

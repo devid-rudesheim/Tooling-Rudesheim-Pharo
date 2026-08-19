@@ -6,6 +6,11 @@ OCArrayNode >> acceptFormatterRudesheim: aFormatter indent: anIndentLevelInteger
 ]
 
 { #category : '*Rudesheim-Tooling' }
+OCArrayNode >> needsExpressionLinesAsAssignmentValueForFormatterRudesheim: aFormatter [
+	^ true
+]
+
+{ #category : '*Rudesheim-Tooling' }
 OCArrayNode >> needsMultilineForFormatterRudesheim: aFormatter [
-	^ self statements anySatisfy: [ :each | each needsMultilineForFormatterRudesheim: aFormatter ]
+	^ self statements notEmpty
 ]

@@ -206,6 +206,133 @@ FormatterToolingRudesheim class >> candidateIdentifiersIn: aString [
 ]
 
 { #category : 'as yet unclassified' }
+FormatterToolingRudesheim class >> commentsInSource: aString
+from: aStartInteger
+to: aStopInteger [
+	|
+		comments
+		index
+		limit
+	|
+
+	comments := OrderedCollection new.
+	index :=
+		aStartInteger
+			max:	1.
+	limit :=
+		aStopInteger
+			min:	aString size.
+
+	[
+		index <= limit.
+	]
+		whileTrue:
+		[
+			(
+				aString
+					at:	index
+			)
+				= $"
+				ifTrue:
+				[
+					|
+						stream
+						closed
+					|
+
+					stream :=
+						WriteStream
+							on:	String new.
+					closed := false.
+					index := index + 1.
+					[
+						index <= limit
+							and:
+							[
+								closed not.
+							].
+					]
+						whileTrue:
+						[
+							(
+								aString
+									at:	index
+							)
+								= $"
+								ifTrue:
+								[
+									(
+										index < limit
+											and:
+											[
+												(
+													aString
+														at:	index + 1
+												)
+													= $".
+											]
+									)
+										ifTrue:
+										[
+											stream
+												nextPut:	$".
+											index := index + 2.
+										]
+										ifFalse:
+										[
+											closed := true.
+											index := index + 1.
+										].
+								]
+								ifFalse:
+								[
+									stream
+										nextPut:	
+										(
+											aString
+												at:	index
+										).
+									index := index + 1.
+								].
+						].
+
+					comments
+						add:	stream contents.
+				]
+				ifFalse:
+				[
+					index := index + 1.
+				].
+		].
+
+	^ comments.
+]
+
+{ #category : 'as yet unclassified' }
+FormatterToolingRudesheim class >> cascadeMessageEndFor: aMessageNode [
+	|
+		end
+	|
+
+	end := aMessageNode selectorInterval last.
+
+	aMessageNode arguments
+		do:
+		[ :each |
+			end :=
+				end
+					max:	each sourceInterval last.
+		].
+
+	^ end.
+]
+
+{ #category : 'as yet unclassified' }
+FormatterToolingRudesheim class >> cascadeMessageStartFor: aMessageNode [
+	^ aMessageNode selectorInterval first.
+]
+
+{ #category : 'as yet unclassified' }
 FormatterToolingRudesheim class >> disableAsFormatter [
 	OCProgramNode resetFormatter.
 ]
@@ -283,6 +410,7 @@ indent: anIndentLevelInteger [
 	|
 		lines
 		statements
+		previousEnd
 	|
 
 	statements := anArrayNode statements.
@@ -326,12 +454,23 @@ indent: anIndentLevelInteger [
 		)
 			, '{'.
 
+	previousEnd := anArrayNode left.
 	statements
 		doWithIndex:
 		[ :each :idx |
 			|
 				elementLines
 			|
+
+			lines
+				addAll:	
+				(
+					self
+						formatCommentLinesInSource:	anArrayNode source
+						from:	previousEnd + 1
+						to:	each sourceInterval first - 1
+						indent:	anIndentLevelInteger + 1
+				).
 
 			elementLines :=
 				self
@@ -351,6 +490,8 @@ indent: anIndentLevelInteger [
 
 			lines
 				addAll:	elementLines.
+
+			previousEnd := each sourceInterval last.
 		].
 
 	lines
@@ -392,6 +533,8 @@ indent: anIndentLevelInteger [
 		prefix
 		inline
 		lines
+		valueLines
+		firstValueLine
 	|
 
 	vars := OrderedCollection new.
@@ -427,13 +570,31 @@ indent: anIndentLevelInteger [
 				)
 					, prefix.
 
+			valueLines :=
+				self
+					formatExpressionLines:	value
+					indent:	anIndentLevelInteger + 1.
+
+			firstValueLine := valueLines first trimBoth.
+			(
+				firstValueLine notEmpty
+					and:
+					[
+						#($( $[ ${)
+							includes:	firstValueLine first.
+					]
+			)
+				ifTrue:
+				[
+					valueLines :=
+						self
+							formatExpressionLines:	value
+							indent:	anIndentLevelInteger.
+				].
+
 			lines
 				addAll:	
-				(
-					self
-						formatExpressionLines:	value
-						indent:	anIndentLevelInteger + 1
-				).
+				valueLines.
 
 			^ lines.
 		].
@@ -543,6 +704,7 @@ indent: anIndentLevelInteger [
 		receiver
 		keywordIndent
 		messages
+		previousEnd
 	|
 
 	lines := OrderedCollection new.
@@ -558,6 +720,7 @@ indent: anIndentLevelInteger [
 
 	keywordIndent := anIndentLevelInteger + 1.
 	messages := aCascadeNode messages.
+	previousEnd := receiver sourceInterval last.
 
 	1
 		to:	messages size
@@ -565,15 +728,30 @@ indent: anIndentLevelInteger [
 		[ :idx |
 			|
 				partLines
+				message
 			|
+
+			message :=
+				messages
+					at:	idx.
+
+			lines
+				addAll:	
+				(
+					self
+						formatCommentLinesInSource:	aCascadeNode source
+						from:	previousEnd + 1
+						to:	(
+							self
+								cascadeMessageStartFor:	message
+						) - 1
+						indent:	keywordIndent
+				).
 
 			partLines :=
 				self
 					formatCascadePartLines:	
-					(
-						messages
-							at:	idx
-					)
+					message
 					indent:	keywordIndent.
 
 			idx < messages size
@@ -589,6 +767,10 @@ indent: anIndentLevelInteger [
 
 			lines
 				addAll:	partLines.
+
+			previousEnd :=
+				self
+					cascadeMessageEndFor:	message.
 		].
 
 	^ lines.
@@ -692,16 +874,93 @@ indent: anIndentLevelInteger [
 ]
 
 { #category : 'as yet unclassified' }
+FormatterToolingRudesheim class >> formatCommentLinesInSource: aString
+from: aStartInteger
+to: aStopInteger
+indent: anIndentLevelInteger [
+	|
+		lines
+		comments
+		indentString
+	|
+
+	comments :=
+		self
+			commentsInSource:	aString
+			from:	aStartInteger
+			to:	aStopInteger.
+
+	indentString :=
+		self
+			indentStringFor:	anIndentLevelInteger.
+
+	lines := OrderedCollection new.
+	comments
+		do:
+		[ :each |
+			lines
+				add:	indentString , '"' , each , '"'.
+		].
+
+	^ lines.
+]
+
+{ #category : 'as yet unclassified' }
+FormatterToolingRudesheim class >> formatLiteralArrayInline: aParseNode [
+	|
+		text
+		body
+	|
+
+	text :=
+		OCSimpleFormatter
+			format:	aParseNode.
+
+	(
+		text
+			beginsWith:	'#('
+	)
+		ifFalse:
+		[
+			^ text.
+		].
+
+	body :=
+		text
+			copyFrom:	3
+			to:	text size - 1.
+
+	^ '#( ' , body trimBoth , ' )'.
+]
+
+{ #category : 'as yet unclassified' }
 FormatterToolingRudesheim class >> formatInline: aParseNode [
 	|
 		text
 	|
 
+	(
+		aParseNode isLiteralNode
+			and:
+			[
+				aParseNode
+					respondsTo:	#isLiteralArray.
+			]
+	)
+		ifTrue:
+		[
+			aParseNode isLiteralArray
+				ifTrue:
+				[
+					^ self
+						formatLiteralArrayInline:	aParseNode.
+				].
+		].
+
 	aParseNode isLiteralNode
 		ifTrue:
 		[
-			^ OCSimpleFormatter
-				format:	aParseNode.
+			^ OCSimpleFormatter format: aParseNode.
 		].
 
 	text :=
@@ -718,7 +977,238 @@ FormatterToolingRudesheim class >> formatInline: aParseNode [
 			copyReplaceAll:	String lf
 			with:	' '.
 
-	^ text trimBoth.
+	^ self
+		formatInlineParenthesesFor:	aParseNode
+		text:	(
+			self
+				formatInlineParenthesesIn:	text trimBoth
+		).
+]
+
+{ #category : 'as yet unclassified' }
+FormatterToolingRudesheim class >> formatInlineParenthesesIn: aString [
+	|
+		stream
+		index
+	|
+
+	stream :=
+		WriteStream
+			on:	String new.
+	index := 1.
+
+	[
+		index <= aString size.
+	]
+		whileTrue:
+		[
+			|
+				character
+			|
+
+			character :=
+				aString
+					at:	index.
+
+			(
+				character = $"
+					or:
+					[
+						character = $'
+					]
+			)
+				ifTrue:
+				[
+					|
+						closed
+						quote
+					|
+
+					closed := false.
+					quote := character.
+					stream
+						nextPut:	character.
+					index := index + 1.
+
+					[
+						index <= aString size
+							and:
+							[
+								closed not.
+							].
+					]
+						whileTrue:
+						[
+							character :=
+								aString
+									at:	index.
+							stream
+								nextPut:	character.
+							index := index + 1.
+
+							character = quote
+								ifTrue:
+								[
+									(
+										index <= aString size
+											and:
+											[
+												(
+													aString
+														at:	index
+												)
+													= quote.
+											]
+									)
+										ifTrue:
+										[
+											stream
+												nextPut:	
+												(
+													aString
+														at:	index
+												).
+											index := index + 1.
+										]
+										ifFalse:
+										[
+											closed := true.
+										].
+								].
+						].
+				]
+				ifFalse:
+				[
+					character = $(
+						ifTrue:
+						[
+							stream
+								nextPut:	character.
+
+							(
+								index < aString size
+									and:
+									[
+										(
+											(
+												aString
+													at:	index + 1
+											)
+												~= Character space
+										)
+											and:
+											[
+												(
+													aString
+														at:	index + 1
+												)
+													~= $)
+											].
+									]
+							)
+								ifTrue:
+								[
+									stream
+										space.
+								].
+
+							index := index + 1.
+						]
+						ifFalse:
+						[
+							character = $)
+								ifTrue:
+								[
+									(
+										stream position > 0
+											and:
+											[
+												(
+													stream contents last ~= Character space
+												)
+													and:
+													[
+														stream contents last ~= $(.
+													].
+											]
+									)
+										ifTrue:
+										[
+											stream
+												space.
+										].
+
+									stream
+										nextPut:	character.
+									index := index + 1.
+								]
+								ifFalse:
+								[
+									stream
+										nextPut:	character.
+									index := index + 1.
+								].
+						].
+				].
+		].
+
+	^ stream contents.
+]
+
+{ #category : 'as yet unclassified' }
+FormatterToolingRudesheim class >> formatInlineParenthesesFor: aParseNode
+text: aString [
+	|
+		text
+	|
+
+	(
+		aParseNode
+			respondsTo:	#parentheses
+	)
+		ifFalse:
+		[
+			^ aString.
+		].
+
+	aParseNode parentheses isEmpty
+		ifTrue:
+		[
+			^ aString.
+		].
+
+	(
+		aString size >= 2
+			and:
+			[
+				(
+					(
+						aString
+							first
+					)
+						= $(
+				)
+					and:
+					[
+						(
+							aString
+								last
+						)
+							= $)
+					].
+			]
+	)
+		ifFalse:
+		[
+			^ aString.
+		].
+
+	text :=
+		aString
+			copyFrom:	2
+			to:	aString size - 1.
+
+	^ '( ' , text trimBoth , ' )'.
 ]
 
 { #category : 'as yet unclassified' }
@@ -752,7 +1242,7 @@ indent: anIndentLevelInteger [
 		addAll:	
 		(
 			self
-				formatSubexpressionLines:	receiver
+				formatKeywordReceiverLines:	receiver
 				indent:	anIndentLevelInteger
 		).
 
@@ -786,12 +1276,40 @@ indent: anIndentLevelInteger [
 ]
 
 { #category : 'as yet unclassified' }
+FormatterToolingRudesheim class >> formatKeywordReceiverLines: aParseNode
+indent: anIndentLevelInteger [
+	(
+		(aParseNode isKindOf: OCMessageNode)
+			and:
+			[
+				(
+					self
+						isKeywordMessage:	aParseNode
+				)
+					not.
+			]
+	)
+		ifTrue:
+		[
+			^ self
+				formatInlineNodeLines:	aParseNode
+				indent:	anIndentLevelInteger.
+		].
+
+	^ self
+		formatSubexpressionLines:	aParseNode
+		indent:	anIndentLevelInteger.
+]
+
+{ #category : 'as yet unclassified' }
 FormatterToolingRudesheim class >> formatKeywordPart: aKeywordPart
 argument: aNode
 indent: anIndentLevelInteger [
 	|
 		indentString
 		lines
+		argumentLines
+		firstArgumentLine
 	|
 
 	indentString :=
@@ -826,13 +1344,30 @@ indent: anIndentLevelInteger [
 					, aKeywordPart
 					, String tab.
 
+			argumentLines :=
+				self
+					formatSubexpressionLines:	aNode
+					indent:	anIndentLevelInteger.
+
+			firstArgumentLine := argumentLines first trimBoth.
+			(
+				firstArgumentLine notEmpty
+					and:
+					[
+						(#($( $[ ${) includes: firstArgumentLine first) not.
+					]
+			)
+				ifTrue:
+				[
+					argumentLines :=
+						self
+							formatSubexpressionLines:	aNode
+							indent:	anIndentLevelInteger + 1.
+				].
+
 			lines
 				addAll:	
-				(
-					self
-						formatSubexpressionLines:	aNode
-						indent:	anIndentLevelInteger
-				).
+				argumentLines.
 
 			^ lines.
 		].
@@ -927,6 +1462,7 @@ FormatterToolingRudesheim class >> formatMethodNode: aMethodNode [
 	|
 		lines
 		temps
+		comment
 	|
 
 	lines := OrderedCollection new.
@@ -937,6 +1473,14 @@ FormatterToolingRudesheim class >> formatMethodNode: aMethodNode [
 			self
 				formatSignatureLinesFor:	aMethodNode
 		).
+
+	comment := aMethodNode firstPrecodeComment.
+	comment isNil
+		ifFalse:
+		[
+			lines
+				add:	String tab , '"' , comment , '"'.
+		].
 
 	temps := aMethodNode temporaryNames.
 
@@ -1096,6 +1640,7 @@ indent: anIndentLevelInteger [
 	|
 		statements
 		lines
+		previousEnd
 	|
 
 	aSequenceNode isNil
@@ -1106,6 +1651,22 @@ indent: anIndentLevelInteger [
 
 	statements := aSequenceNode statements.
 	lines := OrderedCollection new.
+	previousEnd :=
+		aSequenceNode rightBar
+			ifNil:
+			[
+				(
+					aSequenceNode parent respondsTo:	#left
+				)
+					ifTrue:
+					[
+						aSequenceNode parent left.
+					]
+					ifFalse:
+					[
+						aSequenceNode sourceInterval first - 1.
+					].
+			].
 
 	1
 		to:	statements size
@@ -1122,6 +1683,16 @@ indent: anIndentLevelInteger [
 			stmt :=
 				statements
 					at:	idx.
+
+			lines
+				addAll:	
+				(
+					self
+						formatCommentLinesInSource:	aSequenceNode source
+						from:	previousEnd + 1
+						to:	stmt sourceInterval first - 1
+						indent:	anIndentLevelInteger
+				).
 
 			stmtLines :=
 				self
@@ -1165,6 +1736,8 @@ indent: anIndentLevelInteger [
 
 			lines
 				addAll:	stmtLines.
+
+			previousEnd := stmt sourceInterval last.
 
 			idx < statements size
 				ifTrue:
@@ -1432,33 +2005,60 @@ indent: anIndentLevelInteger [
 		do:
 		[ :step |
 			|
-				stepIndentString
 				stepText
+				argument
 			|
 
-			stepIndentString :=
-				self
-					indentStringFor:	anIndentLevelInteger + 1.
-
-			stepText :=
+			(
 				step isBinary
-					ifTrue:
+					and:
 					[
-						step
-							selector
-							asString
-							, ' '
-							, (self formatInline: step arguments first).
+						argument := step arguments first.
+						self
+							needsMultilineFor:	argument.
 					]
-					ifFalse:
-					[
-						step
-							selector
-							asString.
-					].
+			)
+				ifTrue:
+				[
+					lines
+						at:	lines size
+						put:	
+						lines
+							last
+							, ' '
+							, step selector asString.
 
-			lines
-				add:	stepIndentString , stepText.
+					lines
+						addAll:	
+						(
+							self
+								formatSubexpressionLines:	argument
+								indent:	anIndentLevelInteger
+						).
+				]
+				ifFalse:
+				[
+					stepText :=
+						step isBinary
+							ifTrue:
+							[
+								step
+									selector
+									asString
+									, ' '
+									, (self formatInline: step arguments first).
+							]
+							ifFalse:
+							[
+								step
+									selector
+									asString.
+							].
+
+					lines
+						at:	lines size
+						put:	lines last , ' ' , stepText.
+				].
 		].
 
 	^ lines.
