@@ -73,6 +73,32 @@ FormatterToolingRudesheim class >> assignmentPrefixForVariables: aVariableCollec
 	^ stream.
 ]
 
+{ #category : 'testing' }
+FormatterToolingRudesheim class >> candidateIdentifierTerminatesWith: aCharacter [
+	aCharacter isNil
+		ifTrue:
+		[
+			^ true.
+		].
+
+	aCharacter isSeparator
+		ifTrue:
+		[
+			^ true.
+		].
+
+	^
+	(
+		Set
+			with:	$.
+			with:	$]
+			with:	$)
+			with:	$;
+			with:	$:
+	)
+		includes:	aCharacter.
+]
+
 { #category : 'as yet unclassified' }
 FormatterToolingRudesheim class >> candidateIdentifiersIn: aString [
 	|
@@ -141,8 +167,50 @@ FormatterToolingRudesheim class >> candidateIdentifiersIn: aString [
 								to:	index - 1.
 
 						nextIndex := index.
-						nextChar := [ | valueBreak | valueBreak := thisContext. nextIndex <= size ifTrue: [ valueBreak return: ( aString at: nextIndex ) ]. nil ] value.
-						nextChar2 := [ | valueBreak | valueBreak := thisContext. nextIndex + 1 <= size ifTrue: [ valueBreak return: ( aString at: nextIndex + 1 ) ]. nil ] value.
+
+						nextChar :=
+						[
+							|
+								valueBreak
+							|
+
+							valueBreak := thisContext.
+
+							nextIndex <= size
+								ifTrue:
+								[
+									valueBreak
+										return:
+										(
+											aString
+												at:	nextIndex
+										).
+								].
+
+							nil.
+						] value.
+
+						nextChar2 :=
+						[
+							|
+								valueBreak
+							|
+
+							valueBreak := thisContext.
+
+							nextIndex + 1 <= size
+								ifTrue:
+								[
+									valueBreak
+										return:
+										(
+											aString
+												at:	nextIndex + 1
+										).
+								].
+
+							nil.
+						] value.
 
 						nextChar = $:
 							ifTrue:
@@ -155,57 +223,14 @@ FormatterToolingRudesheim class >> candidateIdentifiersIn: aString [
 									].
 							].
 
-						nextChar isNil
+						(
+							self
+								candidateIdentifierTerminatesWith:	nextChar
+						)
 							ifTrue:
 							[
 								candidates
 									add:	ident.
-							].
-
-						nextChar notNil
-							ifTrue:
-							[
-								nextChar isSeparator
-									ifTrue:
-									[
-										candidates
-											add:	ident.
-									].
-
-								nextChar = $.
-									ifTrue:
-									[
-										candidates
-											add:	ident.
-									].
-
-								nextChar = $]
-									ifTrue:
-									[
-										candidates
-											add:	ident.
-									].
-
-								nextChar = $)
-									ifTrue:
-									[
-										candidates
-											add:	ident.
-									].
-
-								nextChar = $;
-									ifTrue:
-									[
-										candidates
-											add:	ident.
-									].
-
-								nextChar = $:
-									ifTrue:
-									[
-										candidates
-											add:	ident.
-									].
 							].
 
 						break
