@@ -9,27 +9,27 @@ Class {
 }
 
 { #category : 'accessing' }
-BracketPairCharacterKindFormatterToolingRudesheim >> closingCharacter [
+BracketPairCharacterKindFormatterToolingRudesheim class >> closingCharacter [
 	self subclassResponsibility.
 ]
 
 { #category : 'testing' }
-BracketPairCharacterKindFormatterToolingRudesheim >> candidateIdentifierTerminatesWith: aCharacter [
+BracketPairCharacterKindFormatterToolingRudesheim class >> candidateIdentifierTerminatesWith: aCharacter [
 	^ aCharacter = self closingCharacter.
 ]
 
 { #category : 'testing' }
-BracketPairCharacterKindFormatterToolingRudesheim >> isClosingBracketCharacter: aCharacter [
+BracketPairCharacterKindFormatterToolingRudesheim class >> isClosingBracketCharacter: aCharacter [
 	^ aCharacter = self closingCharacter.
 ]
 
 { #category : 'testing' }
-BracketPairCharacterKindFormatterToolingRudesheim >> isOpeningBracketCharacter: aCharacter [
+BracketPairCharacterKindFormatterToolingRudesheim class >> isOpeningBracketCharacter: aCharacter [
 	^ aCharacter = self openingCharacter.
 ]
 
 { #category : 'testing' }
-BracketPairCharacterKindFormatterToolingRudesheim >> match: aCharacter [
+BracketPairCharacterKindFormatterToolingRudesheim class >> match: aCharacter [
 	(
 		self
 			isOpeningBracketCharacter:	aCharacter
@@ -44,12 +44,12 @@ BracketPairCharacterKindFormatterToolingRudesheim >> match: aCharacter [
 ]
 
 { #category : 'accessing' }
-BracketPairCharacterKindFormatterToolingRudesheim >> openingCharacter [
+BracketPairCharacterKindFormatterToolingRudesheim class >> openingCharacter [
 	self subclassResponsibility.
 ]
 
 { #category : 'testing' }
-BracketPairCharacterKindFormatterToolingRudesheim >> openingBracketMatches: aCharacter [
+BracketPairCharacterKindFormatterToolingRudesheim class >> openingBracketMatches: aCharacter [
 	^ self
 		isOpeningBracketCharacter:	aCharacter.
 ]

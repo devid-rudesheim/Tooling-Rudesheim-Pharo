@@ -9,6 +9,11 @@ Class {
 }
 
 { #category : 'namespace' }
+ToolingRudesheim class >> CharacterKind [
+	^ CharacterKindFormatterToolingRudesheim.
+]
+
+{ #category : 'namespace' }
 ToolingRudesheim class >> Formatter [
 	^ FormatterToolingRudesheim.
 ]

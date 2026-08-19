@@ -14,7 +14,7 @@ CharacterKindFormatterToolingRudesheimTest >> testBracketKindMatchesOpeningAndCl
 		kind
 	|
 
-	kind := ParenthesesCharacterKindFormatterToolingRudesheim new.
+	kind := ParenthesesCharacterKindFormatterToolingRudesheim.
 
 	self
 		assert:
@@ -64,7 +64,7 @@ CharacterKindFormatterToolingRudesheimTest >> testAssignmentKindDetectsAssignmen
 		kind
 	|
 
-	kind := AssignmentCharacterKindFormatterToolingRudesheim new.
+	kind := AssignmentCharacterKindFormatterToolingRudesheim.
 
 	self
 		assert:
@@ -113,7 +113,7 @@ CharacterKindFormatterToolingRudesheimTest >> testColonKindDistinguishesKeywordC
 		kind
 	|
 
-	kind := ColonCharacterKindFormatterToolingRudesheim new.
+	kind := ColonCharacterKindFormatterToolingRudesheim.
 
 	self
 		assert:

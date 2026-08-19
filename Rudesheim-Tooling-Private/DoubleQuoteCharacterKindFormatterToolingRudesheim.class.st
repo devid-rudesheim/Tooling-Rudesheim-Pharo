@@ -9,6 +9,6 @@ Class {
 }
 
 { #category : 'accessing' }
-DoubleQuoteCharacterKindFormatterToolingRudesheim >> quoteCharacter [
+DoubleQuoteCharacterKindFormatterToolingRudesheim class >> quoteCharacter [
 	^ $".
 ]

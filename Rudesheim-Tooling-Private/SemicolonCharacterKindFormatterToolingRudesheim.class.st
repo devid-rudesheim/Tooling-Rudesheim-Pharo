@@ -9,6 +9,6 @@ Class {
 }
 
 { #category : 'accessing' }
-SemicolonCharacterKindFormatterToolingRudesheim >> character [
+SemicolonCharacterKindFormatterToolingRudesheim class >> character [
 	^ $;.
 ]

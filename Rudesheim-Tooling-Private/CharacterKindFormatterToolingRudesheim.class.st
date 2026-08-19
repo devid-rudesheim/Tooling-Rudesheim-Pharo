@@ -9,18 +9,18 @@ Class {
 }
 
 { #category : 'testing' }
-CharacterKindFormatterToolingRudesheim >> candidateIdentifierTerminatesWith: aCharacter [
+CharacterKindFormatterToolingRudesheim class >> candidateIdentifierTerminatesWith: aCharacter [
 	^ false.
 ]
 
 { #category : 'testing' }
-CharacterKindFormatterToolingRudesheim >> isAssignmentStartCharacter: aCharacter
+CharacterKindFormatterToolingRudesheim class >> isAssignmentStartCharacter: aCharacter
 followedBy: anotherCharacter [
 	^ false.
 ]
 
 { #category : 'formatting' }
-CharacterKindFormatterToolingRudesheim >> formatInlineParenthesesIn: aString
+CharacterKindFormatterToolingRudesheim class >> formatInlineParenthesesIn: aString
 at: anIndexInteger
 on: aWriteStream [
 	aWriteStream
@@ -34,27 +34,82 @@ on: aWriteStream [
 ]
 
 { #category : 'testing' }
-CharacterKindFormatterToolingRudesheim >> match: aCharacter [
+CharacterKindFormatterToolingRudesheim class >> match: aCharacter [
 	^ false.
 ]
 
 { #category : 'testing' }
-CharacterKindFormatterToolingRudesheim >> isClosingBracketCharacter: aCharacter [
+CharacterKindFormatterToolingRudesheim class >> isClosingBracketCharacter: aCharacter [
 	^ false.
 ]
 
 { #category : 'testing' }
-CharacterKindFormatterToolingRudesheim >> isOpeningBracketCharacter: aCharacter [
+CharacterKindFormatterToolingRudesheim class >> isOpeningBracketCharacter: aCharacter [
 	^ false.
 ]
 
 { #category : 'testing' }
-CharacterKindFormatterToolingRudesheim >> isKeywordColonCharacter: aCharacter
+CharacterKindFormatterToolingRudesheim class >> isKeywordColonCharacter: aCharacter
 followedBy: anotherCharacter [
 	^ false.
 ]
 
 { #category : 'testing' }
-CharacterKindFormatterToolingRudesheim >> openingBracketMatches: aCharacter [
+CharacterKindFormatterToolingRudesheim class >> openingBracketMatches: aCharacter [
 	^ false.
+]
+
+{ #category : 'namespace' }
+CharacterKindFormatterToolingRudesheim class >> Assignment [
+	^ AssignmentCharacterKindFormatterToolingRudesheim.
+]
+
+{ #category : 'namespace' }
+CharacterKindFormatterToolingRudesheim class >> CharacterLiteral [
+	^ CharacterLiteralCharacterKindFormatterToolingRudesheim.
+]
+
+{ #category : 'namespace' }
+CharacterKindFormatterToolingRudesheim class >> Colon [
+	^ ColonCharacterKindFormatterToolingRudesheim.
+]
+
+{ #category : 'namespace' }
+CharacterKindFormatterToolingRudesheim class >> CurlyBraces [
+	^ CurlyBracesCharacterKindFormatterToolingRudesheim.
+]
+
+{ #category : 'namespace' }
+CharacterKindFormatterToolingRudesheim class >> DoubleQuote [
+	^ DoubleQuoteCharacterKindFormatterToolingRudesheim.
+]
+
+{ #category : 'namespace' }
+CharacterKindFormatterToolingRudesheim class >> Parentheses [
+	^ ParenthesesCharacterKindFormatterToolingRudesheim.
+]
+
+{ #category : 'namespace' }
+CharacterKindFormatterToolingRudesheim class >> Period [
+	^ PeriodCharacterKindFormatterToolingRudesheim.
+]
+
+{ #category : 'namespace' }
+CharacterKindFormatterToolingRudesheim class >> Semicolon [
+	^ SemicolonCharacterKindFormatterToolingRudesheim.
+]
+
+{ #category : 'namespace' }
+CharacterKindFormatterToolingRudesheim class >> Separator [
+	^ SeparatorCharacterKindFormatterToolingRudesheim.
+]
+
+{ #category : 'namespace' }
+CharacterKindFormatterToolingRudesheim class >> SingleQuote [
+	^ SingleQuoteCharacterKindFormatterToolingRudesheim.
+]
+
+{ #category : 'namespace' }
+CharacterKindFormatterToolingRudesheim class >> SquareBrackets [
+	^ SquareBracketsCharacterKindFormatterToolingRudesheim.
 ]

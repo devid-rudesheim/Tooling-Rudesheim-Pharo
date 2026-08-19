@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : 'formatting' }
-QuoteCharacterKindFormatterToolingRudesheim >> formatInlineParenthesesIn: aString
+QuoteCharacterKindFormatterToolingRudesheim class >> formatInlineParenthesesIn: aString
 at: anIndexInteger
 on: aWriteStream [
 	|
@@ -90,11 +90,11 @@ on: aWriteStream [
 ]
 
 { #category : 'testing' }
-QuoteCharacterKindFormatterToolingRudesheim >> match: aCharacter [
+QuoteCharacterKindFormatterToolingRudesheim class >> match: aCharacter [
 	^ aCharacter = self quoteCharacter.
 ]
 
 { #category : 'accessing' }
-QuoteCharacterKindFormatterToolingRudesheim >> quoteCharacter [
+QuoteCharacterKindFormatterToolingRudesheim class >> quoteCharacter [
 	self subclassResponsibility.
 ]

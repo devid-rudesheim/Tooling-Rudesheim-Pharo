@@ -103,19 +103,25 @@ FormatterToolingRudesheim class >> candidateIdentifierTerminatesWith: aCharacter
 
 { #category : 'accessing' }
 FormatterToolingRudesheim class >> characterKinds [
+	|
+		characterKind
+	|
+
+	characterKind := Rudesheim Tooling CharacterKind.
+
 	^
 	{
-		SeparatorCharacterKindFormatterToolingRudesheim new.
-		PeriodCharacterKindFormatterToolingRudesheim new.
-		SemicolonCharacterKindFormatterToolingRudesheim new.
-		ColonCharacterKindFormatterToolingRudesheim new.
-		AssignmentCharacterKindFormatterToolingRudesheim new.
-		ParenthesesCharacterKindFormatterToolingRudesheim new.
-		SquareBracketsCharacterKindFormatterToolingRudesheim new.
-		CurlyBracesCharacterKindFormatterToolingRudesheim new.
-		DoubleQuoteCharacterKindFormatterToolingRudesheim new.
-		SingleQuoteCharacterKindFormatterToolingRudesheim new.
-		CharacterLiteralCharacterKindFormatterToolingRudesheim new.
+		characterKind Separator.
+		characterKind Period.
+		characterKind Semicolon.
+		characterKind Colon.
+		characterKind Assignment.
+		characterKind Parentheses.
+		characterKind SquareBrackets.
+		characterKind CurlyBraces.
+		characterKind DoubleQuote.
+		characterKind SingleQuote.
+		characterKind CharacterLiteral.
 	}.
 ]
 
@@ -1149,7 +1155,7 @@ FormatterToolingRudesheim class >> formatInlineParenthesesIn: aString [
 				ifTrue:
 				[
 					index :=
-						CharacterKindFormatterToolingRudesheim new
+						Rudesheim Tooling CharacterKind
 							formatInlineParenthesesIn:	aString
 							at:	index
 							on:	stream.

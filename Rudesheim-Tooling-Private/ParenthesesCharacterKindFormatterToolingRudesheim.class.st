@@ -9,12 +9,12 @@ Class {
 }
 
 { #category : 'accessing' }
-ParenthesesCharacterKindFormatterToolingRudesheim >> closingCharacter [
+ParenthesesCharacterKindFormatterToolingRudesheim class >> closingCharacter [
 	^ $).
 ]
 
 { #category : 'formatting' }
-ParenthesesCharacterKindFormatterToolingRudesheim >> formatInlineParenthesesIn: aString
+ParenthesesCharacterKindFormatterToolingRudesheim class >> formatInlineParenthesesIn: aString
 at: anIndexInteger
 on: aWriteStream [
 	|
@@ -74,6 +74,6 @@ on: aWriteStream [
 ]
 
 { #category : 'accessing' }
-ParenthesesCharacterKindFormatterToolingRudesheim >> openingCharacter [
+ParenthesesCharacterKindFormatterToolingRudesheim class >> openingCharacter [
 	^ $(.
 ]

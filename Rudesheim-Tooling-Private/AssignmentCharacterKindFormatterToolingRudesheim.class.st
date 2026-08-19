@@ -9,17 +9,17 @@ Class {
 }
 
 { #category : 'accessing' }
-AssignmentCharacterKindFormatterToolingRudesheim >> assignmentFirstCharacter [
+AssignmentCharacterKindFormatterToolingRudesheim class >> assignmentFirstCharacter [
 	^ $:.
 ]
 
 { #category : 'accessing' }
-AssignmentCharacterKindFormatterToolingRudesheim >> assignmentSecondCharacter [
+AssignmentCharacterKindFormatterToolingRudesheim class >> assignmentSecondCharacter [
 	^ $=.
 ]
 
 { #category : 'testing' }
-AssignmentCharacterKindFormatterToolingRudesheim >> isAssignmentStartCharacter: aCharacter
+AssignmentCharacterKindFormatterToolingRudesheim class >> isAssignmentStartCharacter: aCharacter
 followedBy: anotherCharacter [
 	aCharacter = self assignmentFirstCharacter
 		ifFalse:
@@ -31,7 +31,7 @@ followedBy: anotherCharacter [
 ]
 
 { #category : 'testing' }
-AssignmentCharacterKindFormatterToolingRudesheim >> match: aCharacter [
+AssignmentCharacterKindFormatterToolingRudesheim class >> match: aCharacter [
 	aCharacter = self assignmentFirstCharacter
 		ifTrue:
 		[

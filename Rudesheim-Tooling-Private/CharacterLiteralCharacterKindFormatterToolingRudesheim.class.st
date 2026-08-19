@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : 'formatting' }
-CharacterLiteralCharacterKindFormatterToolingRudesheim >> formatInlineParenthesesIn: aString
+CharacterLiteralCharacterKindFormatterToolingRudesheim class >> formatInlineParenthesesIn: aString
 at: anIndexInteger
 on: aWriteStream [
 	aWriteStream
@@ -36,6 +36,6 @@ on: aWriteStream [
 ]
 
 { #category : 'testing' }
-CharacterLiteralCharacterKindFormatterToolingRudesheim >> match: aCharacter [
+CharacterLiteralCharacterKindFormatterToolingRudesheim class >> match: aCharacter [
 	^ aCharacter = $$.
 ]

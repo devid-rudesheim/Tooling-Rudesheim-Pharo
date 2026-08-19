@@ -9,11 +9,11 @@ Class {
 }
 
 { #category : 'accessing' }
-CurlyBracesCharacterKindFormatterToolingRudesheim >> closingCharacter [
+CurlyBracesCharacterKindFormatterToolingRudesheim class >> closingCharacter [
 	^ Character value: 125.
 ]
 
 { #category : 'accessing' }
-CurlyBracesCharacterKindFormatterToolingRudesheim >> openingCharacter [
+CurlyBracesCharacterKindFormatterToolingRudesheim class >> openingCharacter [
 	^ Character value: 123.
 ]

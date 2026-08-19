@@ -9,6 +9,6 @@ Class {
 }
 
 { #category : 'accessing' }
-PeriodCharacterKindFormatterToolingRudesheim >> character [
+PeriodCharacterKindFormatterToolingRudesheim class >> character [
 	^ $..
 ]

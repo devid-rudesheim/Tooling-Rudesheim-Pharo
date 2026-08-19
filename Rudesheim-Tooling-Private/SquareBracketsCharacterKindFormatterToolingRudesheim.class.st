@@ -9,11 +9,11 @@ Class {
 }
 
 { #category : 'accessing' }
-SquareBracketsCharacterKindFormatterToolingRudesheim >> closingCharacter [
+SquareBracketsCharacterKindFormatterToolingRudesheim class >> closingCharacter [
 	^ $].
 ]
 
 { #category : 'accessing' }
-SquareBracketsCharacterKindFormatterToolingRudesheim >> openingCharacter [
+SquareBracketsCharacterKindFormatterToolingRudesheim class >> openingCharacter [
 	^ $[.
 ]

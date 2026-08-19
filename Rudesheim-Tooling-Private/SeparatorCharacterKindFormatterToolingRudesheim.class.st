@@ -9,11 +9,11 @@ Class {
 }
 
 { #category : 'testing' }
-SeparatorCharacterKindFormatterToolingRudesheim >> candidateIdentifierTerminatesWith: aCharacter [
+SeparatorCharacterKindFormatterToolingRudesheim class >> candidateIdentifierTerminatesWith: aCharacter [
 	^ true.
 ]
 
 { #category : 'testing' }
-SeparatorCharacterKindFormatterToolingRudesheim >> match: aCharacter [
+SeparatorCharacterKindFormatterToolingRudesheim class >> match: aCharacter [
 	^ aCharacter isSeparator.
 ]

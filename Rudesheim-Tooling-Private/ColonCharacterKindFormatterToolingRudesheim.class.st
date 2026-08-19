@@ -9,12 +9,12 @@ Class {
 }
 
 { #category : 'accessing' }
-ColonCharacterKindFormatterToolingRudesheim >> character [
+ColonCharacterKindFormatterToolingRudesheim class >> character [
 	^ $:.
 ]
 
 { #category : 'testing' }
-ColonCharacterKindFormatterToolingRudesheim >> isKeywordColonCharacter: aCharacter
+ColonCharacterKindFormatterToolingRudesheim class >> isKeywordColonCharacter: aCharacter
 followedBy: anotherCharacter [
 	(
 		self
@@ -27,7 +27,7 @@ followedBy: anotherCharacter [
 
 	^
 	(
-		AssignmentCharacterKindFormatterToolingRudesheim new
+		Rudesheim Tooling CharacterKind Assignment
 			isAssignmentStartCharacter:	aCharacter
 			followedBy:	anotherCharacter
 	) not.

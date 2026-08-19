@@ -9,16 +9,16 @@ Class {
 }
 
 { #category : 'accessing' }
-PunctuationCharacterKindFormatterToolingRudesheim >> character [
+PunctuationCharacterKindFormatterToolingRudesheim class >> character [
 	self subclassResponsibility.
 ]
 
 { #category : 'testing' }
-PunctuationCharacterKindFormatterToolingRudesheim >> candidateIdentifierTerminatesWith: aCharacter [
+PunctuationCharacterKindFormatterToolingRudesheim class >> candidateIdentifierTerminatesWith: aCharacter [
 	^ true.
 ]
 
 { #category : 'testing' }
-PunctuationCharacterKindFormatterToolingRudesheim >> match: aCharacter [
+PunctuationCharacterKindFormatterToolingRudesheim class >> match: aCharacter [
 	^ aCharacter = self character.
 ]
