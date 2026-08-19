@@ -505,76 +505,76 @@ indent: anIndentLevelInteger [
 		self
 			needsMultilineFor:	anArrayNode
 	)
-		ifTrue:
+		ifFalse:
 		[
-			lines := OrderedCollection new.
-
-			lines
-				add:
+			^
+			{
 				(
 					self
 						indentStringFor:	anIndentLevelInteger
-				) , '{'.
-
-			previousEnd := anArrayNode left.
-
-			statements
-				doWithIndex:
-				[ :each :idx |
-					|
-						elementLines
-					|
-
-					lines
-						addAll:
-						(
-							self
-								formatCommentLinesInSource:	anArrayNode source
-								from:	previousEnd + 1
-								to:	each sourceInterval first - 1
-								indent:	anIndentLevelInteger + 1
-						).
-
-					elementLines :=
-						self
-							formatSubexpressionLines:	each
-							indent:	anIndentLevelInteger + 1.
-
-					idx < statements size
-						ifTrue:
-						[
-							elementLines
-								at:	elementLines size
-								put:	elementLines last , '.'.
-						].
-
-					lines
-						addAll:	elementLines.
-
-					previousEnd := each sourceInterval last.
-				].
-
-			lines
-				add:
+				) ,
 				(
 					self
-						indentStringFor:	anIndentLevelInteger
-				) , '}'.
-
-			^ lines.
+						formatInline:	anArrayNode
+				)
+			}.
 		].
 
-	^
-	{
+	lines := OrderedCollection new.
+
+	lines
+		add:
 		(
 			self
 				indentStringFor:	anIndentLevelInteger
-		) ,
+		) , '{'.
+
+	previousEnd := anArrayNode left.
+
+	statements
+		doWithIndex:
+		[ :each :idx |
+			|
+				elementLines
+			|
+
+			lines
+				addAll:
+				(
+					self
+						formatCommentLinesInSource:	anArrayNode source
+						from:	previousEnd + 1
+						to:	each sourceInterval first - 1
+						indent:	anIndentLevelInteger + 1
+				).
+
+			elementLines :=
+				self
+					formatSubexpressionLines:	each
+					indent:	anIndentLevelInteger + 1.
+
+			idx < statements size
+				ifTrue:
+				[
+					elementLines
+						at:	elementLines size
+						put:	elementLines last , '.'.
+				].
+
+			lines
+				addAll:	elementLines.
+
+			previousEnd := each sourceInterval last.
+		].
+
+	lines
+		add:
 		(
 			self
-				formatInline:	anArrayNode
-		)
-	}.
+				indentStringFor:	anIndentLevelInteger
+		) , '}'.
+
+	^ lines.
 ]
 
 { #category : 'as yet unclassified' }
@@ -630,57 +630,57 @@ indent: anIndentLevelInteger [
 		value
 			needsExpressionLinesAsAssignmentValueForFormatterRudesheim:	self
 	)
-		ifTrue:
+		ifFalse:
 		[
-			lines := OrderedCollection new.
+			inline :=
+				self
+					formatInline:	value.
 
-			lines
-				add:
+			^
+			{
 				(
 					self
 						indentStringFor:	anIndentLevelInteger
-				) , prefix.
-
-			valueLines :=
-				self
-					formatExpressionLines:	value
-					indent:	anIndentLevelInteger + 1.
-
-			firstValueLine := valueLines first trimBoth.
-
-			firstValueLine notEmpty
-				ifTrue:
-				[
-					(
-						self
-							isOpeningBracketCharacter:	firstValueLine first
-					)
-						ifTrue:
-						[
-							valueLines :=
-								self
-									formatExpressionLines:	value
-									indent:	anIndentLevelInteger.
-						].
-				].
-
-			lines
-				addAll:	valueLines.
-
-			^ lines.
+				) , prefix , ' ' , inline
+			}.
 		].
 
-	inline :=
-		self
-			formatInline:	value.
+	lines := OrderedCollection new.
 
-	^
-	{
+	lines
+		add:
 		(
 			self
 				indentStringFor:	anIndentLevelInteger
-		) , prefix , ' ' , inline
-	}.
+		) , prefix.
+
+	valueLines :=
+		self
+			formatExpressionLines:	value
+			indent:	anIndentLevelInteger + 1.
+
+	firstValueLine := valueLines first trimBoth.
+
+	firstValueLine notEmpty
+		ifTrue:
+		[
+			(
+				self
+					isOpeningBracketCharacter:	firstValueLine first
+			)
+				ifTrue:
+				[
+					valueLines :=
+						self
+							formatExpressionLines:	value
+							indent:	anIndentLevelInteger.
+				].
+		].
+
+	lines
+		addAll:	valueLines.
+
+	^ lines.
 ]
 
 { #category : 'as yet unclassified' }
@@ -1470,62 +1470,61 @@ indent: anIndentLevelInteger [
 		self
 			needsMultilineFor:	aNode
 	)
-		ifTrue:
+		ifFalse:
 		[
-			lines := OrderedCollection new.
-
-			argumentLines :=
-				self
-					formatSubexpressionLines:	aNode
-					indent:	anIndentLevelInteger.
-
-			firstArgumentLine := argumentLines first trimBoth.
-
-			argumentLineAction :=
-			[
-				lines
-					add:
-						indentString , aKeywordPart , String tab.
-
-				argumentLines :=
+			^
+			{
+				indentString , aKeywordPart , String tab ,
+				(
 					self
-						formatSubexpressionLines:	aNode
-						indent:	anIndentLevelInteger + 1.
-			].
-
-			firstArgumentLine notEmpty
-				ifTrue:
-				[
-					(
-						self
-							isOpeningBracketCharacter:	firstArgumentLine first
-					)
-						ifTrue:
-						[
-							argumentLineAction :=
-							[
-								lines
-									add:	indentString , aKeywordPart.
-							].
-						].
-				].
-
-			argumentLineAction value.
-
-			lines
-				addAll:	argumentLines.
-
-			^ lines.
+						formatInline:	aNode
+				)
+			}.
 		].
 
-	^
-	{
-		indentString , aKeywordPart , String tab ,
-		(
+	lines := OrderedCollection new.
+
+	argumentLines :=
+		self
+			formatSubexpressionLines:	aNode
+			indent:	anIndentLevelInteger.
+
+	firstArgumentLine := argumentLines first trimBoth.
+
+	argumentLineAction :=
+	[
+		lines
+			add:	indentString , aKeywordPart , String tab.
+
+		argumentLines :=
 			self
-				formatInline:	aNode
-		)
-	}.
+				formatSubexpressionLines:	aNode
+				indent:	anIndentLevelInteger + 1.
+	].
+
+	firstArgumentLine notEmpty
+		ifTrue:
+		[
+			(
+				self
+					isOpeningBracketCharacter:	firstArgumentLine first
+			)
+				ifTrue:
+				[
+					argumentLineAction :=
+					[
+						lines
+							add:	indentString , aKeywordPart.
+					].
+				].
+		].
+
+	argumentLineAction value.
+
+	lines
+		addAll:	argumentLines.
+
+	^ lines.
 ]
 
 { #category : 'formatting-keyword' }
