@@ -165,7 +165,7 @@ FormatterToolingRudesheimTest class >> expectedEnsureProcessingClassNamedTarget 
 		add:	6 -> ('name:' , String tab , 'aClassSymbol;').
 
 	specs
-		add:	6 -> ('traits:' , String tab).
+		add:	6 -> 'traits:'.
 
 	specs
 		add:	6 -> '{'.
@@ -494,6 +494,42 @@ FormatterToolingRudesheimTest >> testParenthesisSpacingDoesNotChangeStringLitera
 			format:	'sample ^ ''(keep)'' , (1 + 2)'.
 
 	expected := 'sample' , String cr , String tab , '^ ''(keep)'' , ( 1 + 2 ).'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testBinaryAfterParenthesizedMultilineReceiverStaysOnClosingParenthesis [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'sample ^ (self formatInlineParenthesesIn: text trimBoth) = $"'.
+
+	expected := 'sample' , String cr , String tab , '^' , String cr , String tab , '(' , String cr , String tab , String tab , 'self' , String cr , String tab , String tab , String tab , 'formatInlineParenthesesIn:' , String tab , 'text trimBoth' , String cr , String tab , ') = $".'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testKeywordParenthesizedMultilineArgumentStartsOnNextLine [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'sample ^ self text: (self formatInlineParenthesesIn: text trimBoth)'.
+
+	expected := 'sample' , String cr , String tab , '^ self' , String cr , String tab , String tab , 'text:' , String cr , String tab , String tab , '(' , String cr , String tab , String tab , String tab , 'self' , String cr , String tab , String tab , String tab , String tab , 'formatInlineParenthesesIn:' , String tab , 'text trimBoth' , String cr , String tab , String tab , ').'.
 
 	self
 		assert:	formatted

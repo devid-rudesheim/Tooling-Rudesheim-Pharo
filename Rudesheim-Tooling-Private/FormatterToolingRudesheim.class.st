@@ -933,7 +933,7 @@ FormatterToolingRudesheim class >> formatLiteralArrayInline: aParseNode [
 	^ '#( ' , body trimBoth , ' )'.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'formatting-inline' }
 FormatterToolingRudesheim class >> formatInline: aParseNode [
 	|
 		text
@@ -960,7 +960,8 @@ FormatterToolingRudesheim class >> formatInline: aParseNode [
 	aParseNode isLiteralNode
 		ifTrue:
 		[
-			^ OCSimpleFormatter format: aParseNode.
+			^ OCSimpleFormatter
+				format:	aParseNode.
 		].
 
 	text :=
@@ -979,7 +980,8 @@ FormatterToolingRudesheim class >> formatInline: aParseNode [
 
 	^ self
 		formatInlineParenthesesFor:	aParseNode
-		text:	(
+		text:
+		(
 			self
 				formatInlineParenthesesIn:	text trimBoth
 		).
@@ -1301,7 +1303,7 @@ indent: anIndentLevelInteger [
 		indent:	anIndentLevelInteger.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'formatting-keyword' }
 FormatterToolingRudesheim class >> formatKeywordPart: aKeywordPart
 argument: aNode
 indent: anIndentLevelInteger [
@@ -1338,31 +1340,35 @@ indent: anIndentLevelInteger [
 		[
 			lines := OrderedCollection new.
 
-			lines
-				add:	
-				indentString
-					, aKeywordPart
-					, String tab.
-
 			argumentLines :=
 				self
 					formatSubexpressionLines:	aNode
 					indent:	anIndentLevelInteger.
 
 			firstArgumentLine := argumentLines first trimBoth.
+
 			(
-				firstArgumentLine notEmpty
-					and:
+				firstArgumentLine isEmpty
+					or:
 					[
 						(#($( $[ ${) includes: firstArgumentLine first) not.
 					]
 			)
 				ifTrue:
 				[
+					lines
+						add:	
+							indentString , aKeywordPart , String tab.
+
 					argumentLines :=
 						self
 							formatSubexpressionLines:	aNode
 							indent:	anIndentLevelInteger + 1.
+				]
+				ifFalse:
+				[
+					lines
+						add:	indentString , aKeywordPart.
 				].
 
 			lines
@@ -1374,10 +1380,11 @@ indent: anIndentLevelInteger [
 
 	^
 	{
-		indentString
-			, aKeywordPart
-			, String tab
-			, (self formatInline: aNode)
+		indentString , aKeywordPart , String tab ,
+		(
+			self
+				formatInline:	aNode
+		)
 	}.
 ]
 
@@ -1915,7 +1922,7 @@ indent: anIndentLevelInteger [
 	^ lines.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'formatting-inline' }
 FormatterToolingRudesheim class >> formatUnaryOrBinaryChainLines: aMessageNode
 indent: anIndentLevelInteger [
 	|
