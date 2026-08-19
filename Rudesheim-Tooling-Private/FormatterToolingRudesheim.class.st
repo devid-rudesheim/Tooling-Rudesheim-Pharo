@@ -1634,7 +1634,7 @@ indent: anIndentLevelInteger [
 	aSequenceNode isNil
 		ifTrue:
 		[
-			^ #(  ).
+			self error: 'aSequenceNode must not be nil'.
 		].
 
 	statements := aSequenceNode statements.
@@ -2066,24 +2066,24 @@ FormatterToolingRudesheim class >> indentStringFor: anInteger [
 	|
 
 	anInteger isNumber
-		ifTrue:
+		ifFalse:
 		[
-			count :=
-				anInteger
-					max:	0.
-
-			count = 0
-				ifTrue:
-				[
-					^ ''.
-				].
-
-			^ String
-				new:	count
-				withAll:	Character tab.
+			self error: 'anInteger must be a number'.
 		].
 
-	^ ''.
+	count :=
+		anInteger
+			max:	0.
+
+	count = 0
+		ifTrue:
+		[
+			^ ''.
+		].
+
+	^ String
+		new:	count
+		withAll:	Character tab.
 ]
 
 { #category : 'as yet unclassified' }
