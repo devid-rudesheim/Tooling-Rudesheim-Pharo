@@ -1,44 +1,44 @@
 Extension { #name : 'ClassDescription' }
 
 { #category : '*Rudesheim-Tooling' }
-ClassDescription >> createGetMethodWithDefault:	aVariableNameString [
+ClassDescription >> createGetMethodWithDefault: aVariableNameString [
 	|
 		selectorForDefault
 		classified
 	|
-	
+
 	aVariableNameString
 		ifEmpty:
 		[
 			Rudesheim Utility SyntaxErrorNotification
-				inClass:		self
-				withCode:		''
-				doitFlag:		false
+				inClass:	self
+				withCode:	''
+				doitFlag:	false
 				errorMessage:	'Message pattern expected'
-				location: 		1.
+				location:	1.
 		].
-	
+
 	classified := 'accessing'.
-	selectorForDefault := 'default', aVariableNameString first uppercase asString, aVariableNameString copyWithoutFirst.
-	
+	selectorForDefault := 'default' , aVariableNameString first uppercase asString , aVariableNameString copyWithoutFirst.
+
 	self
-		compile:
+		compile:	
 		(
-'{1}
+			'{1}
 
 	^ 0.
 '
-				format:
+				format:	
 				{
 					selectorForDefault
 				}
 		)
-		classified: 	classified.
+		classified:	classified.
 
 	self
-		compile:
+		compile:	
 		(
-'{1}
+			'{1}
 
 	^ {1}
 		ifNil:
@@ -46,11 +46,11 @@ ClassDescription >> createGetMethodWithDefault:	aVariableNameString [
 			{1} := self {2}.
 		].
 '
-				format:
+				format:	
 				{
 					aVariableNameString.
 					selectorForDefault
 				}
 		)
-		classified: 	classified.
+		classified:	classified.
 ]

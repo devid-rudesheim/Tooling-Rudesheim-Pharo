@@ -321,6 +321,330 @@ FormatterToolingRudesheimTest >> testChainedUnaryMessagesStayInline [
 ]
 
 { #category : 'as yet unclassified' }
+FormatterToolingRudesheimTest >> testShortBinaryChainStaysInline [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'sum ^ 1 + 2 + 3'.
+
+	expected := 'sum' , String cr , String tab , '^ 1 + 2 + 3.'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testAssignmentBracketStartsAtAssignmentIndent [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'run | block total | block := [ 1 ]. total := (1 + 2)'.
+
+	expected := 'run' , String cr , String tab , '|' , String cr , String tab , String tab , 'block' , String cr , String tab , String tab , 'total' , String cr , String tab , '|' , String cr , String cr , String tab , 'block :=' , String cr , String tab , '[' , String cr , String tab , String tab , '1.' , String cr , String tab , '].' , String cr , String cr , String tab , 'total := 1 + 2.'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testDynamicArrayAlwaysUsesMultilineElements [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'ranges ^ { self rows. self columns }'.
+
+	expected := 'ranges' , String cr , String tab , '^' , String cr , String tab , '{' , String cr , String tab , String tab , 'self rows.' , String cr , String tab , String tab , 'self columns' , String cr , String tab , '}.'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testBinaryArgumentKeywordMessageKeepsParenthesizedMultiline [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'sum ^ total + (items inject: 0 into: [ :sum :each | sum + each ])'.
+
+	expected := 'sum' , String cr , String tab , '^ total +' , String cr , String tab , '(' , String cr , String tab , String tab , 'items' , String cr , String tab , String tab , String tab , 'inject:' , String tab , '0' , String cr , String tab , String tab , String tab , 'into:' , String cr , String tab , String tab , String tab , '[ :sum :each |' , String cr , String tab , String tab , String tab , String tab , 'sum + each.' , String cr , String tab , String tab , String tab , ']' , String cr , String tab , ').'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testKeywordArgumentShortBinaryMessageStaysInline [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'sample elementLines at: elementLines size put: elementLines last , ''.'''.
+
+	expected := 'sample' , String cr , String tab , 'elementLines' , String cr , String tab , String tab , 'at:' , String tab , 'elementLines size' , String cr , String tab , String tab , 'put:' , String tab , 'elementLines last , ''.''.'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testKeywordArgumentStartingWithVariableIndentsOneLevelDeeper [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'store output at: index put: total + (biases at: oc + 1)'.
+
+	expected := 'store' , String cr , String tab , 'output' , String cr , String tab , String tab , 'at:' , String tab , 'index' , String cr , String tab , String tab , 'put:' , String tab , String cr , String tab , String tab , String tab , 'total +' , String cr , String tab , String tab , String tab , '(' , String cr , String tab , String tab , String tab , String tab , 'biases' , String cr , String tab , String tab , String tab , String tab , String tab , 'at:' , String tab , 'oc + 1' , String cr , String tab , String tab , String tab , ').'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testKeywordReceiverUnaryChainStaysInline [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'sample ^ Rudesheim MachineLearning NeuralNetwork TensorLayout forOutput: self output'.
+
+	expected := 'sample' , String cr , String tab , '^ Rudesheim MachineLearning NeuralNetwork TensorLayout' , String cr , String tab , String tab , 'forOutput:' , String tab , 'self output.'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testCommentsArePreserved [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'sample "method comment" | value | "before assignment" value := 1. "before return" ^ value'.
+
+	expected := 'sample' , String cr , String tab , '"method comment"' , String cr , String tab , '|' , String cr , String tab , String tab , 'value' , String cr , String tab , '|' , String cr , String cr , String tab , '"before assignment"' , String cr , String tab , 'value := 1.' , String cr , String tab , '"before return"' , String cr , String tab , '^ value.'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testLiteralArrayKeepsInsideSpaces [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'numbers ^ #( 1 2 3 )'.
+
+	expected := 'numbers' , String cr , String tab , '^ #( 1 2 3 ).'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testParenthesizedInlineExpressionKeepsInsideSpaces [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'sample ^ columnTotal + (weight * value)'.
+
+	expected := 'sample' , String cr , String tab , '^ columnTotal + ( weight * value ).'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testParenthesisSpacingDoesNotChangeStringLiteralContents [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'sample ^ ''(keep)'' , (1 + 2)'.
+
+	expected := 'sample' , String cr , String tab , '^ ''(keep)'' , ( 1 + 2 ).'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testParenthesisSpacingDoesNotChangeCharacterLiteralContents [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'sample ^ $) = $('.
+
+	expected := 'sample' , String cr , String tab , '^ $) = $(.'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testBinaryAfterParenthesizedMultilineReceiverStaysOnClosingParenthesis [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'sample ^ (self formatInlineParenthesesIn: text trimBoth) = $"'.
+
+	expected := 'sample' , String cr , String tab , '^' , String cr , String tab , '(' , String cr , String tab , String tab , 'self' , String cr , String tab , String tab , String tab , 'formatInlineParenthesesIn:' , String tab , 'text trimBoth' , String cr , String tab , ') = $".'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testKeywordParenthesizedMultilineArgumentStartsOnNextLine [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'sample ^ self text: (self formatInlineParenthesesIn: text trimBoth)'.
+
+	expected := 'sample' , String cr , String tab , '^ self' , String cr , String tab , String tab , 'text:' , String cr , String tab , String tab , '(' , String cr , String tab , String tab , String tab , 'self' , String cr , String tab , String tab , String tab , String tab , 'formatInlineParenthesesIn:' , String tab , 'text trimBoth' , String cr , String tab , String tab , ').'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testKeywordParenthesizedBinaryArgumentIndentsAsExpression [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'sample self formatCommentLinesInSource: source from: previousEnd + 1 to: (self cascadeMessageStartFor: message) - 1 indent: keywordIndent'.
+
+	expected := 'sample' , String cr , String tab , 'self' , String cr , String tab , String tab , 'formatCommentLinesInSource:' , String tab , 'source' , String cr , String tab , String tab , 'from:' , String tab , 'previousEnd + 1' , String cr , String tab , String tab , 'to:' , String cr , String tab , String tab , '(' , String cr , String tab , String tab , String tab , 'self' , String cr , String tab , String tab , String tab , String tab , 'cascadeMessageStartFor:' , String tab , 'message' , String cr , String tab , String tab , ') - 1' , String cr , String tab , String tab , 'indent:' , String tab , 'keywordIndent.'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testDynamicArrayAssignmentWithLiteralArraysStaysMultiline [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'sample | output | output := { "inside dynamic array" #( 10 20 ). #( ''a'' ''b'' ) }'.
+
+	expected := 'sample' , String cr , String tab , '|' , String cr , String tab , String tab , 'output' , String cr , String tab , '|' , String cr , String cr , String tab , 'output :=' , String cr , String tab , '{' , String cr , String tab , String tab , '"inside dynamic array"' , String cr , String tab , String tab , '#( 10 20 ).' , String cr , String tab , String tab , '#( ''a'' ''b'' )' , String cr , String tab , '}.'. 
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testAssignmentBinaryWithLiteralArrayKeywordArgumentStaysMultiline [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'total | ranges | total := (ranges at: 1) + (#( 4 5 6 ) inject: 0 into: [ :sum :each | "inside block" sum + each ])'.
+
+	expected := 'total' , String cr , String tab , '|' , String cr , String tab , String tab , 'ranges' , String cr , String tab , '|' , String cr , String cr , String tab , 'total :=' , String cr , String tab , '(' , String cr , String tab , String tab , 'ranges' , String cr , String tab , String tab , String tab , 'at:' , String tab , '1' , String cr , String tab , ') +' , String cr , String tab , '(' , String cr , String tab , String tab , '#( 4 5 6 )' , String cr , String tab , String tab , String tab , 'inject:' , String tab , '0' , String cr , String tab , String tab , String tab , 'into:' , String cr , String tab , String tab , String tab , '[ :sum :each |' , String cr , String tab , String tab , String tab , String tab , '"inside block"' , String cr , String tab , String tab , String tab , String tab , 'sum + each.' , String cr , String tab , String tab , String tab , ']' , String cr , String tab , ').'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testCascadeCommentsArePreserved [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'sample | builder | builder := Object new. builder "before name" name: #Foo; "before values" values: #( 1 2 3 ); yourself'.
+
+	expected := 'sample' , String cr , String tab , '|' , String cr , String tab , String tab , 'builder' , String cr , String tab , '|' , String cr , String cr , String tab , 'builder := Object new.' , String cr , String cr , String tab , 'builder' , String cr , String tab , String tab , '"before name"' , String cr , String tab , String tab , 'name:' , String tab , '#Foo;' , String cr , String tab , String tab , '"before values"' , String cr , String tab , String tab , 'values:' , String tab , '#( 1 2 3 );' , String cr , String tab , String tab , 'yourself.'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'as yet unclassified' }
 FormatterToolingRudesheimTest >> testFormatAsYouReadPolicyAndFormatterSwitch [
 	|
 		previousClass
