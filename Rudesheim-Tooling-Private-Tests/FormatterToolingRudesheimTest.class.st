@@ -338,7 +338,7 @@ FormatterToolingRudesheimTest >> testShortBinaryChainStaysInline [
 		equals:	expected.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 FormatterToolingRudesheimTest >> testAssignmentBracketStartsAtAssignmentIndent [
 	|
 		formatted
@@ -356,7 +356,7 @@ FormatterToolingRudesheimTest >> testAssignmentBracketStartsAtAssignmentIndent [
 		equals:	expected.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 FormatterToolingRudesheimTest >> testDynamicArrayAlwaysUsesMultilineElements [
 	|
 		formatted
@@ -374,7 +374,7 @@ FormatterToolingRudesheimTest >> testDynamicArrayAlwaysUsesMultilineElements [
 		equals:	expected.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 FormatterToolingRudesheimTest >> testBinaryArgumentKeywordMessageKeepsParenthesizedMultiline [
 	|
 		formatted
@@ -392,7 +392,7 @@ FormatterToolingRudesheimTest >> testBinaryArgumentKeywordMessageKeepsParenthesi
 		equals:	expected.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 FormatterToolingRudesheimTest >> testKeywordArgumentStartingWithVariableIndentsOneLevelDeeper [
 	|
 		formatted
@@ -410,7 +410,7 @@ FormatterToolingRudesheimTest >> testKeywordArgumentStartingWithVariableIndentsO
 		equals:	expected.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 FormatterToolingRudesheimTest >> testKeywordReceiverUnaryChainStaysInline [
 	|
 		formatted
@@ -428,7 +428,7 @@ FormatterToolingRudesheimTest >> testKeywordReceiverUnaryChainStaysInline [
 		equals:	expected.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 FormatterToolingRudesheimTest >> testCommentsArePreserved [
 	|
 		formatted
@@ -446,7 +446,7 @@ FormatterToolingRudesheimTest >> testCommentsArePreserved [
 		equals:	expected.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 FormatterToolingRudesheimTest >> testLiteralArrayKeepsInsideSpaces [
 	|
 		formatted
@@ -464,7 +464,7 @@ FormatterToolingRudesheimTest >> testLiteralArrayKeepsInsideSpaces [
 		equals:	expected.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 FormatterToolingRudesheimTest >> testParenthesizedInlineExpressionKeepsInsideSpaces [
 	|
 		formatted
@@ -482,7 +482,7 @@ FormatterToolingRudesheimTest >> testParenthesizedInlineExpressionKeepsInsideSpa
 		equals:	expected.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 FormatterToolingRudesheimTest >> testParenthesisSpacingDoesNotChangeStringLiteralContents [
 	|
 		formatted
@@ -500,7 +500,7 @@ FormatterToolingRudesheimTest >> testParenthesisSpacingDoesNotChangeStringLitera
 		equals:	expected.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 FormatterToolingRudesheimTest >> testDynamicArrayAssignmentWithLiteralArraysStaysMultiline [
 	|
 		formatted
@@ -518,7 +518,7 @@ FormatterToolingRudesheimTest >> testDynamicArrayAssignmentWithLiteralArraysStay
 		equals:	expected.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 FormatterToolingRudesheimTest >> testAssignmentBinaryWithLiteralArrayKeywordArgumentStaysMultiline [
 	|
 		formatted
@@ -536,7 +536,7 @@ FormatterToolingRudesheimTest >> testAssignmentBinaryWithLiteralArrayKeywordArgu
 		equals:	expected.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 FormatterToolingRudesheimTest >> testCascadeCommentsArePreserved [
 	|
 		formatted

@@ -308,7 +308,7 @@ to: aStopInteger [
 	^ comments.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'formatting-cascade' }
 FormatterToolingRudesheim class >> cascadeMessageEndFor: aMessageNode [
 	|
 		end
@@ -327,7 +327,7 @@ FormatterToolingRudesheim class >> cascadeMessageEndFor: aMessageNode [
 	^ end.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'formatting-cascade' }
 FormatterToolingRudesheim class >> cascadeMessageStartFor: aMessageNode [
 	^ aMessageNode selectorInterval first.
 ]
@@ -985,7 +985,7 @@ FormatterToolingRudesheim class >> formatInline: aParseNode [
 		).
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'formatting-inline' }
 FormatterToolingRudesheim class >> formatInlineParenthesesIn: aString [
 	|
 		stream
@@ -1155,7 +1155,7 @@ FormatterToolingRudesheim class >> formatInlineParenthesesIn: aString [
 	^ stream contents.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'formatting-inline' }
 FormatterToolingRudesheim class >> formatInlineParenthesesFor: aParseNode
 text: aString [
 	|
@@ -1275,7 +1275,7 @@ indent: anIndentLevelInteger [
 	^ lines.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'formatting-keyword' }
 FormatterToolingRudesheim class >> formatKeywordReceiverLines: aParseNode
 indent: anIndentLevelInteger [
 	(

@@ -10,6 +10,5 @@ Class {
 
 { #category : 'namespace' }
 ToolingRudesheim class >> Formatter [
-
-	^ FormatterToolingRudesheim
+	^ FormatterToolingRudesheim.
 ]
