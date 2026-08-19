@@ -276,6 +276,12 @@ to: aStopInteger [
 		comments
 		index
 		limit
+		stream
+		closed
+		commentIndex
+		quoteAction
+		characterAction
+		offset
 	|
 
 	comments := OrderedCollection new.
@@ -299,101 +305,92 @@ to: aStopInteger [
 
 				break := thisContext.
 
-				( aString at: index ) = $"
+				( aString at: index ) ~= $"
 					ifTrue:
 					[
-						|
-							stream
-							closed
-							commentIndex
-							quoteAction
-							characterAction
-							offset
-						|
-
-						stream :=
-							WriteStream
-								on:	String new.
-
-						closed := false.
-						commentIndex := index + 1.
-						[
-							[
-								|
-									conditionBreak
-								|
-
-								conditionBreak := thisContext.
-
-								commentIndex <= limit
-									ifTrue:
-									[
-										conditionBreak
-											return:	closed not.
-									].
-
-								false.
-							] value
-						]
-							whileTrue:
-							[
-								offset := 0.
-
-								characterAction :=
-								[
-									stream
-										nextPut:
-										(
-											aString
-												at:	commentIndex
-										).
-								].
-
-								( aString at: commentIndex ) = $"
-									ifTrue:
-									[
-										characterAction :=
-										[
-										].
-
-										quoteAction :=
-										[
-											closed := true.
-										].
-
-										commentIndex < limit
-											ifTrue:
-											[
-												( aString at: commentIndex + 1 ) = $"
-													ifTrue:
-													[
-														quoteAction :=
-														[
-															stream
-																nextPut:	$".
-														].
-
-														offset := 1.
-													].
-											].
-
-										quoteAction value.
-									].
-
-								characterAction value.
-								commentIndex := commentIndex + 1 + offset.
-							].
-
-						comments
-							add:	stream contents.
-
-						index := commentIndex.
+						index := index + 1.
 
 						break
 							return:	self.
 					].
 
-				index := index + 1.
+				stream :=
+					WriteStream
+						on:	String new.
+
+				closed := false.
+				commentIndex := index + 1.
+				[
+					[
+						|
+							conditionBreak
+						|
+
+						conditionBreak := thisContext.
+
+						commentIndex <= limit
+							ifTrue:
+							[
+								conditionBreak
+									return:	closed not.
+							].
+
+						false.
+					] value
+				]
+					whileTrue:
+					[
+						offset := 0.
+
+						characterAction :=
+						[
+							stream
+								nextPut:
+								(
+									aString
+										at:	commentIndex
+								).
+						].
+
+						( aString at: commentIndex ) = $"
+							ifTrue:
+							[
+								characterAction :=
+								[
+								].
+
+								quoteAction :=
+								[
+									closed := true.
+								].
+
+								commentIndex < limit
+									ifTrue:
+									[
+										( aString at: commentIndex + 1 ) = $"
+											ifTrue:
+											[
+												quoteAction :=
+												[
+													stream
+														nextPut:	$".
+												].
+
+												offset := 1.
+											].
+									].
+
+								quoteAction value.
+							].
+
+						characterAction value.
+						commentIndex := commentIndex + 1 + offset.
+					].
+
+				comments
+					add:	stream contents.
+
+				index := commentIndex.
 			] value
 		].
 
@@ -1872,8 +1869,7 @@ indent: anIndentLevelInteger [
 						ifTrue:
 						[
 							break
-								return:
-									aSequenceNode parent left.
+								return:	aSequenceNode parent left.
 						].
 
 					aSequenceNode sourceInterval first - 1.
@@ -1901,8 +1897,7 @@ indent: anIndentLevelInteger [
 					self
 						formatCommentLinesInSource:	aSequenceNode source
 						from:	previousEnd + 1
-						to:
-							stmt sourceInterval first - 1
+						to:	stmt sourceInterval first - 1
 						indent:	anIndentLevelInteger
 				).
 
