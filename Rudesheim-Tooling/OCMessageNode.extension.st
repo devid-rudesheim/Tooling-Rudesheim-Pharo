@@ -48,9 +48,9 @@ OCMessageNode >> needsMultilineForFormatterRudesheim: aFormatter [
 		].
 
 	conditions :=
-		{
-			self receiver
-		} asOrderedCollection.
+	{
+		self receiver
+	} asOrderedCollection.
 
 	self isBinary
 		ifTrue:
