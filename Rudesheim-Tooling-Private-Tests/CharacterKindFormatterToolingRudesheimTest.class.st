@@ -59,6 +59,31 @@ CharacterKindFormatterToolingRudesheimTest >> testBracketStateCanDetectMatchingC
 ]
 
 { #category : 'tests' }
+CharacterKindFormatterToolingRudesheimTest >> testAssignmentKindDetectsAssignmentToken [
+	|
+		kind
+	|
+
+	kind := AssignmentCharacterKindFormatterToolingRudesheim new.
+
+	self
+		assert:
+		(
+			kind
+				isAssignmentStartCharacter:	$:
+				followedBy:	$=
+		).
+
+	self
+		deny:
+		(
+			kind
+				isAssignmentStartCharacter:	$:
+				followedBy:	Character space
+		).
+]
+
+{ #category : 'tests' }
 CharacterKindFormatterToolingRudesheimTest >> testCharacterKindsCanBeSelectedAndCollectedThroughSharedInterface [
 	|
 		results
@@ -80,4 +105,29 @@ CharacterKindFormatterToolingRudesheimTest >> testCharacterKindsCanBeSelectedAnd
 	self
 		assert:	results asArray
 		equals:	{ true }.
+]
+
+{ #category : 'tests' }
+CharacterKindFormatterToolingRudesheimTest >> testColonKindDistinguishesKeywordColonFromAssignment [
+	|
+		kind
+	|
+
+	kind := ColonCharacterKindFormatterToolingRudesheim new.
+
+	self
+		assert:
+		(
+			kind
+				isKeywordColonCharacter:	$:
+				followedBy:	Character space
+		).
+
+	self
+		deny:
+		(
+			kind
+				isKeywordColonCharacter:	$:
+				followedBy:	$=
+		).
 ]

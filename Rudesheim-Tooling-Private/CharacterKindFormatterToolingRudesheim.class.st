@@ -13,6 +13,12 @@ CharacterKindFormatterToolingRudesheim >> candidateIdentifierTerminatesWith: aCh
 	^ false.
 ]
 
+{ #category : 'testing' }
+CharacterKindFormatterToolingRudesheim >> isAssignmentStartCharacter: aCharacter
+followedBy: anotherCharacter [
+	^ false.
+]
+
 { #category : 'formatting' }
 CharacterKindFormatterToolingRudesheim >> formatInlineParenthesesIn: aString
 at: anIndexInteger
@@ -39,6 +45,12 @@ CharacterKindFormatterToolingRudesheim >> isClosingBracketCharacter: aCharacter 
 
 { #category : 'testing' }
 CharacterKindFormatterToolingRudesheim >> isOpeningBracketCharacter: aCharacter [
+	^ false.
+]
+
+{ #category : 'testing' }
+CharacterKindFormatterToolingRudesheim >> isKeywordColonCharacter: aCharacter
+followedBy: anotherCharacter [
 	^ false.
 ]
 

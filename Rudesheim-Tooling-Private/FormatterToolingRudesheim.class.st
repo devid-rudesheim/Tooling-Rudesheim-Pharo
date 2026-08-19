@@ -109,6 +109,7 @@ FormatterToolingRudesheim class >> characterKinds [
 		PeriodCharacterKindFormatterToolingRudesheim new.
 		SemicolonCharacterKindFormatterToolingRudesheim new.
 		ColonCharacterKindFormatterToolingRudesheim new.
+		AssignmentCharacterKindFormatterToolingRudesheim new.
 		ParenthesesCharacterKindFormatterToolingRudesheim new.
 		SquareBracketsCharacterKindFormatterToolingRudesheim new.
 		CurlyBracesCharacterKindFormatterToolingRudesheim new.
@@ -241,15 +242,15 @@ FormatterToolingRudesheim class >> candidateIdentifiersIn: aString [
 							nil.
 						] value.
 
-						nextChar = $:
+						(
+							self
+								isAssignmentStartCharacter:	nextChar
+								followedBy:	nextChar2
+						)
 							ifTrue:
 							[
-								nextChar2 = $=
-									ifTrue:
-									[
-										candidates
-											add:	ident.
-									].
+								candidates
+									add:	ident.
 							].
 
 						(
@@ -2107,6 +2108,45 @@ FormatterToolingRudesheim class >> isOpeningBracketCharacter: aCharacter [
 	) notEmpty.
 ]
 
+{ #category : 'testing' }
+FormatterToolingRudesheim class >> isAssignmentStartCharacter: aCharacter
+followedBy: anotherCharacter [
+	^
+	(
+		self characterKinds
+			select:
+			[ :each |
+				each
+					isAssignmentStartCharacter:	aCharacter
+					followedBy:	anotherCharacter
+			]
+	) notEmpty.
+]
+
+{ #category : 'testing' }
+FormatterToolingRudesheim class >> isKeywordColonCharacter: aCharacter
+followedBy: anotherCharacter [
+	^
+	(
+		self characterKinds
+			select:
+			[ :each |
+				each
+					match:	aCharacter
+			]
+			thenCollect:
+			[ :each |
+				each
+					isKeywordColonCharacter:	aCharacter
+					followedBy:	anotherCharacter
+			]
+	)
+		anySatisfy:
+		[ :each |
+			each
+		].
+]
+
 { #category : 'as yet unclassified' }
 FormatterToolingRudesheim class >> joinLines: aLineCollection [
 	|
@@ -2275,11 +2315,32 @@ FormatterToolingRudesheim class >> repairMethodString: aString [
 									nextChar := [ | valueBreak | valueBreak := thisContext. index <= size ifTrue: [ valueBreak return: ( aString at: index ) ]. nil ] value.
 									nextIsKeywordColon := false.
 
-									nextChar = $:
-										ifTrue:
-										[
-											nextIsKeywordColon := [ | valueBreak | valueBreak := thisContext. index + 1 <= size ifTrue: [ valueBreak return: ( aString at: index + 1 ) ~= $= ]. true ] value.
-										].
+									nextIsKeywordColon :=
+										self
+											isKeywordColonCharacter:	nextChar
+											followedBy:
+											(
+												[
+													|
+														valueBreak
+													|
+
+													valueBreak := thisContext.
+
+													index + 1 <= size
+														ifTrue:
+														[
+															valueBreak
+																return:
+																(
+																	aString
+																		at:	index + 1
+																).
+														].
+
+													nil.
+												] value
+											).
 
 									repaired :=
 										self

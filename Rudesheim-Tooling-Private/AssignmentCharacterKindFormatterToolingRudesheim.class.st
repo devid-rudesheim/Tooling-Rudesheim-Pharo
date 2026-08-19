@@ -1,0 +1,42 @@
+"
+Character category for assignment token.
+"
+Class {
+	#name : 'AssignmentCharacterKindFormatterToolingRudesheim',
+	#superclass : 'CharacterKindFormatterToolingRudesheim',
+	#category : 'Rudesheim-Tooling',
+	#package : 'Rudesheim-Tooling-Private'
+}
+
+{ #category : 'accessing' }
+AssignmentCharacterKindFormatterToolingRudesheim >> assignmentFirstCharacter [
+	^ $:.
+]
+
+{ #category : 'accessing' }
+AssignmentCharacterKindFormatterToolingRudesheim >> assignmentSecondCharacter [
+	^ $=.
+]
+
+{ #category : 'testing' }
+AssignmentCharacterKindFormatterToolingRudesheim >> isAssignmentStartCharacter: aCharacter
+followedBy: anotherCharacter [
+	aCharacter = self assignmentFirstCharacter
+		ifFalse:
+		[
+			^ false.
+		].
+
+	^ anotherCharacter = self assignmentSecondCharacter.
+]
+
+{ #category : 'testing' }
+AssignmentCharacterKindFormatterToolingRudesheim >> match: aCharacter [
+	aCharacter = self assignmentFirstCharacter
+		ifTrue:
+		[
+			^ true.
+		].
+
+	^ aCharacter = self assignmentSecondCharacter.
+]

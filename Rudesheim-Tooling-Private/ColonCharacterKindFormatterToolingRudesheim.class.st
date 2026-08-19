@@ -12,3 +12,23 @@ Class {
 ColonCharacterKindFormatterToolingRudesheim >> character [
 	^ $:.
 ]
+
+{ #category : 'testing' }
+ColonCharacterKindFormatterToolingRudesheim >> isKeywordColonCharacter: aCharacter
+followedBy: anotherCharacter [
+	(
+		self
+			match:	aCharacter
+	)
+		ifFalse:
+		[
+			^ false.
+		].
+
+	^
+	(
+		AssignmentCharacterKindFormatterToolingRudesheim new
+			isAssignmentStartCharacter:	aCharacter
+			followedBy:	anotherCharacter
+	) not.
+]
