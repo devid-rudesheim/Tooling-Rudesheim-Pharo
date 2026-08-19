@@ -77,26 +77,55 @@ FormatterToolingRudesheim class >> assignmentPrefixForVariables: aVariableCollec
 FormatterToolingRudesheim class >> candidateIdentifierTerminatesWith: aCharacter [
 	aCharacter isNil
 		ifTrue:
-		[
+	[
 			^ true.
-		].
-
-	aCharacter isSeparator
-		ifTrue:
-		[
-			^ true.
-		].
+	].
 
 	^
 	(
-		Set
-			with:	$.
-			with:	$]
-			with:	$)
-			with:	$;
-			with:	$:
+		self characterKinds
+			select:
+			[ :each |
+				each
+					match:	aCharacter
+			]
+			thenCollect:
+			[ :each |
+				each
+					candidateIdentifierTerminatesWith:	aCharacter
+			]
 	)
-		includes:	aCharacter.
+		anySatisfy:
+		[ :each |
+			each
+		].
+]
+
+{ #category : 'accessing' }
+FormatterToolingRudesheim class >> characterKinds [
+	^
+	{
+		SeparatorCharacterKindFormatterToolingRudesheim new.
+		PeriodCharacterKindFormatterToolingRudesheim new.
+		SemicolonCharacterKindFormatterToolingRudesheim new.
+		ColonCharacterKindFormatterToolingRudesheim new.
+		ParenthesesCharacterKindFormatterToolingRudesheim new.
+		SquareBracketsCharacterKindFormatterToolingRudesheim new.
+		CurlyBracesCharacterKindFormatterToolingRudesheim new.
+		DoubleQuoteCharacterKindFormatterToolingRudesheim new.
+		SingleQuoteCharacterKindFormatterToolingRudesheim new.
+		CharacterLiteralCharacterKindFormatterToolingRudesheim new.
+	}.
+]
+
+{ #category : 'accessing' }
+FormatterToolingRudesheim class >> bracketStatesStartingWith: aCharacter [
+	^ self characterKinds
+		select:
+		[ :each |
+			each
+				isOpeningBracketCharacter:	aCharacter
+		].
 ]
 
 { #category : 'as yet unclassified' }
@@ -1090,6 +1119,7 @@ FormatterToolingRudesheim class >> formatInlineParenthesesIn: aString [
 	|
 		stream
 		index
+		matchedKinds
 	|
 
 	stream :=
@@ -1101,285 +1131,44 @@ FormatterToolingRudesheim class >> formatInlineParenthesesIn: aString [
 		index <= aString size.
 	]
 		whileTrue:
-		[
-			|
-				character
-				characterAction
-			|
-
-			character :=
-				aString
-					at:	index.
-
-			characterAction :=
-			[
-				stream
-					nextPut:	character.
-
-				index := index + 1.
-			].
-
-			character = $"
-				ifTrue:
-				[
-					|
-						closed
-						quote
-					|
-
-					closed := false.
-					quote := character.
-
-					stream
-						nextPut:	character.
-
-					index := index + 1.
-					[
-						[
-							|
-								conditionBreak
-							|
-
-							conditionBreak := thisContext.
-
-							index <= aString size
-								ifTrue:
-								[
-									conditionBreak
-										return:	closed not.
-								].
-
-							false.
-						] value
-					]
-						whileTrue:
-						[
-							|
-								quoteAction
-							|
-
-							character :=
+	[
+			matchedKinds :=
+				self characterKinds
+					select:
+					[ :each |
+						each
+							match:
+							(
 								aString
-									at:	index.
-
-							stream
-								nextPut:	character.
-
-							index := index + 1.
-
-							character = quote
-								ifTrue:
-								[
-									quoteAction :=
-									[
-										closed := true.
-									].
-
-									index <= aString size
-										ifTrue:
-										[
-											( aString at: index ) = quote
-												ifTrue:
-												[
-													quoteAction :=
-													[
-														stream
-															nextPut:
-															(
-																aString
-																	at:	index
-															).
-
-														index := index + 1.
-													].
-												].
-										].
-
-									quoteAction value.
-								].
-						].
-
-					characterAction :=
-					[
+									at:	index
+							)
 					].
-				].
 
-			character = $'
+			matchedKinds isEmpty
 				ifTrue:
 				[
-					|
-						closed
-						quote
-					|
-
-					closed := false.
-					quote := character.
-
-					stream
-						nextPut:	character.
-
-					index := index + 1.
-					[
-						[
-							|
-								conditionBreak
-							|
-
-							conditionBreak := thisContext.
-
-							index <= aString size
-								ifTrue:
-								[
-									conditionBreak
-										return:	closed not.
-								].
-
-							false.
-						] value
-					]
-						whileTrue:
-						[
-							|
-								quoteAction
-							|
-
-							character :=
-								aString
-									at:	index.
-
-							stream
-								nextPut:	character.
-
-							index := index + 1.
-
-							character = quote
-								ifTrue:
-								[
-									quoteAction :=
-									[
-										closed := true.
-									].
-
-									index <= aString size
-										ifTrue:
-										[
-											( aString at: index ) = quote
-												ifTrue:
-												[
-													quoteAction :=
-													[
-														stream
-															nextPut:
-															(
-																aString
-																	at:	index
-															).
-
-														index := index + 1.
-													].
-												].
-										].
-
-									quoteAction value.
-								].
-						].
-
-					characterAction :=
-					[
-					].
+					index :=
+						CharacterKindFormatterToolingRudesheim new
+							formatInlineParenthesesIn:	aString
+							at:	index
+							on:	stream.
 				].
 
-			character = $$
-				ifTrue:
+			matchedKinds isEmpty
+				ifFalse:
 				[
-					characterAction :=
-					[
-						|
-							literalAction
-						|
-
-						stream
-							nextPut:	character.
-
-						literalAction :=
-						[
-							index := index + 1.
-						].
-
-						index < aString size
-							ifTrue:
-							[
-								stream
-									nextPut:
-									(
-										aString
-											at:	index + 1
-									).
-
-								index := index + 2.
-
-								literalAction :=
-								[
-								].
-							].
-
-						literalAction value.
-					].
+					index :=
+					(
+						matchedKinds
+							collect:
+							[ :each |
+								each
+									formatInlineParenthesesIn:	aString
+									at:	index
+									on:	stream
+							]
+					) first.
 				].
-
-			character = $(
-				ifTrue:
-				[
-					characterAction :=
-					[
-						stream
-							nextPut:	character.
-
-						index < aString size
-							ifTrue:
-							[
-								( aString at: index + 1 ) ~= Character space
-									ifTrue:
-									[
-										( aString at: index + 1 ) ~= $)
-											ifTrue:
-											[
-												stream space.
-											].
-									].
-							].
-
-						index := index + 1.
-					].
-				].
-
-			character = $)
-				ifTrue:
-				[
-					characterAction :=
-					[
-						stream position > 0
-							ifTrue:
-							[
-								stream contents last ~= Character space
-									ifTrue:
-									[
-										stream contents last ~= $(
-											ifTrue:
-											[
-												stream space.
-											].
-									].
-							].
-
-						stream
-							nextPut:	character.
-
-						index := index + 1.
-					].
-				].
-
-			characterAction value.
 		].
 
 	^ stream contents.
@@ -2311,25 +2100,11 @@ FormatterToolingRudesheim class >> isKeywordMessage: aMessage [
 
 { #category : 'testing' }
 FormatterToolingRudesheim class >> isOpeningBracketCharacter: aCharacter [
-	aCharacter = $(
-		ifTrue:
-		[
-			^ true.
-		].
-
-	aCharacter = $[
-		ifTrue:
-		[
-			^ true.
-		].
-
-	aCharacter asciiValue = 123
-		ifTrue:
-		[
-			^ true.
-		].
-
-	^ false.
+	^
+	(
+		self
+			bracketStatesStartingWith:	aCharacter
+	) notEmpty.
 ]
 
 { #category : 'as yet unclassified' }
