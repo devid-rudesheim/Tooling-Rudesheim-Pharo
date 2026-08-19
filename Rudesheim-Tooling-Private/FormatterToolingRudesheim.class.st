@@ -4,7 +4,7 @@ EFFormatter compatible entry point that applies tmp/format.md rules first for kn
 Class {
 	#name : 'FormatterToolingRudesheim',
 	#superclass : 'OCAbstractFormatter',
-	#category : 'Rudesheim-Tooling',
+	#category : 'Rudesheim-Tooling-Private',
 	#package : 'Rudesheim-Tooling-Private'
 }
 
@@ -85,11 +85,7 @@ FormatterToolingRudesheim class >> candidateIdentifiersIn: aString [
 	]
 		whileTrue:
 		[
-			(
-				aString
-					at:	index
-			)
-				isAlphaNumeric
+			( aString at: index ) isAlphaNumeric
 				ifTrue:
 				[
 					|
@@ -103,13 +99,16 @@ FormatterToolingRudesheim class >> candidateIdentifiersIn: aString [
 					start := index.
 					[
 						index <= size
-							and:
+							ifTrue:
 							[
 								(
 									aString
 										at:	index
-								)
-									isAlphaNumeric.
+								) isAlphaNumeric.
+							]
+							ifFalse:
+							[
+								false.
 							].
 					]
 						whileTrue:
@@ -137,9 +136,7 @@ FormatterToolingRudesheim class >> candidateIdentifiersIn: aString [
 							].
 
 					nextChar2 :=
-						nextIndex
-							+ 1
-							<= size
+						nextIndex + 1 <= size
 							ifTrue:
 							[
 								aString
@@ -150,17 +147,15 @@ FormatterToolingRudesheim class >> candidateIdentifiersIn: aString [
 								nil.
 							].
 
-					(
-						nextChar = $:
-							and:
-							[
-								nextChar2 = $=.
-							]
-					)
+					nextChar = $:
 						ifTrue:
 						[
-							candidates
-								add:	ident.
+							nextChar2 = $=
+								ifTrue:
+								[
+									candidates
+										add:	ident.
+								].
 						].
 
 					(
@@ -205,109 +200,6 @@ FormatterToolingRudesheim class >> candidateIdentifiersIn: aString [
 	^ candidates.
 ]
 
-{ #category : 'as yet unclassified' }
-FormatterToolingRudesheim class >> commentsInSource: aString
-from: aStartInteger
-to: aStopInteger [
-	|
-		comments
-		index
-		limit
-	|
-
-	comments := OrderedCollection new.
-	index :=
-		aStartInteger
-			max:	1.
-	limit :=
-		aStopInteger
-			min:	aString size.
-
-	[
-		index <= limit.
-	]
-		whileTrue:
-		[
-			(
-				aString
-					at:	index
-			)
-				= $"
-				ifTrue:
-				[
-					|
-						stream
-						closed
-					|
-
-					stream :=
-						WriteStream
-							on:	String new.
-					closed := false.
-					index := index + 1.
-					[
-						index <= limit
-							and:
-							[
-								closed not.
-							].
-					]
-						whileTrue:
-						[
-							(
-								aString
-									at:	index
-							)
-								= $"
-								ifTrue:
-								[
-									(
-										index < limit
-											and:
-											[
-												(
-													aString
-														at:	index + 1
-												)
-													= $".
-											]
-									)
-										ifTrue:
-										[
-											stream
-												nextPut:	$".
-											index := index + 2.
-										]
-										ifFalse:
-										[
-											closed := true.
-											index := index + 1.
-										].
-								]
-								ifFalse:
-								[
-									stream
-										nextPut:	
-										(
-											aString
-												at:	index
-										).
-									index := index + 1.
-								].
-						].
-
-					comments
-						add:	stream contents.
-				]
-				ifFalse:
-				[
-					index := index + 1.
-				].
-		].
-
-	^ comments.
-]
-
 { #category : 'formatting-cascade' }
 FormatterToolingRudesheim class >> cascadeMessageEndFor: aMessageNode [
 	|
@@ -330,6 +222,115 @@ FormatterToolingRudesheim class >> cascadeMessageEndFor: aMessageNode [
 { #category : 'formatting-cascade' }
 FormatterToolingRudesheim class >> cascadeMessageStartFor: aMessageNode [
 	^ aMessageNode selectorInterval first.
+]
+
+{ #category : 'as yet unclassified' }
+FormatterToolingRudesheim class >> commentsInSource: aString
+from: aStartInteger
+to: aStopInteger [
+	|
+		comments
+		index
+		limit
+	|
+
+	comments := OrderedCollection new.
+
+	index :=
+		aStartInteger
+			max:	1.
+
+	limit :=
+		aStopInteger
+			min:	aString size.
+	[
+		index <= limit.
+	]
+		whileTrue:
+		[
+			( aString at: index ) = $"
+				ifTrue:
+				[
+					|
+						stream
+						closed
+						commentIndex
+						quoteAction
+						offset
+					|
+
+					stream :=
+						WriteStream
+							on:	String new.
+
+					closed := false.
+					commentIndex := index + 1.
+					[
+						commentIndex <= limit
+							ifTrue:
+							[
+								closed not.
+							]
+							ifFalse:
+							[
+								false.
+							].
+					]
+						whileTrue:
+						[
+							offset := 0.
+
+							( aString at: commentIndex ) = $"
+								ifTrue:
+								[
+									quoteAction :=
+									[
+										closed := true.
+									].
+
+									commentIndex < limit
+										ifTrue:
+										[
+											( aString at: commentIndex + 1 ) = $"
+												ifTrue:
+												[
+													quoteAction :=
+													[
+														stream
+															nextPut:	$".
+													].
+
+													offset := 1.
+												].
+										].
+
+									quoteAction value.
+								]
+								ifFalse:
+								[
+									stream
+										nextPut:
+										(
+											aString
+												at:	commentIndex
+										).
+								].
+
+							commentIndex := commentIndex + 1 + offset.
+						].
+
+					comments
+						add:	stream contents.
+
+					index := commentIndex.
+				]
+				ifFalse:
+				[
+					index := index + 1.
+				].
+		].
+
+	^ comments.
 ]
 
 { #category : 'as yet unclassified' }
@@ -563,12 +564,11 @@ indent: anIndentLevelInteger [
 			lines := OrderedCollection new.
 
 			lines
-				add:	
+				add:
 				(
 					self
 						indentStringFor:	anIndentLevelInteger
-				)
-					, prefix.
+				) , prefix.
 
 			valueLines :=
 				self
@@ -576,25 +576,25 @@ indent: anIndentLevelInteger [
 					indent:	anIndentLevelInteger + 1.
 
 			firstValueLine := valueLines first trimBoth.
-			(
-				firstValueLine notEmpty
-					and:
-					[
-						#($( $[ ${)
-							includes:	firstValueLine first.
-					]
-			)
+
+			firstValueLine notEmpty
 				ifTrue:
 				[
-					valueLines :=
+					(
 						self
-							formatExpressionLines:	value
-							indent:	anIndentLevelInteger.
+							isOpeningBracketCharacter:	firstValueLine first
+					)
+						ifTrue:
+						[
+							valueLines :=
+								self
+									formatExpressionLines:	value
+									indent:	anIndentLevelInteger.
+						].
 				].
 
 			lines
-				addAll:	
-				valueLines.
+				addAll:	valueLines.
 
 			^ lines.
 		].
@@ -608,10 +608,7 @@ indent: anIndentLevelInteger [
 		(
 			self
 				indentStringFor:	anIndentLevelInteger
-		)
-			, prefix
-			, ' '
-			, inline
+		) , prefix , ' ' , inline
 	}.
 ]
 
@@ -696,7 +693,7 @@ indent: anIndentLevelInteger [
 	^ lines.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'formatting-cascade' }
 FormatterToolingRudesheim class >> formatCascadeLines: aCascadeNode
 indent: anIndentLevelInteger [
 	|
@@ -711,7 +708,7 @@ indent: anIndentLevelInteger [
 	receiver := aCascadeNode receiver.
 
 	lines
-		addAll:	
+		addAll:
 		(
 			self
 				formatSubexpressionLines:	receiver
@@ -736,12 +733,13 @@ indent: anIndentLevelInteger [
 					at:	idx.
 
 			lines
-				addAll:	
+				addAll:
 				(
 					self
 						formatCommentLinesInSource:	aCascadeNode source
 						from:	previousEnd + 1
-						to:	(
+						to:
+						(
 							self
 								cascadeMessageStartFor:	message
 						) - 1
@@ -750,8 +748,7 @@ indent: anIndentLevelInteger [
 
 			partLines :=
 				self
-					formatCascadePartLines:	
-					message
+					formatCascadePartLines:	message
 					indent:	keywordIndent.
 
 			idx < messages size
@@ -759,10 +756,7 @@ indent: anIndentLevelInteger [
 				[
 					partLines
 						at:	partLines size
-						put:	
-						partLines
-							last
-							, ';'.
+						put:	partLines last , ';'.
 				].
 
 			lines
@@ -866,14 +860,6 @@ selector: aSymbol [
 ]
 
 { #category : 'as yet unclassified' }
-FormatterToolingRudesheim class >> formatExpressionLines: aParseNode
-indent: anIndentLevelInteger [
-	^ aParseNode
-		acceptFormatterRudesheim:	self
-		indent:	anIndentLevelInteger.
-]
-
-{ #category : 'as yet unclassified' }
 FormatterToolingRudesheim class >> formatCommentLinesInSource: aString
 from: aStartInteger
 to: aStopInteger
@@ -906,31 +892,11 @@ indent: anIndentLevelInteger [
 ]
 
 { #category : 'as yet unclassified' }
-FormatterToolingRudesheim class >> formatLiteralArrayInline: aParseNode [
-	|
-		text
-		body
-	|
-
-	text :=
-		OCSimpleFormatter
-			format:	aParseNode.
-
-	(
-		text
-			beginsWith:	'#('
-	)
-		ifFalse:
-		[
-			^ text.
-		].
-
-	body :=
-		text
-			copyFrom:	3
-			to:	text size - 1.
-
-	^ '#( ' , body trimBoth , ' )'.
+FormatterToolingRudesheim class >> formatExpressionLines: aParseNode
+indent: anIndentLevelInteger [
+	^ aParseNode
+		acceptFormatterRudesheim:	self
+		indent:	anIndentLevelInteger.
 ]
 
 { #category : 'formatting-inline' }
@@ -939,21 +905,21 @@ FormatterToolingRudesheim class >> formatInline: aParseNode [
 		text
 	|
 
-	(
-		aParseNode isLiteralNode
-			and:
-			[
-				aParseNode
-					respondsTo:	#isLiteralArray.
-			]
-	)
+	aParseNode isLiteralNode
 		ifTrue:
 		[
-			aParseNode isLiteralArray
+			(
+				aParseNode
+					respondsTo:	#isLiteralArray
+			)
 				ifTrue:
 				[
-					^ self
-						formatLiteralArrayInline:	aParseNode.
+					aParseNode isLiteralArray
+						ifTrue:
+						[
+							^ self
+								formatLiteralArrayInline:	aParseNode.
+						].
 				].
 		].
 
@@ -987,174 +953,17 @@ FormatterToolingRudesheim class >> formatInline: aParseNode [
 		).
 ]
 
-{ #category : 'formatting-inline' }
-FormatterToolingRudesheim class >> formatInlineParenthesesIn: aString [
-	|
-		stream
-		index
-	|
-
-	stream :=
-		WriteStream
-			on:	String new.
-	index := 1.
-
-	[
-		index <= aString size.
-	]
-		whileTrue:
-		[
-			|
-				character
-			|
-
-			character :=
-				aString
-					at:	index.
-
-			(
-				character = $"
-					or:
-					[
-						character = $'
-					]
-			)
-				ifTrue:
-				[
-					|
-						closed
-						quote
-					|
-
-					closed := false.
-					quote := character.
-					stream
-						nextPut:	character.
-					index := index + 1.
-
-					[
-						index <= aString size
-							and:
-							[
-								closed not.
-							].
-					]
-						whileTrue:
-						[
-							character :=
-								aString
-									at:	index.
-							stream
-								nextPut:	character.
-							index := index + 1.
-
-							character = quote
-								ifTrue:
-								[
-									(
-										index <= aString size
-											and:
-											[
-												(
-													aString
-														at:	index
-												)
-													= quote.
-											]
-									)
-										ifTrue:
-										[
-											stream
-												nextPut:	
-												(
-													aString
-														at:	index
-												).
-											index := index + 1.
-										]
-										ifFalse:
-										[
-											closed := true.
-										].
-								].
-						].
-				]
-				ifFalse:
-				[
-					character = $(
-						ifTrue:
-						[
-							stream
-								nextPut:	character.
-
-							(
-								index < aString size
-									and:
-									[
-										(
-											(
-												aString
-													at:	index + 1
-											)
-												~= Character space
-										)
-											and:
-											[
-												(
-													aString
-														at:	index + 1
-												)
-													~= $)
-											].
-									]
-							)
-								ifTrue:
-								[
-									stream
-										space.
-								].
-
-							index := index + 1.
-						]
-						ifFalse:
-						[
-							character = $)
-								ifTrue:
-								[
-									(
-										stream position > 0
-											and:
-											[
-												(
-													stream contents last ~= Character space
-												)
-													and:
-													[
-														stream contents last ~= $(.
-													].
-											]
-									)
-										ifTrue:
-										[
-											stream
-												space.
-										].
-
-									stream
-										nextPut:	character.
-									index := index + 1.
-								]
-								ifFalse:
-								[
-									stream
-										nextPut:	character.
-									index := index + 1.
-								].
-						].
-				].
-		].
-
-	^ stream contents.
+{ #category : 'as yet unclassified' }
+FormatterToolingRudesheim class >> formatInlineNodeLines: aParseNode
+indent: anIndentLevelInteger [
+	^
+	{
+		(
+			self
+				indentStringFor:	anIndentLevelInteger
+		)
+			, (self formatInline: aParseNode)
+	}.
 ]
 
 { #category : 'formatting-inline' }
@@ -1179,27 +988,19 @@ text: aString [
 			^ aString.
 		].
 
-	(
-		aString size >= 2
-			and:
-			[
-				(
-					(
-						aString
-							first
-					)
-						= $(
-				)
-					and:
-					[
-						(
-							aString
-								last
-						)
-							= $)
-					].
-			]
-	)
+	aString size >= 2
+		ifFalse:
+		[
+			^ aString.
+		].
+
+	aString first = $(
+		ifFalse:
+		[
+			^ aString.
+		].
+
+	aString last = $)
 		ifFalse:
 		[
 			^ aString.
@@ -1213,17 +1014,190 @@ text: aString [
 	^ '( ' , text trimBoth , ' )'.
 ]
 
-{ #category : 'as yet unclassified' }
-FormatterToolingRudesheim class >> formatInlineNodeLines: aParseNode
-indent: anIndentLevelInteger [
-	^
-	{
-		(
-			self
-				indentStringFor:	anIndentLevelInteger
-		)
-			, (self formatInline: aParseNode)
-	}.
+{ #category : 'formatting-inline' }
+FormatterToolingRudesheim class >> formatInlineParenthesesIn: aString [
+	|
+		stream
+		index
+	|
+
+	stream :=
+		WriteStream
+			on:	String new.
+
+	index := 1.
+	[
+		index <= aString size.
+	]
+		whileTrue:
+		[
+			|
+				character
+			|
+
+			character :=
+				aString
+					at:	index.
+
+			(
+				character = $"
+					or:
+					[
+						character = $'.
+					]
+			)
+				ifTrue:
+				[
+					|
+						closed
+						quote
+					|
+
+					closed := false.
+					quote := character.
+
+					stream
+						nextPut:	character.
+
+					index := index + 1.
+					[
+						index <= aString size
+							ifTrue:
+							[
+								closed not.
+							]
+							ifFalse:
+							[
+								false.
+							].
+					]
+						whileTrue:
+						[
+							character :=
+								aString
+									at:	index.
+
+							stream
+								nextPut:	character.
+
+							index := index + 1.
+
+							character = quote
+								ifTrue:
+								[
+									index <= aString size
+										ifTrue:
+										[
+											( aString at: index ) = quote
+												ifTrue:
+												[
+													stream
+														nextPut:
+														(
+															aString
+																at:	index
+														).
+
+													index := index + 1.
+												]
+												ifFalse:
+												[
+													closed := true.
+												].
+										]
+										ifFalse:
+										[
+											closed := true.
+										].
+								].
+						].
+				]
+				ifFalse:
+				[
+					character = $$
+						ifTrue:
+						[
+							stream
+								nextPut:	character.
+
+							index < aString size
+								ifTrue:
+								[
+									stream
+										nextPut:
+										(
+											aString
+												at:	index + 1
+										).
+
+									index := index + 2.
+								]
+								ifFalse:
+								[
+									index := index + 1.
+								].
+						]
+						ifFalse:
+						[
+							character = $(
+								ifTrue:
+								[
+									stream
+										nextPut:	character.
+
+									index < aString size
+										ifTrue:
+										[
+											( aString at: index + 1 ) ~= Character space
+												ifTrue:
+												[
+													( aString at: index + 1 ) ~= $)
+														ifTrue:
+														[
+															stream space.
+														].
+												].
+										].
+
+									index := index + 1.
+								]
+								ifFalse:
+								[
+									character = $)
+										ifTrue:
+										[
+											stream position > 0
+												ifTrue:
+												[
+													stream contents last ~= Character space
+														ifTrue:
+														[
+															stream contents last ~= $(
+																ifTrue:
+																[
+																	stream space.
+																].
+														].
+												].
+
+											stream
+												nextPut:	character.
+
+											index := index + 1.
+										]
+										ifFalse:
+										[
+											stream
+												nextPut:	character.
+
+											index := index + 1.
+										].
+								].
+						].
+				].
+		].
+
+	^ stream contents.
 ]
 
 { #category : 'as yet unclassified' }
@@ -1278,32 +1252,6 @@ indent: anIndentLevelInteger [
 ]
 
 { #category : 'formatting-keyword' }
-FormatterToolingRudesheim class >> formatKeywordReceiverLines: aParseNode
-indent: anIndentLevelInteger [
-	(
-		(aParseNode isKindOf: OCMessageNode)
-			and:
-			[
-				(
-					self
-						isKeywordMessage:	aParseNode
-				)
-					not.
-			]
-	)
-		ifTrue:
-		[
-			^ self
-				formatInlineNodeLines:	aParseNode
-				indent:	anIndentLevelInteger.
-		].
-
-	^ self
-		formatSubexpressionLines:	aParseNode
-		indent:	anIndentLevelInteger.
-]
-
-{ #category : 'formatting-keyword' }
 FormatterToolingRudesheim class >> formatKeywordPart: aKeywordPart
 argument: aNode
 indent: anIndentLevelInteger [
@@ -1312,6 +1260,7 @@ indent: anIndentLevelInteger [
 		lines
 		argumentLines
 		firstArgumentLine
+		argumentLineAction
 	|
 
 	indentString :=
@@ -1323,7 +1272,7 @@ indent: anIndentLevelInteger [
 		[
 			^ OrderedCollection new
 				add:	indentString , aKeywordPart;
-				addAll:	
+				addAll:
 				(
 					self
 						formatBlockLines:	aNode
@@ -1347,33 +1296,38 @@ indent: anIndentLevelInteger [
 
 			firstArgumentLine := argumentLines first trimBoth.
 
-			(
-				firstArgumentLine isEmpty
-					or:
-					[
-						(#($( $[ ${) includes: firstArgumentLine first) not.
-					]
-			)
-				ifTrue:
-				[
-					lines
-						add:	
-							indentString , aKeywordPart , String tab.
+			argumentLineAction :=
+			[
+				lines
+					add:	indentString , aKeywordPart , String tab.
 
-					argumentLines :=
-						self
-							formatSubexpressionLines:	aNode
-							indent:	anIndentLevelInteger + 1.
-				]
+				argumentLines :=
+					self
+						formatSubexpressionLines:	aNode
+						indent:	anIndentLevelInteger + 1.
+			].
+
+			firstArgumentLine isEmpty
 				ifFalse:
 				[
-					lines
-						add:	indentString , aKeywordPart.
+					(
+						self
+							isOpeningBracketCharacter:	firstArgumentLine first
+					)
+						ifTrue:
+						[
+							argumentLineAction :=
+							[
+								lines
+									add:	indentString , aKeywordPart.
+							].
+						].
 				].
 
+			argumentLineAction value.
+
 			lines
-				addAll:	
-				argumentLines.
+				addAll:	argumentLines.
 
 			^ lines.
 		].
@@ -1386,6 +1340,60 @@ indent: anIndentLevelInteger [
 				formatInline:	aNode
 		)
 	}.
+]
+
+{ #category : 'formatting-keyword' }
+FormatterToolingRudesheim class >> formatKeywordReceiverLines: aParseNode
+indent: anIndentLevelInteger [
+	(
+		aParseNode
+			isKindOf:	OCMessageNode
+	)
+		ifTrue:
+		[
+			(
+				self
+					isKeywordMessage:	aParseNode
+			)
+				ifFalse:
+				[
+					^ self
+						formatInlineNodeLines:	aParseNode
+						indent:	anIndentLevelInteger.
+				].
+		].
+
+	^ self
+		formatSubexpressionLines:	aParseNode
+		indent:	anIndentLevelInteger.
+]
+
+{ #category : 'as yet unclassified' }
+FormatterToolingRudesheim class >> formatLiteralArrayInline: aParseNode [
+	|
+		text
+		body
+	|
+
+	text :=
+		OCSimpleFormatter
+			format:	aParseNode.
+
+	(
+		text
+			beginsWith:	'#('
+	)
+		ifFalse:
+		[
+			^ text.
+		].
+
+	body :=
+		text
+			copyFrom:	3
+			to:	text size - 1.
+
+	^ '#( ' , body trimBoth , ' )'.
 ]
 
 { #category : 'as yet unclassified' }
@@ -1576,64 +1584,53 @@ indent: anIndentLevelInteger [
 			indent:	anIndentLevelInteger.
 
 	firstLineBody :=
-		(
-			exprLines first
-				beginsWith:	indentString
-		)
-			ifTrue:
-			[
-				exprLines first
-					copyFrom:	
-					indentString
-						size
-						+ 1
-					to:	
-					exprLines
-						first
-						size.
-			]
-			ifFalse:
-			[
-				exprLines first.
-			].
-
-	startsWithBracket :=
-		firstLineBody notEmpty
-			and:
-			[
-				#($( $[ ${)
-					includes:	firstLineBody first.
-			].
-
 	(
-		startsWithBracket
-			and:
-			[
-				exprLines
-					size
-					> 1.
-			]
+		exprLines first
+			beginsWith:	indentString
 	)
 		ifTrue:
 		[
-			lines := OrderedCollection new.
+			exprLines first
+				copyFrom:	indentString size + 1
+				to:	exprLines first size.
+		]
+		ifFalse:
+		[
+			exprLines first.
+		].
 
-			lines
-				add:	indentString , '^'.
+	startsWithBracket := false.
 
-			lines
-				addAll:	exprLines.
+	firstLineBody notEmpty
+		ifTrue:
+		[
+			startsWithBracket :=
+				self
+					isOpeningBracketCharacter:	firstLineBody first.
+		].
 
-			^ lines.
+	startsWithBracket
+		ifTrue:
+		[
+			exprLines size > 1
+				ifTrue:
+				[
+					lines := OrderedCollection new.
+
+					lines
+						add:	indentString , '^'.
+
+					lines
+						addAll:	exprLines.
+
+					^ lines.
+				].
 		].
 
 	lines := OrderedCollection new.
 
 	lines
-		add:	
-		indentString
-			, '^ '
-			, firstLineBody.
+		add:	indentString , '^ ' , firstLineBody.
 
 	lines
 		addAll:	exprLines allButFirst.
@@ -1653,17 +1650,19 @@ indent: anIndentLevelInteger [
 	aSequenceNode isNil
 		ifTrue:
 		[
-			^ #().
+			^ #(  ).
 		].
 
 	statements := aSequenceNode statements.
 	lines := OrderedCollection new.
+
 	previousEnd :=
 		aSequenceNode rightBar
 			ifNil:
 			[
 				(
-					aSequenceNode parent respondsTo:	#left
+					aSequenceNode parent
+						respondsTo:	#left
 				)
 					ifTrue:
 					[
@@ -1683,8 +1682,7 @@ indent: anIndentLevelInteger [
 				stmt
 				stmtLines
 				nextLines
-				shouldAppend
-				skipPeriod
+				appendPeriodAction
 			|
 
 			stmt :=
@@ -1692,7 +1690,7 @@ indent: anIndentLevelInteger [
 					at:	idx.
 
 			lines
-				addAll:	
+				addAll:
 				(
 					self
 						formatCommentLinesInSource:	aSequenceNode source
@@ -1706,40 +1704,36 @@ indent: anIndentLevelInteger [
 					formatStatementLines:	stmt
 					indent:	anIndentLevelInteger.
 
-			shouldAppend := true.
+			appendPeriodAction :=
+			[
+				self
+					appendPeriodToLastLine:	stmtLines.
+			].
 
 			idx = statements size
 				ifTrue:
 				[
-					skipPeriod :=
-						stmt isMessage
-							and:
-							[
-								(
-									self
-										isBlockStatement:	stmt
-								)
-									and:
-									[
-										stmt
-											isKeyword
-											not.
-									].
-							].
-
-					skipPeriod
+					stmt isMessage
 						ifTrue:
 						[
-							shouldAppend := false.
+							(
+								self
+									isBlockStatement:	stmt
+							)
+								ifTrue:
+								[
+									stmt isKeyword not
+										ifTrue:
+										[
+											appendPeriodAction :=
+											[
+											].
+										].
+								].
 						].
 				].
 
-			shouldAppend
-				ifTrue:
-				[
-					self
-						appendPeriodToLastLine:	stmtLines.
-				].
+			appendPeriodAction value.
 
 			lines
 				addAll:	stmtLines.
@@ -1751,7 +1745,7 @@ indent: anIndentLevelInteger [
 				[
 					nextLines :=
 						self
-							formatStatementLines:	
+							formatStatementLines:
 							(
 								statements
 									at:	idx + 1
@@ -1761,7 +1755,7 @@ indent: anIndentLevelInteger [
 					(
 						self
 							needsBlankLineAfter:	stmt
-							next:	
+							next:
 							(
 								statements
 									at:	idx + 1
@@ -1930,30 +1924,44 @@ indent: anIndentLevelInteger [
 		node
 		lines
 		receiverLines
-		receiverNeedsParens
+		receiverLinesAction
 		keepWalking
 	|
 
 	steps := OrderedCollection new.
 	node := aMessageNode.
-	receiverNeedsParens := false.
+
+	receiverLinesAction :=
+	[
+		self
+			formatSubexpressionLines:	node
+			indent:	anIndentLevelInteger.
+	].
+
 	keepWalking := true.
 	[
 		keepWalking
-			and:
+			ifTrue:
 			[
 				(
 					node
 						isKindOf:	OCMessageNode
 				)
-					and:
+					ifTrue:
 					[
 						(
 							self
 								isKeywordMessage:	node
-						)
-							not.
+						) not.
+					]
+					ifFalse:
+					[
+						false.
 					].
+			]
+			ifFalse:
+			[
+				false.
 			].
 	]
 		whileTrue:
@@ -1961,48 +1969,34 @@ indent: anIndentLevelInteger [
 			steps
 				addFirst:	node.
 
-			(
-				node
-					isBinary
-					not
-					and:
-					[
-						(
-							node receiver
-								isKindOf:	OCMessageNode
-						)
-							and:
-							[
-								node
-									receiver
-									isBinary.
-							].
-					]
-			)
+			node isBinary not
 				ifTrue:
 				[
-					receiverNeedsParens := true.
-					keepWalking := false.
+					(
+						node receiver
+							isKindOf:	OCMessageNode
+					)
+						ifTrue:
+						[
+							node receiver isBinary
+								ifTrue:
+								[
+									receiverLinesAction :=
+									[
+										self
+											formatParenthesizedLines:	node
+											indent:	anIndentLevelInteger.
+									].
+
+									keepWalking := false.
+								].
+						].
 				].
 
 			node := node receiver.
 		].
 
-	receiverLines :=
-		receiverNeedsParens
-			ifTrue:
-			[
-				self
-					formatParenthesizedLines:	node
-					indent:	anIndentLevelInteger.
-			]
-			ifFalse:
-			[
-				self
-					formatSubexpressionLines:	node
-					indent:	anIndentLevelInteger.
-			].
-
+	receiverLines := receiverLinesAction value.
 	lines := OrderedCollection new.
 
 	lines
@@ -2014,58 +2008,60 @@ indent: anIndentLevelInteger [
 			|
 				stepText
 				argument
+				stepAction
 			|
 
-			(
-				step isBinary
-					and:
-					[
-						argument := step arguments first.
-						self
-							needsMultilineFor:	argument.
-					]
-			)
+			stepAction :=
+			[
+				stepText :=
+					step isBinary
+						ifTrue:
+						[
+							step selector asString , ' ' ,
+							(
+								self
+									formatInline:	step arguments first
+							).
+						]
+						ifFalse:
+						[
+							step selector asString.
+						].
+
+				lines
+					at:	lines size
+					put:	lines last , ' ' , stepText.
+			].
+
+			step isBinary
 				ifTrue:
 				[
-					lines
-						at:	lines size
-						put:	
-						lines
-							last
-							, ' '
-							, step selector asString.
+					argument := step arguments first.
 
-					lines
-						addAll:	
-						(
-							self
-								formatSubexpressionLines:	argument
-								indent:	anIndentLevelInteger
-						).
-				]
-				ifFalse:
-				[
-					stepText :=
-						step isBinary
-							ifTrue:
+					(
+						self
+							needsMultilineFor:	argument
+					)
+						ifTrue:
+						[
+							stepAction :=
 							[
-								step
-									selector
-									asString
-									, ' '
-									, (self formatInline: step arguments first).
-							]
-							ifFalse:
-							[
-								step
-									selector
-									asString.
+								lines
+									at:	lines size
+									put:	lines last , ' ' , step selector asString.
+
+								lines
+									addAll:
+									(
+										self
+											formatSubexpressionLines:	argument
+											indent:	anIndentLevelInteger
+									).
 							].
-
-					lines
-						at:	lines size
-						put:	lines last , ' ' , stepText.
+						].
 				].
+
+			stepAction value.
 		].
 
 	^ lines.
@@ -2111,6 +2107,29 @@ FormatterToolingRudesheim class >> isKeywordMessage: aMessage [
 		includes:	$:.
 ]
 
+{ #category : 'testing' }
+FormatterToolingRudesheim class >> isOpeningBracketCharacter: aCharacter [
+	aCharacter = $(
+		ifTrue:
+		[
+			^ true.
+		].
+
+	aCharacter = $[
+		ifTrue:
+		[
+			^ true.
+		].
+
+	aCharacter asciiValue = 123
+		ifTrue:
+		[
+			^ true.
+		].
+
+	^ false.
+]
+
 { #category : 'as yet unclassified' }
 FormatterToolingRudesheim class >> joinLines: aLineCollection [
 	|
@@ -2154,27 +2173,21 @@ nextLines: aNextLineCollection [
 		self
 			isBlockStatement:	aNextLineString.
 
-	(
-		currentIsAssign
-			and:
-			[
-				nextIsBlock.
-			]
-	)
+	currentIsAssign
 		ifTrue:
 		[
-			^ false.
+			nextIsBlock
+				ifTrue:
+				[
+					^ false.
+				].
 		].
 
 	(
-		aCurrentLineCollection
-			size
-			> 1
+		aCurrentLineCollection size > 1
 			or:
 			[
-				aNextLineCollection
-					size
-					> 1.
+				aNextLineCollection size > 1.
 			]
 	)
 		ifTrue:
@@ -2246,13 +2259,16 @@ FormatterToolingRudesheim class >> repairMethodString: aString [
 								start := index.
 								[
 									index <= size
-										and:
+										ifTrue:
 										[
 											(
 												aString
 													at:	index
-											)
-												isAlphaNumeric.
+											) isAlphaNumeric.
+										]
+										ifFalse:
+										[
+											false.
 										].
 								]
 									whileTrue:
@@ -2277,31 +2293,30 @@ FormatterToolingRudesheim class >> repairMethodString: aString [
 											nil.
 										].
 
-								nextIsKeywordColon :=
-									nextChar = $:
-										and:
-										[
-											index
-												+ 1
-												<= size
+								nextIsKeywordColon := false.
+
+								nextChar = $:
+									ifTrue:
+									[
+										nextIsKeywordColon :=
+											index + 1 <= size
 												ifTrue:
 												[
 													(
 														aString
 															at:	index + 1
-													)
-														~= $=.
+													) ~= $=.
 												]
 												ifFalse:
 												[
 													true.
 												].
-										].
+									].
 
 								repaired :=
 									self
 										splitIdentifier:	ident
-										usingUnarySelectors:	#()
+										usingUnarySelectors:	#(  )
 										usingKeywordParts:	keywords
 										usingCandidates:	candidates
 										followedByColon:	nextIsKeywordColon.
@@ -2390,27 +2405,25 @@ followedByColon: anIsKeywordBoolean [
 
 			eachSize := each size.
 
-			(
-				eachSize > 0
-					and:
-					[
-						anIdentifierString
-							endsWith:	each.
-					]
-			)
+			eachSize > 0
 				ifTrue:
 				[
 					(
-						eachSize < anIdentifierString size
-							and:
-							[
-								eachSize > bestSize.
-							]
+						anIdentifierString
+							endsWith:	each
 					)
 						ifTrue:
 						[
-							bestSize := eachSize.
-							bestMatch := each.
+							eachSize < anIdentifierString size
+								ifTrue:
+								[
+									eachSize > bestSize
+										ifTrue:
+										[
+											bestSize := eachSize.
+											bestMatch := each.
+										].
+								].
 						].
 				].
 		].
@@ -2424,10 +2437,7 @@ followedByColon: anIsKeywordBoolean [
 	prefix :=
 		anIdentifierString
 			copyFrom:	1
-			to:	
-			anIdentifierString
-				size
-				- bestMatch size.
+			to:	anIdentifierString size - bestMatch size.
 
 	(
 		prefix isEmpty
@@ -2436,8 +2446,7 @@ followedByColon: anIsKeywordBoolean [
 				(
 					aCandidateCollection
 						includes:	prefix
-				)
-					not.
+				) not.
 			]
 	)
 		ifTrue:
@@ -2445,9 +2454,7 @@ followedByColon: anIsKeywordBoolean [
 			^ anIdentifierString.
 		].
 
-	^ prefix
-		, ' '
-		, bestMatch.
+	^ prefix , ' ' , bestMatch.
 ]
 
 { #category : 'as yet unclassified' }
