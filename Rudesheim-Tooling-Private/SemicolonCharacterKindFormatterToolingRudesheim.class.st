@@ -4,7 +4,7 @@ Character category for semicolons.
 Class {
 	#name : 'SemicolonCharacterKindFormatterToolingRudesheim',
 	#superclass : 'PunctuationCharacterKindFormatterToolingRudesheim',
-	#category : 'Rudesheim-Tooling',
+	#category : 'Rudesheim-Tooling-Private',
 	#package : 'Rudesheim-Tooling-Private'
 }
 

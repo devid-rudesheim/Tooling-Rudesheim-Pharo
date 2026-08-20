@@ -4,7 +4,7 @@ Character category for Smalltalk quoted ranges.
 Class {
 	#name : 'QuoteCharacterKindFormatterToolingRudesheim',
 	#superclass : 'CharacterKindFormatterToolingRudesheim',
-	#category : 'Rudesheim-Tooling',
+	#category : 'Rudesheim-Tooling-Private',
 	#package : 'Rudesheim-Tooling-Private'
 }
 

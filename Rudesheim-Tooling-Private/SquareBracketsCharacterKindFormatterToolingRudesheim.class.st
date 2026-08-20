@@ -4,7 +4,7 @@ Character category for square brackets.
 Class {
 	#name : 'SquareBracketsCharacterKindFormatterToolingRudesheim',
 	#superclass : 'BracketPairCharacterKindFormatterToolingRudesheim',
-	#category : 'Rudesheim-Tooling',
+	#category : 'Rudesheim-Tooling-Private',
 	#package : 'Rudesheim-Tooling-Private'
 }
 

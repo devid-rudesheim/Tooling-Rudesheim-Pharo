@@ -4,18 +4,18 @@ Character category for a bracket pair.
 Class {
 	#name : 'BracketPairCharacterKindFormatterToolingRudesheim',
 	#superclass : 'CharacterKindFormatterToolingRudesheim',
-	#category : 'Rudesheim-Tooling',
+	#category : 'Rudesheim-Tooling-Private',
 	#package : 'Rudesheim-Tooling-Private'
 }
-
-{ #category : 'accessing' }
-BracketPairCharacterKindFormatterToolingRudesheim class >> closingCharacter [
-	self subclassResponsibility.
-]
 
 { #category : 'testing' }
 BracketPairCharacterKindFormatterToolingRudesheim class >> candidateIdentifierTerminatesWith: aCharacter [
 	^ aCharacter = self closingCharacter.
+]
+
+{ #category : 'accessing' }
+BracketPairCharacterKindFormatterToolingRudesheim class >> closingCharacter [
+	self subclassResponsibility.
 ]
 
 { #category : 'testing' }
@@ -43,13 +43,13 @@ BracketPairCharacterKindFormatterToolingRudesheim class >> match: aCharacter [
 		isClosingBracketCharacter:	aCharacter.
 ]
 
-{ #category : 'accessing' }
-BracketPairCharacterKindFormatterToolingRudesheim class >> openingCharacter [
-	self subclassResponsibility.
-]
-
 { #category : 'testing' }
 BracketPairCharacterKindFormatterToolingRudesheim class >> openingBracketMatches: aCharacter [
 	^ self
 		isOpeningBracketCharacter:	aCharacter.
+]
+
+{ #category : 'accessing' }
+BracketPairCharacterKindFormatterToolingRudesheim class >> openingCharacter [
+	self subclassResponsibility.
 ]

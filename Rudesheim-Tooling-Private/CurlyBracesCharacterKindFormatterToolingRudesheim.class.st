@@ -4,7 +4,7 @@ Character category for curly braces.
 Class {
 	#name : 'CurlyBracesCharacterKindFormatterToolingRudesheim',
 	#superclass : 'BracketPairCharacterKindFormatterToolingRudesheim',
-	#category : 'Rudesheim-Tooling',
+	#category : 'Rudesheim-Tooling-Private',
 	#package : 'Rudesheim-Tooling-Private'
 }
 

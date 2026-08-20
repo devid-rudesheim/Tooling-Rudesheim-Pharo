@@ -4,7 +4,7 @@ Character category for separators.
 Class {
 	#name : 'SeparatorCharacterKindFormatterToolingRudesheim',
 	#superclass : 'CharacterKindFormatterToolingRudesheim',
-	#category : 'Rudesheim-Tooling',
+	#category : 'Rudesheim-Tooling-Private',
 	#package : 'Rudesheim-Tooling-Private'
 }
 
