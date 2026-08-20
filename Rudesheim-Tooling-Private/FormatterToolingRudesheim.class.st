@@ -514,7 +514,7 @@ indent: anIndentLevelInteger [
 	^ lines.
 ]
 
-{ #category : 'formatting' }
+{ #category : 'accessing' }
 FormatterToolingRudesheim class >> formatAsYouReadPolicy [
 	^ self
 		propertyAt:	#formatAsYouReadPolicy
@@ -524,7 +524,7 @@ FormatterToolingRudesheim class >> formatAsYouReadPolicy [
 		].
 ]
 
-{ #category : 'formatting' }
+{ #category : 'accessing' }
 FormatterToolingRudesheim class >> formatAsYouReadPolicy: aBoolean [
 	self
 		propertyAt:	#formatAsYouReadPolicy
@@ -927,7 +927,7 @@ FormatterToolingRudesheim class >> formatInline: aParseNode [
 		).
 ]
 
-{ #category : 'formatting' }
+{ #category : 'formatting-inline' }
 FormatterToolingRudesheim class >> formatInlineNodeLines: aParseNode
 indent: anIndentLevelInteger [
 	^
@@ -1052,7 +1052,7 @@ FormatterToolingRudesheim class >> formatInlineParenthesesIn: aString [
 	^ stream contents.
 ]
 
-{ #category : 'formatting' }
+{ #category : 'formatting-keyword' }
 FormatterToolingRudesheim class >> formatKeywordMessageLines: aMessageNode
 indent: anIndentLevelInteger [
 	|
