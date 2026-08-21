@@ -1,5 +1,10 @@
 # Rudesheim Tooling for Pharo
 
+[![GitHub release](https://img.shields.io/github/release/devid-rudesheim/Tooling-Rudesheim-Pharo.svg)](https://github.com/devid-rudesheim/Tooling-Rudesheim-Pharo/releases/latest)
+[![Unit Tests](https://github.com/devid-rudesheim/Tooling-Rudesheim-Pharo/actions/workflows/tests.yml/badge.svg)](https://github.com/devid-rudesheim/Tooling-Rudesheim-Pharo/actions/workflows/tests.yml)
+
+[![Pharo 13](https://img.shields.io/badge/Pharo-13-informational)](https://pharo.org)
+
 Rudesheim Tooling is an AST-based Smalltalk source formatter (`FormatterToolingRudesheim`, an
 `OCAbstractFormatter` compatible entry point) along with a small set of `OpenCompiler` AST node
 and `ClassDescription` extensions used to support it.
