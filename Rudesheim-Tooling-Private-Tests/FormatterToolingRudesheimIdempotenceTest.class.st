@@ -57,12 +57,16 @@ FormatterToolingRudesheimIdempotenceTest class >> methodsToSweep [
 			package definedClasses
 				do:
 				[ :aClass |
-					methods
-						addAll:
-						(
-							package
-								definedMethodsForClass:	aClass
-						).
+					{ aClass. aClass class }
+						do:
+						[ :aBehavior |
+							methods
+								addAll:
+								(
+									package
+										definedMethodsForClass:	aBehavior
+								).
+						].
 				].
 
 			package extendedClasses
