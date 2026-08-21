@@ -1,0 +1,14 @@
+SmalltalkCISpec {
+  #loading : [
+    SCIMetacelloLoadSpec {
+      #baseline : 'RudesheimTooling',
+      #load : [ 'tests' ],
+      #registerInIceberg : true
+    }
+  ],
+  #testing : {
+    #include : {
+      #packages : [ 'Rudesheim-Tooling-Tests', 'Rudesheim-Tooling-Private-Tests' ]
+    }
+  }
+}
