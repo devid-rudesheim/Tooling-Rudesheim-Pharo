@@ -24,7 +24,7 @@ IndentToolingRudesheim class >> level: anInteger [
 	instance := self new.
 
 	instance
-		indent:	anInteger max: 0.
+		indent:	( anInteger max: 0 ).
 
 	^ instance.
 ]
