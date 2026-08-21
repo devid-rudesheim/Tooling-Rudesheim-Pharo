@@ -4,7 +4,7 @@ Character category for Smalltalk character literals.
 Class {
 	#name : 'CharacterLiteralCharacterKindFormatterToolingRudesheim',
 	#superclass : 'CharacterKindFormatterToolingRudesheim',
-	#category : 'Rudesheim-Tooling',
+	#category : 'Rudesheim-Tooling-Private',
 	#package : 'Rudesheim-Tooling-Private'
 }
 
