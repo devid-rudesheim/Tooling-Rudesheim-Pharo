@@ -66,7 +66,7 @@ MessageKindFormatterToolingRudesheimTest >> testShortBinaryAndUnaryChainsStayInl
 		assert:
 		(
 			FormatterToolingRudesheim
-				format:	'sum ^ 1 + 2 + 3'.
+				format:	'sum ^ 1 + 2 + 3'
 		)
 		equals:	'sum' , String cr , String tab , '^ 1 + 2 + 3.'.
 
@@ -74,7 +74,7 @@ MessageKindFormatterToolingRudesheimTest >> testShortBinaryAndUnaryChainsStayInl
 		assert:
 		(
 			FormatterToolingRudesheim
-				format:	'run ^ self foo bar'.
+				format:	'run ^ self foo bar'
 		)
 		equals:	'run' , String cr , String tab , '^ self foo bar.'.
 ]
