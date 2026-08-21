@@ -891,3 +891,90 @@ FormatterToolingRudesheimTest >> testReturnSimpleValueStaysInline [
 		assert:	formatted
 		equals:	expected.
 ]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testKeywordMessageReceiverKeepsOwnRequiredMultilineInsteadOfCollapsing [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'sample: aString index: anIndex (aString at: anIndex) isAlphaNumeric ifFalse: [ ^ false ]'.
+
+	expected :=
+		'sample: aString' , String cr ,
+		'index: anIndex' , String cr ,
+		String tab , '(' , String cr ,
+		String tab , String tab , 'aString' , String cr ,
+		String tab , String tab , String tab , 'at:' , String tab , 'anIndex' , String cr ,
+		String tab , ') isAlphaNumeric' , String cr ,
+		String tab , String tab , 'ifFalse:' , String cr ,
+		String tab , String tab , '[' , String cr ,
+		String tab , String tab , String tab , '^ false.' , String cr ,
+		String tab , String tab , '].'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+
+	self
+		deny:
+		(
+			formatted
+				includesSubstring:	'at::'
+		).
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testShortBinaryExpressionWrittenOnOneLineStaysOnOneLine [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'total: total weight: weight value: value ^ total + (weight * value)'.
+
+	expected :=
+		'total: total' , String cr ,
+		'weight: weight' , String cr ,
+		'value: value' , String cr ,
+		String tab , '^ total + ( weight * value ).'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testShortBinaryExpressionWrittenAcrossLinesStaysMultiline [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:
+			'total: total weight: weight value: value
+	^ total +
+		(
+			weight
+				*
+				value
+		)'.
+
+	expected :=
+		'total: total' , String cr ,
+		'weight: weight' , String cr ,
+		'value: value' , String cr ,
+		String tab , '^ total +' , String cr ,
+		String tab , 'weight * value.'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
