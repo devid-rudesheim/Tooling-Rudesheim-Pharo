@@ -171,16 +171,10 @@ FormatterToolingRudesheimTest class >> expectedEnsureProcessingClassNamedTarget 
 		add:	6 -> '{'.
 
 	specs
-		add:	7 -> '('.
+		add:	7 -> 'Smalltalk'.
 
 	specs
-		add:	8 -> 'Smalltalk'.
-
-	specs
-		add:	9 -> ('at:' , String tab , '#TMethodUtilityGPTAgent').
-
-	specs
-		add:	7 -> ')'.
+		add:	8 -> ('at:' , String tab , '#TMethodUtilityGPTAgent').
 
 	specs
 		add:	6 -> '};'.
@@ -825,6 +819,55 @@ FormatterToolingRudesheimTest >> testReturnNonBracketMultilineJoinsFirstLine [
 			format:	'at: aClassSymbol ^ Smalltalk at: aClassSymbol'.
 
 	expected := 'at: aClassSymbol' , String cr , String tab , '^ Smalltalk' , String cr , String tab , String tab , 'at:' , String tab , 'aClassSymbol.'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testDynamicArrayKeywordMessageElementsDoNotGetWrappedInParentheses [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:
+			'sample: aString nextChar: nextChar nextIndex: nextIndex size: size
+	{
+		self
+			candidateIdentifierTerminatesWith: nextChar.
+		1 + nextIndex <= size
+			and:
+			[
+				self
+					isAssignmentStartCharacter: nextChar
+					followedBy: (aString at: 1 + nextIndex).
+			]
+	}'.
+
+	expected :=
+		'sample: aString' , String cr ,
+		'nextChar: nextChar' , String cr ,
+		'nextIndex: nextIndex' , String cr ,
+		'size: size' , String cr ,
+		String tab , '{' , String cr ,
+		String tab , String tab , 'self' , String cr ,
+		String tab , String tab , String tab , 'candidateIdentifierTerminatesWith:' , String tab , 'nextChar.' , String cr ,
+		String tab , String tab , '1 + nextIndex <= size' , String cr ,
+		String tab , String tab , String tab , 'and:' , String cr ,
+		String tab , String tab , String tab , '[' , String cr ,
+		String tab , String tab , String tab , String tab , 'self' , String cr ,
+		String tab , String tab , String tab , String tab , String tab , 'isAssignmentStartCharacter:' , String tab , 'nextChar' , String cr ,
+		String tab , String tab , String tab , String tab , String tab , 'followedBy:' , String cr ,
+		String tab , String tab , String tab , String tab , String tab , '(' , String cr ,
+		String tab , String tab , String tab , String tab , String tab , String tab , 'aString' , String cr ,
+		String tab , String tab , String tab , String tab , String tab , String tab , String tab , 'at:' , String tab , '1 + nextIndex' , String cr ,
+		String tab , String tab , String tab , String tab , String tab , ').' , String cr ,
+		String tab , String tab , String tab , ']' , String cr ,
+		String tab , '}.'.
 
 	self
 		assert:	formatted

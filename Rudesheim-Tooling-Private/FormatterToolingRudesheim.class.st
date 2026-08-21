@@ -487,7 +487,7 @@ indent: anIndentLevelInteger [
 
 			elementLines :=
 				self
-					formatSubexpressionLines:	each
+					formatExpressionLines:	each
 					indent:	anIndentLevelInteger + 1.
 
 			index < statements size
