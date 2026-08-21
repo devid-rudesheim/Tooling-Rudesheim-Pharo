@@ -108,6 +108,46 @@ CharacterKindFormatterToolingRudesheimTest >> testCharacterKindsCanBeSelectedAnd
 ]
 
 { #category : 'tests' }
+CharacterKindFormatterToolingRudesheimTest >> testColonAndAssignmentKindsAreMutuallyExclusiveForBareColon [
+	|
+		matchingKinds
+	|
+
+	matchingKinds :=
+		FormatterToolingRudesheim characterKinds
+			select:
+			[ :each |
+				each
+					match:	$:
+			].
+
+	self
+		assert:	matchingKinds size
+		equals:	1.
+
+	self
+		assert:	matchingKinds first
+		equals:	ColonCharacterKindFormatterToolingRudesheim.
+]
+
+{ #category : 'tests' }
+CharacterKindFormatterToolingRudesheimTest >> testAssignmentKindStillMatchesEqualsCharacter [
+	self
+		assert:
+		(
+			AssignmentCharacterKindFormatterToolingRudesheim
+				match:	$=
+		).
+
+	self
+		deny:
+		(
+			AssignmentCharacterKindFormatterToolingRudesheim
+				match:	$:
+		).
+]
+
+{ #category : 'tests' }
 CharacterKindFormatterToolingRudesheimTest >> testColonKindDistinguishesKeywordColonFromAssignment [
 	|
 		kind

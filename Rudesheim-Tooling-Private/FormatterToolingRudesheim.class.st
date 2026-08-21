@@ -1185,28 +1185,6 @@ indent: anIndentLevelInteger [
 { #category : 'formatting-keyword' }
 FormatterToolingRudesheim class >> formatKeywordReceiverLines: aParseNode
 indent: anIndentLevelInteger [
-	(
-		aParseNode
-			isKindOf:	OCMessageNode
-	)
-		ifTrue:
-		[
-			(
-				self
-					isKeywordMessage:	aParseNode
-			)
-				ifTrue:
-				[
-					^ self
-						formatSubexpressionLines:	aParseNode
-						indent:	anIndentLevelInteger.
-				].
-
-			^ self
-				formatInlineNodeLines:	aParseNode
-				indent:	anIndentLevelInteger.
-		].
-
 	^ self
 		formatSubexpressionLines:	aParseNode
 		indent:	anIndentLevelInteger.
@@ -2081,9 +2059,46 @@ nextLines: aNextLineCollection [
 ]
 
 { #category : 'functions' }
+FormatterToolingRudesheim class >> hasHandWrittenLineBreakFor: aNode [
+	|
+		interval
+		text
+	|
+
+	interval := aNode sourceInterval.
+
+	interval isEmpty
+		ifTrue:
+		[
+			^ false.
+		].
+
+	text :=
+		aNode source
+			copyFrom:	interval first
+			to:	interval last.
+
+	^ text
+		anySatisfy:
+		[ :each |
+			{ Character cr. Character lf. }
+				includes:	each
+		].
+]
+
+{ #category : 'functions' }
 FormatterToolingRudesheim class >> needsMultilineFor: aNode [
-	^ aNode
-		needsMultilineForFormatterRudesheim:	self.
+	(
+		aNode
+			needsMultilineForFormatterRudesheim:	self
+	)
+		ifTrue:
+		[
+			^ true.
+		].
+
+	^ self
+		hasHandWrittenLineBreakFor:	aNode.
 ]
 
 { #category : 'accessing' }
