@@ -2,26 +2,43 @@ Extension { #name : 'OCMessageNode' }
 
 { #category : '*Rudesheim-Tooling' }
 OCMessageNode >> acceptFormatterRudesheim: aFormatter
-indent: anIndentLevelInteger [
-	^ aFormatter
-		formatMessageLines:	self
-		indent:	anIndentLevelInteger.
+indent: anIndentToolingRudesheim [
+	^ self formatterKindForRudesheim
+		formatLines:	self
+		indent:	anIndentToolingRudesheim.
 ]
 
 { #category : '*Rudesheim-Tooling' }
 OCMessageNode >> acceptFormatterRudesheimAsSubexpression: aFormatter
-indent: anIndentLevelInteger [
+indent: anIndentToolingRudesheim [
 	self isKeyword
 		ifTrue:
 		[
 			^ aFormatter
 				formatParenthesizedLines:	self
-				indent:	anIndentLevelInteger.
+				indent:	anIndentToolingRudesheim.
 		].
 
 	^ self
 		acceptFormatterRudesheim:	aFormatter
-		indent:	anIndentLevelInteger.
+		indent:	anIndentToolingRudesheim.
+]
+
+{ #category : '*Rudesheim-Tooling' }
+OCMessageNode >> formatterKindForRudesheim [
+	self isKeyword
+		ifTrue:
+		[
+			^ KeywordMessageKindFormatterToolingRudesheim.
+		].
+
+	self isBinary
+		ifTrue:
+		[
+			^ BinaryMessageKindFormatterToolingRudesheim.
+		].
+
+	^ UnaryMessageKindFormatterToolingRudesheim.
 ]
 
 { #category : '*Rudesheim-Tooling' }
@@ -65,19 +82,4 @@ OCMessageNode >> needsMultilineForFormatterRudesheim: aFormatter [
 			each
 				needsMultilineForFormatterRudesheim:	aFormatter.
 		].
-]
-
-{ #category : '*Rudesheim-Tooling' }
-OCMessageNode >> unaryBinaryChainLengthForFormatterRudesheim: aFormatter [
-	self isKeyword
-		ifTrue:
-		[
-			^ 0.
-		].
-
-	^ 1 +
-	(
-		self receiver
-			unaryBinaryChainLengthForFormatterRudesheim:	aFormatter
-	).
 ]

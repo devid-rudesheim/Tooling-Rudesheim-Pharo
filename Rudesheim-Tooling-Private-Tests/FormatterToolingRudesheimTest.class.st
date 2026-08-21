@@ -639,25 +639,13 @@ FormatterToolingRudesheimTest >> testCascadeCommentsArePreserved [
 ]
 
 { #category : 'as yet unclassified' }
-FormatterToolingRudesheimTest >> testFormatAsYouReadPolicyAndFormatterSwitch [
+FormatterToolingRudesheimTest >> testEnableAsFormatterInstallsAndDisableAsFormatterRestoresDefault [
 	|
 		previousClass
-		previousPolicy
 	|
 
 	previousClass := OCProgramNode formatterClass.
-	previousPolicy := self targetClass formatAsYouReadPolicy.
 	[
-		self targetClass
-			formatAsYouReadPolicy:	false.
-
-		self
-			assert:	
-			self
-				targetClass
-				formatAsYouReadPolicy
-			equals:	false.
-
 		self
 			targetClass
 			enableAsFormatter.
@@ -665,16 +653,6 @@ FormatterToolingRudesheimTest >> testFormatAsYouReadPolicyAndFormatterSwitch [
 		self
 			assert:	OCProgramNode formatterClass
 			equals:	self targetClass.
-
-		self targetClass
-			formatAsYouReadPolicy:	true.
-
-		self
-			assert:	
-			self
-				targetClass
-				formatAsYouReadPolicy
-			equals:	true.
 
 		self
 			targetClass
@@ -686,9 +664,6 @@ FormatterToolingRudesheimTest >> testFormatAsYouReadPolicyAndFormatterSwitch [
 	]
 		ensure:
 		[
-			self targetClass
-				formatAsYouReadPolicy:	previousPolicy.
-
 			OCProgramNode
 				formatterClass:	previousClass.
 		].

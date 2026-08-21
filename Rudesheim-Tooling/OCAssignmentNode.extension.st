@@ -2,8 +2,8 @@ Extension { #name : 'OCAssignmentNode' }
 
 { #category : '*Rudesheim-Tooling' }
 OCAssignmentNode >> acceptFormatterRudesheimAsStatement: aFormatter
-indent: anIndentLevelInteger [
-	^ aFormatter
+indent: anIndentToolingRudesheim [
+	^ AssignmentFormatterToolingRudesheim
 		formatAssignmentLines:	self
-		indent:	anIndentLevelInteger.
+		indent:	anIndentToolingRudesheim.
 ]
