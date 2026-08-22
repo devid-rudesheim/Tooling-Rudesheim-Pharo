@@ -823,47 +823,41 @@ indent: anIndentToolingRudesheim [
 					appendPeriodToLastLine:	statementLines.
 			].
 
-			(
-				[
-					|
-						break
-					|
+			[
+				|
+					continue
+				|
 
-					break := thisContext.
+				continue := thisContext.
 
-					index = statements size
-						ifFalse:
-						[
-							break return: false.
-						].
-
-					statement isMessage
-						ifFalse:
-						[
-							break return: false.
-						].
-
-					statement isBlockStatementForFormatterRudesheim
-						ifFalse:
-						[
-							break return: false.
-						].
-
-					statement isKeyword
-						ifTrue:
-						[
-							break return: false.
-						].
-
-					true.
-				] value
-			)
-				ifTrue:
-				[
-					appendPeriodAction :=
+				index = statements size
+					ifFalse:
 					[
+						continue return.
 					].
+
+				statement isMessage
+					ifFalse:
+					[
+						continue return.
+					].
+
+				statement isBlockStatementForFormatterRudesheim
+					ifFalse:
+					[
+						continue return.
+					].
+
+				statement isKeyword
+					ifTrue:
+					[
+						continue return.
+					].
+
+				appendPeriodAction :=
+				[
 				].
+			] value.
 
 			appendPeriodAction value.
 

@@ -131,41 +131,43 @@ indent: anIndentToolingRudesheim [
 			steps
 				addFirst:	node.
 
-			node isBinary
-				ifFalse:
+			[
+				|
+					continue
+				|
+
+				continue := thisContext.
+
+				node isBinary
+					ifTrue:
+					[
+						continue return.
+					].
+
+				(
+					node receiver
+						isKindOf:	OCMessageNode
+				)
+					ifFalse:
+					[
+						continue return.
+					].
+
+				node receiver isBinary
+					ifFalse:
+					[
+						continue return.
+					].
+
+				receiverLinesAction :=
 				[
-					(
-						[
-							|
-								break
-							|
-
-							break := thisContext.
-
-							(
-								node receiver
-									isKindOf:	OCMessageNode
-							)
-								ifFalse:
-								[
-									break return: false.
-								].
-
-							node receiver isBinary.
-						] value
-					)
-						ifTrue:
-						[
-							receiverLinesAction :=
-							[
-								formatter
-									formatParenthesizedLines:	node
-									indent:	anIndentToolingRudesheim.
-							].
-
-							keepWalking := false.
-						].
+					formatter
+						formatParenthesizedLines:	node
+						indent:	anIndentToolingRudesheim.
 				].
+
+				keepWalking := false.
+			] value.
 
 			node := node receiver.
 		].
@@ -205,43 +207,45 @@ indent: anIndentToolingRudesheim [
 					put:	lines last , ' ' , stepText.
 			].
 
-			(
-				[
-					|
-						break
-					|
+			[
+				|
+					continue
+				|
 
-					break := thisContext.
+				continue := thisContext.
 
-					step isBinary
-						ifFalse:
-						[
-							break return: false.
-						].
-
-					argument := step arguments first.
-
-					formatter
-						needsMultilineFor:	argument.
-				] value
-			)
-				ifTrue:
-				[
-					stepAction :=
+				step isBinary
+					ifFalse:
 					[
-						lines
-							at:	lines size
-							put:	lines last , ' ' , step selector asString.
-
-						lines
-							addAll:
-							(
-								formatter
-									formatSubexpressionLines:	argument
-									indent:	anIndentToolingRudesheim
-							).
+						continue return.
 					].
+
+				argument := step arguments first.
+
+				(
+					formatter
+						needsMultilineFor:	argument
+				)
+					ifFalse:
+					[
+						continue return.
+					].
+
+				stepAction :=
+				[
+					lines
+						at:	lines size
+						put:	lines last , ' ' , step selector asString.
+
+					lines
+						addAll:
+						(
+							formatter
+								formatSubexpressionLines:	argument
+								indent:	anIndentToolingRudesheim
+						).
 				].
+			] value.
 
 			stepAction value.
 		].
