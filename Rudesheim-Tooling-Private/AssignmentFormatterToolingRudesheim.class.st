@@ -94,21 +94,31 @@ indent: anIndentToolingRudesheim [
 
 	firstValueLine := valueLines first trimBoth.
 
-	firstValueLine
-		ifNotEmpty:
-		[
-			(
-				formatter
-					isOpeningBracketCharacter:	firstValueLine first
-			)
-				ifTrue:
-				[
-					valueLines :=
-						formatter
-							formatExpressionLines:	value
-							indent:	anIndentToolingRudesheim.
-				].
-		].
+	[
+		|
+			continue
+		|
+
+		continue := thisContext.
+
+		firstValueLine
+			ifEmpty:
+			[
+				continue return.
+			].
+
+		(
+			formatter
+				isOpeningBracketCharacter:	firstValueLine first
+		)
+			ifTrue:
+			[
+				valueLines :=
+					formatter
+						formatExpressionLines:	value
+						indent:	anIndentToolingRudesheim.
+			].
+	] value.
 
 	lines
 		addAll:	valueLines.

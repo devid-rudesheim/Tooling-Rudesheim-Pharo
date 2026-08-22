@@ -113,22 +113,32 @@ indent: anIndentToolingRudesheim [
 				indent:	anIndentToolingRudesheim oneLevelDeeper.
 	].
 
-	firstArgumentLine
-		ifNotEmpty:
-		[
-			(
-				formatter
-					isOpeningBracketCharacter:	firstArgumentLine first
-			)
-				ifTrue:
+	[
+		|
+			continue
+		|
+
+		continue := thisContext.
+
+		firstArgumentLine
+			ifEmpty:
+			[
+				continue return.
+			].
+
+		(
+			formatter
+				isOpeningBracketCharacter:	firstArgumentLine first
+		)
+			ifTrue:
+			[
+				argumentLineAction :=
 				[
-					argumentLineAction :=
-					[
-						lines
-							add:	indentString , aKeywordPart.
-					].
+					lines
+						add:	indentString , aKeywordPart.
 				].
-		].
+			].
+	] value.
 
 	argumentLineAction value.
 
