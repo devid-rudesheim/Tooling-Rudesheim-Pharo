@@ -94,8 +94,8 @@ indent: anIndentToolingRudesheim [
 
 	firstValueLine := valueLines first trimBoth.
 
-	firstValueLine notEmpty
-		ifTrue:
+	firstValueLine
+		ifNotEmpty:
 		[
 			(
 				formatter

@@ -135,23 +135,35 @@ indent: anIndentToolingRudesheim [
 				ifFalse:
 				[
 					(
-						node receiver
-							isKindOf:	OCMessageNode
+						[
+							|
+								break
+							|
+
+							break := thisContext.
+
+							(
+								node receiver
+									isKindOf:	OCMessageNode
+							)
+								ifFalse:
+								[
+									break return: false.
+								].
+
+							node receiver isBinary.
+						] value
 					)
 						ifTrue:
 						[
-							node receiver isBinary
-								ifTrue:
-								[
-									receiverLinesAction :=
-									[
-										formatter
-											formatParenthesizedLines:	node
-											indent:	anIndentToolingRudesheim.
-									].
+							receiverLinesAction :=
+							[
+								formatter
+									formatParenthesizedLines:	node
+									indent:	anIndentToolingRudesheim.
+							].
 
-									keepWalking := false.
-								].
+							keepWalking := false.
 						].
 				].
 
@@ -193,32 +205,42 @@ indent: anIndentToolingRudesheim [
 					put:	lines last , ' ' , stepText.
 			].
 
-			step isBinary
-				ifTrue:
+			(
 				[
+					|
+						break
+					|
+
+					break := thisContext.
+
+					step isBinary
+						ifFalse:
+						[
+							break return: false.
+						].
+
 					argument := step arguments first.
 
-					(
-						formatter
-							needsMultilineFor:	argument
-					)
-						ifTrue:
-						[
-							stepAction :=
-							[
-								lines
-									at:	lines size
-									put:	lines last , ' ' , step selector asString.
+					formatter
+						needsMultilineFor:	argument.
+				] value
+			)
+				ifTrue:
+				[
+					stepAction :=
+					[
+						lines
+							at:	lines size
+							put:	lines last , ' ' , step selector asString.
 
-								lines
-									addAll:
-									(
-										formatter
-											formatSubexpressionLines:	argument
-											indent:	anIndentToolingRudesheim
-									).
-							].
-						].
+						lines
+							addAll:
+							(
+								formatter
+									formatSubexpressionLines:	argument
+									indent:	anIndentToolingRudesheim
+							).
+					].
 				].
 
 			stepAction value.

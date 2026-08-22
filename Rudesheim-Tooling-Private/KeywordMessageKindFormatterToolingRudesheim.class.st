@@ -113,8 +113,8 @@ indent: anIndentToolingRudesheim [
 				indent:	anIndentToolingRudesheim oneLevelDeeper.
 	].
 
-	firstArgumentLine notEmpty
-		ifTrue:
+	firstArgumentLine
+		ifNotEmpty:
 		[
 			(
 				formatter

@@ -382,8 +382,8 @@ withIndents: anInteger [
 			formatted
 				linesDo:
 				[ :line |
-					line isEmpty
-						ifFalse:
+					line
+						ifNotEmpty:
 						[
 							writer
 								nextPutAll:	indent.
@@ -529,8 +529,8 @@ text: aString [
 	)
 		ifTrue:
 		[
-			aParseNode parentheses isEmpty
-				ifTrue:
+			aParseNode parentheses
+				ifEmpty:
 				[
 					^ aString.
 				].
@@ -688,8 +688,8 @@ FormatterToolingRudesheim class >> formatMethodNode: aMethodNode [
 
 	temps := aMethodNode temporaryNames.
 
-	temps notEmpty
-		ifTrue:
+	temps
+		ifNotEmpty:
 		[
 			lines
 				addAll:
@@ -1494,8 +1494,8 @@ FormatterToolingRudesheim class >> systemKeywordParts [
 							tokens
 								do:
 								[ :each |
-									each notEmpty
-										ifTrue:
+									each
+										ifNotEmpty:
 										[
 											parts
 												add:	each.
@@ -1529,8 +1529,8 @@ FormatterToolingRudesheim class >> systemKeywordParts [
 							tokens
 								do:
 								[ :each |
-									each notEmpty
-										ifTrue:
+									each
+										ifNotEmpty:
 										[
 											parts
 												add:	each.

@@ -40,8 +40,8 @@ indent: anIndentToolingRudesheim [
 					to:	exprLines first size.
 		].
 
-	firstLineBody isEmpty
-		ifTrue:
+	firstLineBody
+		ifEmpty:
 		[
 			^ OrderedCollection new
 				add:	indentString , '^ ' , firstLineBody;

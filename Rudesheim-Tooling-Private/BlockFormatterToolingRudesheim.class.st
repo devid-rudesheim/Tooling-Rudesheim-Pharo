@@ -25,8 +25,8 @@ indent: anIndentToolingRudesheim [
 	argumentNames := aBlockNode argumentNames.
 	header := anIndentToolingRudesheim asString , '['.
 
-	argumentNames notEmpty
-		ifTrue:
+	argumentNames
+		ifNotEmpty:
 		[
 			argumentString :=
 				String
@@ -57,8 +57,8 @@ indent: anIndentToolingRudesheim [
 
 	temps := aBlockNode temporaryNames.
 
-	temps notEmpty
-		ifTrue:
+	temps
+		ifNotEmpty:
 		[
 			lines
 				addAll:

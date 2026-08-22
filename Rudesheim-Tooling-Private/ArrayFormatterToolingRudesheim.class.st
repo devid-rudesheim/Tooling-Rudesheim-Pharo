@@ -21,8 +21,8 @@ indent: anIndentToolingRudesheim [
 	formatter := Rudesheim Tooling Formatter.
 	statements := anArrayNode statements.
 
-	statements isEmpty
-		ifTrue:
+	statements
+		ifEmpty:
 		[
 			^
 			{
