@@ -48,7 +48,7 @@ MessageKindFormatterToolingRudesheimTest >> testKeywordMessageReceiverKeepsOwnLi
 	|
 
 	formatted :=
-		FormatterToolingRudesheim
+		Rudesheim Tooling Formatter
 			format:	'at: aClassSymbol ^ Smalltalk at: aClassSymbol'.
 
 	expected :=
@@ -65,7 +65,7 @@ MessageKindFormatterToolingRudesheimTest >> testShortBinaryAndUnaryChainsStayInl
 	self
 		assert:
 		(
-			FormatterToolingRudesheim
+			Rudesheim Tooling Formatter
 				format:	'sum ^ 1 + 2 + 3'
 		)
 		equals:	'sum' , String cr , String tab , '^ 1 + 2 + 3.'.
@@ -73,7 +73,7 @@ MessageKindFormatterToolingRudesheimTest >> testShortBinaryAndUnaryChainsStayInl
 	self
 		assert:
 		(
-			FormatterToolingRudesheim
+			Rudesheim Tooling Formatter
 				format:	'run ^ self foo bar'
 		)
 		equals:	'run' , String cr , String tab , '^ self foo bar.'.

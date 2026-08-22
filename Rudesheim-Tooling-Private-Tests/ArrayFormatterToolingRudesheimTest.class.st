@@ -16,7 +16,7 @@ ArrayFormatterToolingRudesheimTest >> testDynamicArrayAlwaysUsesMultilineElement
 	|
 
 	formatted :=
-		FormatterToolingRudesheim
+		Rudesheim Tooling Formatter
 			format:	'ranges ^ { self rows. self columns }'.
 
 	expected :=
@@ -37,7 +37,7 @@ ArrayFormatterToolingRudesheimTest >> testEmptyDynamicArrayStaysInline [
 	|
 
 	formatted :=
-		FormatterToolingRudesheim
+		Rudesheim Tooling Formatter
 			format:	'empty ^ { }'.
 
 	expected := 'empty' , String cr , String tab , '^ {}.'.

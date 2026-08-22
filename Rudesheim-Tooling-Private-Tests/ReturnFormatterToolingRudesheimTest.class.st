@@ -16,7 +16,7 @@ ReturnFormatterToolingRudesheimTest >> testReturnSimpleValueStaysInline [
 	|
 
 	formatted :=
-		FormatterToolingRudesheim
+		Rudesheim Tooling Formatter
 			format:	'flag ^ true'.
 
 	expected := 'flag' , String cr , String tab , '^ true.'.
@@ -34,7 +34,7 @@ ReturnFormatterToolingRudesheimTest >> testReturnBracketedMultilineKeepsNewlineA
 	|
 
 	formatted :=
-		FormatterToolingRudesheim
+		Rudesheim Tooling Formatter
 			format:	'makeBlock ^ [ 1 + 1 ]'.
 
 	expected :=

@@ -16,7 +16,7 @@ BlockFormatterToolingRudesheimTest >> testBlockAssignmentBreaksOntoItsOwnLines [
 	|
 
 	formatted :=
-		FormatterToolingRudesheim
+		Rudesheim Tooling Formatter
 			format:	'run | block | block := [ 1 ]'.
 
 	expected :=

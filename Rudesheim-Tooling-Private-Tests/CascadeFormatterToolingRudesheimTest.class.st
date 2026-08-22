@@ -16,7 +16,7 @@ CascadeFormatterToolingRudesheimTest >> testCascadeSeparatesMessagesWithSemicolo
 	|
 
 	formatted :=
-		FormatterToolingRudesheim
+		Rudesheim Tooling Formatter
 			format:	'sample | builder | builder := Object new. builder name: #Foo; yourself'.
 
 	expected :=
@@ -45,7 +45,7 @@ CascadeFormatterToolingRudesheimTest >> testCascadeMessageStartAndEndCoverSelect
 	self
 		assert:
 		(
-			CascadeFormatterToolingRudesheim
+			Rudesheim Tooling Formatter Cascade
 				cascadeMessageStartFor:	cascadeMessage
 		)
 		equals:	cascadeMessage selectorInterval first.
@@ -53,7 +53,7 @@ CascadeFormatterToolingRudesheimTest >> testCascadeMessageStartAndEndCoverSelect
 	self
 		assert:
 		(
-			CascadeFormatterToolingRudesheim
+			Rudesheim Tooling Formatter Cascade
 				cascadeMessageEndFor:	cascadeMessage
 		)
 		equals:	cascadeMessage arguments first sourceInterval last.

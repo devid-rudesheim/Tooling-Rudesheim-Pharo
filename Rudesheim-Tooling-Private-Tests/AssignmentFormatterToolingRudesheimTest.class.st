@@ -16,7 +16,7 @@ AssignmentFormatterToolingRudesheimTest >> testSimpleAssignmentStaysInline [
 	|
 
 	formatted :=
-		FormatterToolingRudesheim
+		Rudesheim Tooling Formatter
 			format:	'run | total | total := 1 + 2'.
 
 	expected :=
@@ -33,7 +33,7 @@ AssignmentFormatterToolingRudesheimTest >> testAssignmentPrefixJoinsMultipleVari
 	self
 		assert:
 		(
-			AssignmentFormatterToolingRudesheim
+			Rudesheim Tooling Formatter Assignment
 				assignmentPrefixForVariables:
 				{
 					OCParser parseExpression: 'a'.
