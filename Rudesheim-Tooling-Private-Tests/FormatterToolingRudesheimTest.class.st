@@ -504,11 +504,10 @@ FormatterToolingRudesheimTest >> testFormatAsYouReadPolicyAndFormatterSwitch [
 			formatAsYouReadPolicy:	false.
 
 		self
-			assert:
+			deny:
 			self
 				targetClass
-				formatAsYouReadPolicy
-			equals:	false.
+				formatAsYouReadPolicy.
 
 		self
 			targetClass
@@ -525,8 +524,7 @@ FormatterToolingRudesheimTest >> testFormatAsYouReadPolicyAndFormatterSwitch [
 			assert:
 			self
 				targetClass
-				formatAsYouReadPolicy
-			equals:	true.
+				formatAsYouReadPolicy.
 
 		self
 			targetClass
