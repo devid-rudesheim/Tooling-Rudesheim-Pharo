@@ -634,7 +634,7 @@ FormatterToolingRudesheimTest >> testKeywordArgumentStartingWithVariableIndentsO
 		self targetClass
 			format:	'store output at: index put: total + (biases at: oc + 1)'.
 
-	expected := 'store' , String cr , String tab , 'output' , String cr , String tab , String tab , 'at:' , String tab , 'index' , String cr , String tab , String tab , 'put:' , String tab , String cr , String tab , String tab , String tab , 'total +' , String cr , String tab , String tab , String tab , '(' , String cr , String tab , String tab , String tab , String tab , 'biases' , String cr , String tab , String tab , String tab , String tab , String tab , 'at:' , String tab , 'oc + 1' , String cr , String tab , String tab , String tab , ').'.
+	expected := 'store' , String cr , String tab , 'output' , String cr , String tab , String tab , 'at:' , String tab , 'index' , String cr , String tab , String tab , 'put:' , String cr , String tab , String tab , String tab , 'total +' , String cr , String tab , String tab , String tab , '(' , String cr , String tab , String tab , String tab , String tab , 'biases' , String cr , String tab , String tab , String tab , String tab , String tab , 'at:' , String tab , 'oc + 1' , String cr , String tab , String tab , String tab , ').'.
 
 	self
 		assert:	formatted
