@@ -40,7 +40,7 @@ indent: anIndentToolingRudesheim [
 					self
 						formatKeywordPart:	part
 						argument:	argument
-						indent:	keywordIndent
+						indent:	keywordIndent.
 				]
 		) flattened.
 
@@ -112,7 +112,6 @@ indent: anIndentToolingRudesheim [
 				formatSubexpressionLines:	aNode
 				indent:	anIndentToolingRudesheim oneLevelDeeper.
 	].
-
 	[
 		|
 			continue

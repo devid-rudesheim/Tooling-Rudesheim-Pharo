@@ -10,7 +10,6 @@ Class {
 
 { #category : 'formatting' }
 AssignmentFormatterToolingRudesheim class >> assignmentPrefixForVariables: aVariableCollection [
-
 	^ String
 		streamContents:
 		[ :writer |
@@ -77,15 +76,14 @@ indent: anIndentToolingRudesheim [
 
 			^
 			{
-				anIndentToolingRudesheim asString , prefix , ' ' , inline
+				( anIndentToolingRudesheim asString , prefix , ' ' , inline )
 			}.
 		].
 
 	lines := OrderedCollection new.
 
 	lines
-		add:
-		anIndentToolingRudesheim asString , prefix.
+		add:	anIndentToolingRudesheim asString , prefix.
 
 	valueLines :=
 		formatter
@@ -93,7 +91,6 @@ indent: anIndentToolingRudesheim [
 			indent:	anIndentToolingRudesheim oneLevelDeeper.
 
 	firstValueLine := valueLines first trimBoth.
-
 	[
 		|
 			continue

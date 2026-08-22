@@ -48,6 +48,7 @@ indent: anIndentToolingRudesheim [
 					indent:	anIndentToolingRudesheim.
 
 			argumentString := ''.
+
 			aMessageNode isBinary
 				ifTrue:
 				[
@@ -123,8 +124,8 @@ indent: anIndentToolingRudesheim [
 					and:
 					[
 						node isKeyword not.
-					]
-			]
+					].
+			].
 	]
 		whileTrue:
 		[
@@ -206,7 +207,6 @@ indent: anIndentToolingRudesheim [
 					at:	lines size
 					put:	lines last , ' ' , stepText.
 			].
-
 			[
 				|
 					continue

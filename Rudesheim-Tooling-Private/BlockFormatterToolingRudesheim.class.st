@@ -81,8 +81,7 @@ indent: anIndentToolingRudesheim [
 		).
 
 	lines
-		add:
-		anIndentToolingRudesheim asString , ']'.
+		add:	anIndentToolingRudesheim asString , ']'.
 
 	^ lines.
 ]

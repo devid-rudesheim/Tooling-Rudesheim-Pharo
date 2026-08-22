@@ -65,7 +65,10 @@ on: aWriteStream [
 					index <= aString size
 						ifTrue:
 						[
-							( aString at: index ) = self quoteCharacter
+							(
+								aString
+									at:	index
+							) = self quoteCharacter
 								ifTrue:
 								[
 									quoteAction :=

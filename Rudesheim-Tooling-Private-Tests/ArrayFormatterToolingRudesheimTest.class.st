@@ -4,7 +4,7 @@ Tests ArrayFormatterToolingRudesheim via FormatterToolingRudesheim's public entr
 Class {
 	#name : 'ArrayFormatterToolingRudesheimTest',
 	#superclass : 'TestCase',
-	#category : 'Rudesheim-Tooling-Tests',
+	#category : 'Rudesheim-Tooling-Private-Tests',
 	#package : 'Rudesheim-Tooling-Private-Tests'
 }
 
@@ -19,10 +19,7 @@ ArrayFormatterToolingRudesheimTest >> testDynamicArrayAlwaysUsesMultilineElement
 		Rudesheim Tooling Formatter
 			format:	'ranges ^ { self rows. self columns }'.
 
-	expected :=
-		'ranges' , String cr , String tab , '^' , String cr , String tab , '{' , String cr ,
-		String tab , String tab , 'self rows.' , String cr , String tab , String tab , 'self columns' , String cr ,
-		String tab , '}.'.
+	expected := 'ranges' , String cr , String tab , '^' , String cr , String tab , '{' , String cr , String tab , String tab , 'self rows.' , String cr , String tab , String tab , 'self columns' , String cr , String tab , '}.'.
 
 	self
 		assert:	formatted

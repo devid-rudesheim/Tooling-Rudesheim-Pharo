@@ -78,7 +78,7 @@ FormatterToolingRudesheim class >> bracketStatesStartingWith: aCharacter [
 		select:
 		[ :each |
 			each
-				isOpeningBracketCharacter:	aCharacter
+				isOpeningBracketCharacter:	aCharacter.
 		].
 ]
 
@@ -90,17 +90,17 @@ FormatterToolingRudesheim class >> candidateIdentifierTerminatesWith: aCharacter
 			select:
 			[ :each |
 				each
-					match:	aCharacter
+					match:	aCharacter.
 			]
 			thenCollect:
 			[ :each |
 				each
-					candidateIdentifierTerminatesWith:	aCharacter
+					candidateIdentifierTerminatesWith:	aCharacter.
 			]
 	)
 		anySatisfy:
 		[ :each |
-			each
+			each.
 		].
 ]
 
@@ -137,23 +137,19 @@ FormatterToolingRudesheim class >> candidateIdentifiersIn: aString [
 
 			(
 				{
-					(
-						self
-							candidateIdentifierTerminatesWith:	nextChar
-					).
-					(
-						1 + nextIndex <= size
-							and:
-							[
-								self
-									isAssignmentStartCharacter:	nextChar
-									followedBy:
-									(
-										aString
-											at:	1 + nextIndex
-									).
-							]
-					)
+					self
+						candidateIdentifierTerminatesWith:	nextChar.
+					1 + nextIndex <= size
+						and:
+						[
+							self
+								isAssignmentStartCharacter:	nextChar
+								followedBy:
+								(
+									aString
+										at:	1 + nextIndex
+								).
+						]
 				}
 					anySatisfy:	#yourself
 			)
@@ -194,7 +190,7 @@ FormatterToolingRudesheim class >> characterKinds [
 		characterKind CurlyBraces.
 		characterKind DoubleQuote.
 		characterKind SingleQuote.
-		characterKind CharacterLiteral.
+		characterKind CharacterLiteral
 	}.
 ]
 
@@ -240,8 +236,8 @@ to: aStopInteger [
 
 				(
 					aString
-						at: index
-				) ~= ( Rudesheim Tooling CharacterKind DoubleQuote quoteCharacter )
+						at:	index
+				) ~= Rudesheim Tooling CharacterKind DoubleQuote quoteCharacter
 					ifTrue:
 					[
 						index := nextIndex.
@@ -281,8 +277,8 @@ to: aStopInteger [
 
 						(
 							aString
-								at: commentIndex
-						) = ( Rudesheim Tooling CharacterKind DoubleQuote quoteCharacter )
+								at:	commentIndex
+						) = Rudesheim Tooling CharacterKind DoubleQuote quoteCharacter
 							ifTrue:
 							[
 								characterAction :=
@@ -299,14 +295,14 @@ to: aStopInteger [
 									[
 										(
 											aString
-												at: nextCommentIndex
-										) = ( Rudesheim Tooling CharacterKind DoubleQuote quoteCharacter )
+												at:	nextCommentIndex
+										) = Rudesheim Tooling CharacterKind DoubleQuote quoteCharacter
 											ifTrue:
 											[
 												quoteAction :=
 												[
 													stream
-														nextPut:	( Rudesheim Tooling CharacterKind DoubleQuote quoteCharacter ).
+														nextPut:	Rudesheim Tooling CharacterKind DoubleQuote quoteCharacter.
 												].
 
 												offset := 1.
@@ -343,7 +339,6 @@ FormatterToolingRudesheim class >> enableAsFormatter [
 
 { #category : 'formatting' }
 FormatterToolingRudesheim class >> format: aParseTree [
-
 	^ self
 		formatString:
 		(
@@ -371,10 +366,10 @@ withIndents: anInteger [
 		].
 
 	indent :=
-		(
-			IndentToolingRudesheim
-				level:	anInteger
-		) asString.
+	(
+		IndentToolingRudesheim
+			level:	anInteger
+	) asString.
 
 	^ String
 		streamContents:
@@ -508,7 +503,7 @@ indent: anIndentToolingRudesheim [
 		anIndentToolingRudesheim asString ,
 		(
 			self
-				formatInline: aParseNode
+				formatInline:	aParseNode
 		)
 	}.
 ]
@@ -556,8 +551,7 @@ text: aString [
 			text :=
 				aString
 					copyFrom:	2
-					to:
-						aString size - 1.
+					to:	aString size - 1.
 
 			^ '( ' , text trimBoth , ' )'.
 		].
@@ -582,7 +576,7 @@ FormatterToolingRudesheim class >> formatInlineParenthesesIn: aString [
 		index <= aString size.
 	]
 		whileTrue:
-	[
+		[
 			matchedKinds :=
 				self characterKinds
 					select:
@@ -592,7 +586,7 @@ FormatterToolingRudesheim class >> formatInlineParenthesesIn: aString [
 							(
 								aString
 									at:	index
-							)
+							).
 					].
 
 			matchedKinds isEmpty
@@ -616,7 +610,7 @@ FormatterToolingRudesheim class >> formatInlineParenthesesIn: aString [
 								each
 									formatInlineParenthesesIn:	aString
 									at:	index
-									on:	stream
+									on:	stream.
 							]
 					) first.
 				].
@@ -650,10 +644,7 @@ FormatterToolingRudesheim class >> formatLiteralArrayInline: aParseNode [
 					copyFrom:	3
 					to:	text size - 1.
 
-			^
-			'#' , parenthesesCharacterKind openingCharacter asString ,
-			' ' , body trimBoth , ' ' ,
-			parenthesesCharacterKind closingCharacter asString.
+			^ '#' , parenthesesCharacterKind openingCharacter asString , ' ' , body trimBoth , ' ' , parenthesesCharacterKind closingCharacter asString.
 		].
 
 	^ text.
@@ -682,8 +673,7 @@ FormatterToolingRudesheim class >> formatMethodNode: aMethodNode [
 		ifTrue:
 		[
 			lines
-				add:
-					String tab , '"' , comment , '"'.
+				add:	String tab , '"' , comment , '"'.
 		].
 
 	temps := aMethodNode temporaryNames.
@@ -696,7 +686,11 @@ FormatterToolingRudesheim class >> formatMethodNode: aMethodNode [
 				(
 					self
 						formatTempsLinesFor:	temps
-						indent:	( IndentToolingRudesheim level: 1 )
+						indent:
+						(
+							IndentToolingRudesheim
+								level:	1
+						)
 				).
 
 			lines
@@ -708,7 +702,11 @@ FormatterToolingRudesheim class >> formatMethodNode: aMethodNode [
 		(
 			self
 				formatSequenceLines:	aMethodNode body
-				indent:	( IndentToolingRudesheim level: 1 )
+				indent:
+				(
+					IndentToolingRudesheim
+						level:	1
+				)
 		).
 
 	^ self
@@ -725,8 +723,7 @@ indent: anIndentToolingRudesheim [
 	lines := OrderedCollection new.
 
 	lines
-		add:
-		anIndentToolingRudesheim asString , '('.
+		add:	anIndentToolingRudesheim asString , '('.
 
 	lines
 		addAll:
@@ -737,8 +734,7 @@ indent: anIndentToolingRudesheim [
 		).
 
 	lines
-		add:
-		anIndentToolingRudesheim asString , ')'.
+		add:	anIndentToolingRudesheim asString , ')'.
 
 	^ lines.
 ]
@@ -822,7 +818,6 @@ indent: anIndentToolingRudesheim [
 				self
 					appendPeriodToLastLine:	statementLines.
 			].
-
 			[
 				|
 					continue
@@ -918,7 +913,7 @@ FormatterToolingRudesheim class >> formatSignatureLinesFor: aMethodNode [
 				with:	aMethodNode argumentNames
 				collect:
 				[ :part :argument |
-					part, ' ', argument
+					part , ' ' , argument.
 				].
 		].
 
@@ -999,7 +994,6 @@ indent: anIndentToolingRudesheim [
 	|
 
 	indent := anIndentToolingRudesheim asString.
-
 	inner := anIndentToolingRudesheim oneLevelDeeper asString.
 
 	^ OrderedCollection new
@@ -1014,6 +1008,37 @@ indent: anIndentToolingRudesheim [
 		);
 		add:	indent , '|';
 		yourself.
+]
+
+{ #category : 'functions' }
+FormatterToolingRudesheim class >> hasHandWrittenLineBreakFor: aNode [
+	|
+		interval
+		text
+	|
+
+	interval := aNode sourceInterval.
+
+	interval isEmpty
+		ifTrue:
+		[
+			^ false.
+		].
+
+	text :=
+		aNode source
+			copyFrom:	interval first
+			to:	interval last.
+
+	^ text
+		anySatisfy:
+		[ :each |
+			{
+				Character cr.
+				Character lf
+			}
+				includes:	each.
+		].
 ]
 
 { #category : 'functions' }
@@ -1041,12 +1066,11 @@ do: aBlock [
 
 				(
 					aString
-						at: index
+						at:	index
 				) isAlphaNumeric
 					ifFalse:
 					[
 						index := 1 + index.
-
 						continue return.
 					].
 
@@ -1055,13 +1079,13 @@ do: aBlock [
 				index :=
 				(
 					index
-						to: size
+						to:	size
 				)
 					detect:
 					[ :each |
 						(
 							aString
-								at: each
+								at:	each
 						) isAlphaNumeric not.
 					]
 					ifNone:
@@ -1070,11 +1094,10 @@ do: aBlock [
 					].
 
 				aBlock
-					value: start
-					value: index.
-			] value.
+					value:	start
+					value:	index.
+			] value
 		].
-
 ]
 
 { #category : 'testing' }
@@ -1087,7 +1110,7 @@ followedBy: anotherCharacter [
 			[ :each |
 				each
 					isAssignmentStartCharacter:	aCharacter
-					followedBy:	anotherCharacter
+					followedBy:	anotherCharacter.
 			]
 	) notEmpty.
 ]
@@ -1101,16 +1124,16 @@ followedBy: anotherCharacter [
 			select:
 			[ :each |
 				each
-					match:	aCharacter
+					match:	aCharacter.
 			]
 			thenCollect:
 			[ :each |
 				each
 					isKeywordColonCharacter:	aCharacter
-					followedBy:	anotherCharacter
+					followedBy:	anotherCharacter.
 			]
 	)
-		anySatisfy: #yourself.
+		anySatisfy:	#yourself.
 ]
 
 { #category : 'testing' }
@@ -1140,7 +1163,6 @@ FormatterToolingRudesheim class >> joinLines: aLineCollection [
 						].
 				].
 		].
-
 ]
 
 { #category : 'functions' }
@@ -1154,7 +1176,6 @@ nextLines: aNextLineCollection [
 	|
 
 	currentIsAssign := aCurrentLineString isAssignment.
-
 	nextIsBlock := aNextLineString isBlockStatementForFormatterRudesheim.
 
 	currentIsAssign
@@ -1180,34 +1201,6 @@ nextLines: aNextLineCollection [
 		].
 
 	^ false.
-]
-
-{ #category : 'functions' }
-FormatterToolingRudesheim class >> hasHandWrittenLineBreakFor: aNode [
-	|
-		interval
-		text
-	|
-
-	interval := aNode sourceInterval.
-
-	interval isEmpty
-		ifTrue:
-		[
-			^ false.
-		].
-
-	text :=
-		aNode source
-			copyFrom:	interval first
-			to:	interval last.
-
-	^ text
-		anySatisfy:
-		[ :each |
-			{ Character cr. Character lf. }
-				includes:	each
-		].
 ]
 
 { #category : 'functions' }
@@ -1243,7 +1236,7 @@ FormatterToolingRudesheim class >> repairMethodString: aString [
 
 	candidates :=
 		self
-			candidateIdentifiersIn: aString.
+			candidateIdentifiersIn:	aString.
 
 	size := aString size.
 
@@ -1253,7 +1246,7 @@ FormatterToolingRudesheim class >> repairMethodString: aString [
 			lastIndex := 1.
 
 			self
-				identifierRangesIn: aString
+				identifierRangesIn:	aString
 				do:
 				[ :start :nextIndex |
 					|
@@ -1268,14 +1261,14 @@ FormatterToolingRudesheim class >> repairMethodString: aString [
 							nextPutAll:
 							(
 								aString
-									copyFrom: lastIndex
-									to: start - 1
+									copyFrom:	lastIndex
+									to:	start - 1
 							).
 
 						identifier :=
 							aString
-								copyFrom: start
-								to: nextIndex - 1.
+								copyFrom:	start
+								to:	nextIndex - 1.
 
 						1 + nextIndex <= size
 							ifFalse:
@@ -1288,12 +1281,12 @@ FormatterToolingRudesheim class >> repairMethodString: aString [
 								isKeywordColonCharacter:
 								(
 									aString
-										at: nextIndex
+										at:	nextIndex
 								)
 								followedBy:
 								(
 									aString
-										at: 1 + nextIndex
+										at:	1 + nextIndex
 								)
 						)
 							ifFalse:
@@ -1301,16 +1294,16 @@ FormatterToolingRudesheim class >> repairMethodString: aString [
 								continue return.
 							].
 
-					identifier :=
-						self
-							splitIdentifier: identifier
-							usingUnarySelectors: #(  )
-							usingKeywordParts: keywords
-							usingCandidates: candidates.
+						identifier :=
+							self
+								splitIdentifier:	identifier
+								usingUnarySelectors:	#(  )
+								usingKeywordParts:	keywords
+								usingCandidates:	candidates.
 					] value.
 
 					writer
-						nextPutAll: identifier.
+						nextPutAll:	identifier.
 
 					lastIndex := nextIndex.
 				].
@@ -1322,8 +1315,8 @@ FormatterToolingRudesheim class >> repairMethodString: aString [
 						nextPutAll:
 						(
 							aString
-								copyFrom: lastIndex
-								to: size
+								copyFrom:	lastIndex
+								to:	size
 						).
 				].
 		].
@@ -1337,19 +1330,16 @@ FormatterToolingRudesheim class >> sourceStringFrom: anObject [
 			^ anObject.
 		].
 
-	#(
-		#source
-		#sourceCode
-	)
+	#( #source #sourceCode )
 		detect:
 		[ :each |
 			anObject
-				respondsTo:	each
+				respondsTo:	each.
 		]
 		ifFound:
 		[ :selector |
 			^ selector
-				value: anObject.
+				value:	anObject.
 		].
 
 	^ anObject asString.
@@ -1387,27 +1377,27 @@ usingCandidates: aCandidateCollection [
 			|
 
 			continue := thisContext.
-
 			eachSize := each size.
+
 			(
 				{
 					[
-						0 < eachSize
+						0 < eachSize.
 					].
 					[
 						anIdentifierString
-							endsWith:	each
+							endsWith:	each.
 					].
 					[
-						eachSize < anIdentifierString size
+						eachSize < anIdentifierString size.
 					].
 					[
-						eachSize > bestSize
-					].
+						eachSize > bestSize.
+					]
 				}
 					allSatisfy:
 					[ :condition |
-						condition value
+						condition value.
 					]
 			)
 				ifFalse:
@@ -1428,7 +1418,7 @@ usingCandidates: aCandidateCollection [
 	prefix :=
 		anIdentifierString
 			copyFrom:	1
-			to:			anIdentifierString size - bestMatch size.
+			to:	anIdentifierString size - bestMatch size.
 
 	prefix isEmpty
 		ifTrue:
@@ -1438,7 +1428,7 @@ usingCandidates: aCandidateCollection [
 
 	(
 		aCandidateCollection
-			includes: prefix
+			includes:	prefix
 	)
 		ifFalse:
 		[

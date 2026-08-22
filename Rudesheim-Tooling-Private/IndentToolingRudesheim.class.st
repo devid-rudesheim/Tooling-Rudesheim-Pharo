@@ -4,7 +4,9 @@ Represents an indent level for FormatterToolingRudesheim's line-based formatting
 Class {
 	#name : 'IndentToolingRudesheim',
 	#superclass : 'Object',
-	#instVars : [ 'indent' ],
+	#instVars : [
+		'indent'
+	],
 	#category : 'Rudesheim-Tooling-Private',
 	#package : 'Rudesheim-Tooling-Private'
 }
@@ -18,25 +20,20 @@ IndentToolingRudesheim class >> level: anInteger [
 	anInteger isNumber
 		ifFalse:
 		[
-			self error: 'anInteger must be a number'.
+			self
+				error:	'anInteger must be a number'.
 		].
 
 	instance := self new.
 
 	instance
-		indent:	( anInteger max: 0 ).
+		indent:
+		(
+			anInteger
+				max:	0
+		).
 
 	^ instance.
-]
-
-{ #category : 'accessing' }
-IndentToolingRudesheim >> indent [
-	^ indent.
-]
-
-{ #category : 'accessing' }
-IndentToolingRudesheim >> indent: anInteger [
-	indent := anInteger.
 ]
 
 { #category : 'converting' }
@@ -50,6 +47,16 @@ IndentToolingRudesheim >> asString [
 	^ String
 		new:	self indent
 		withAll:	Character tab.
+]
+
+{ #category : 'accessing' }
+IndentToolingRudesheim >> indent [
+	^ indent.
+]
+
+{ #category : 'accessing' }
+IndentToolingRudesheim >> indent: anInteger [
+	indent := anInteger.
 ]
 
 { #category : 'operations' }

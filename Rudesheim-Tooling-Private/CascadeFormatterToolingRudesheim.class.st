@@ -124,19 +124,18 @@ indent: anIndentToolingRudesheim [
 			^
 			(
 				aMessageNode selectorParts
-					with: aMessageNode arguments
+					with:	aMessageNode arguments
 					collect:
 					[ :part :argument |
 						Rudesheim Tooling Formatter MessageKind Keyword
 							formatKeywordPart:	part
 							argument:	argument
-							indent:	anIndentToolingRudesheim
+							indent:	anIndentToolingRudesheim.
 					]
-			) flattened
+			) flattened.
 		].
 
-	line :=
-		anIndentToolingRudesheim asString , aMessageNode selector asString.
+	line := anIndentToolingRudesheim asString , aMessageNode selector asString.
 
 	aMessageNode isBinary
 		ifTrue:
@@ -151,6 +150,6 @@ indent: anIndentToolingRudesheim [
 
 	^
 	{
-		line.
-	}
+		line
+	}.
 ]

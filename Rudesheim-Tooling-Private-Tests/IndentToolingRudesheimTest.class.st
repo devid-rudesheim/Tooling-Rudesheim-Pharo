@@ -4,31 +4,9 @@ Tests IndentToolingRudesheim.
 Class {
 	#name : 'IndentToolingRudesheimTest',
 	#superclass : 'TestCase',
-	#category : 'Rudesheim-Tooling-Tests',
+	#category : 'Rudesheim-Tooling-Private-Tests',
 	#package : 'Rudesheim-Tooling-Private-Tests'
 }
-
-{ #category : 'tests' }
-IndentToolingRudesheimTest >> testLevelRejectsNonNumber [
-	self
-		should:
-		[
-			IndentToolingRudesheim
-				level:	'not a number'.
-		]
-		raise:	Error.
-]
-
-{ #category : 'tests' }
-IndentToolingRudesheimTest >> testLevelClampsNegativeToZero [
-	self
-		assert:
-		(
-			IndentToolingRudesheim
-				level:	-3
-		) indent
-		equals:	0.
-]
 
 { #category : 'tests' }
 IndentToolingRudesheimTest >> testAsStringForLevelZeroAndLevelTwo [
@@ -46,7 +24,34 @@ IndentToolingRudesheimTest >> testAsStringForLevelZeroAndLevelTwo [
 			IndentToolingRudesheim
 				level:	2
 		) asString
-		equals:	( String new: 2 withAll: Character tab ).
+		equals:
+		(
+			String
+				new:	2
+				withAll:	Character tab
+		).
+]
+
+{ #category : 'tests' }
+IndentToolingRudesheimTest >> testLevelClampsNegativeToZero [
+	self
+		assert:
+		(
+			IndentToolingRudesheim
+				level:	-3
+		) indent
+		equals:	0.
+]
+
+{ #category : 'tests' }
+IndentToolingRudesheimTest >> testLevelRejectsNonNumber [
+	self
+		should:
+		[
+			IndentToolingRudesheim
+				level:	'not a number'.
+		]
+		raise:	Error.
 ]
 
 { #category : 'tests' }

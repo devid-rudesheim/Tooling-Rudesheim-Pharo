@@ -26,7 +26,7 @@ indent: anIndentToolingRudesheim [
 		[
 			^
 			{
-				anIndentToolingRudesheim asString , '{}'
+				( anIndentToolingRudesheim asString , '{}' )
 			}.
 		].
 
@@ -49,8 +49,7 @@ indent: anIndentToolingRudesheim [
 	lines := OrderedCollection new.
 
 	lines
-		add:
-		anIndentToolingRudesheim asString , '{'.
+		add:	anIndentToolingRudesheim asString , '{'.
 
 	previousEnd := anArrayNode left.
 
@@ -91,8 +90,7 @@ indent: anIndentToolingRudesheim [
 		].
 
 	lines
-		add:
-		anIndentToolingRudesheim asString , '}'.
+		add:	anIndentToolingRudesheim asString , '}'.
 
 	^ lines.
 ]

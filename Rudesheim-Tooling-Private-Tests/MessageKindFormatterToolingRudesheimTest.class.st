@@ -6,7 +6,7 @@ FormatterToolingRudesheim's public entry point.
 Class {
 	#name : 'MessageKindFormatterToolingRudesheimTest',
 	#superclass : 'TestCase',
-	#category : 'Rudesheim-Tooling-Tests',
+	#category : 'Rudesheim-Tooling-Private-Tests',
 	#package : 'Rudesheim-Tooling-Private-Tests'
 }
 
@@ -15,28 +15,25 @@ MessageKindFormatterToolingRudesheimTest >> testFormatterKindForRudesheimSelects
 	self
 		assert:
 		(
-			(
-				OCParser parseExpression: 'self foo: 1'
-			) formatterKindForRudesheim
-		)
+			OCParser
+				parseExpression:	'self foo: 1'
+		) formatterKindForRudesheim
 		equals:	KeywordMessageKindFormatterToolingRudesheim.
 
 	self
 		assert:
 		(
-			(
-				OCParser parseExpression: '1 + 2'
-			) formatterKindForRudesheim
-		)
+			OCParser
+				parseExpression:	'1 + 2'
+		) formatterKindForRudesheim
 		equals:	BinaryMessageKindFormatterToolingRudesheim.
 
 	self
 		assert:
 		(
-			(
-				OCParser parseExpression: 'self foo'
-			) formatterKindForRudesheim
-		)
+			OCParser
+				parseExpression:	'self foo'
+		) formatterKindForRudesheim
 		equals:	UnaryMessageKindFormatterToolingRudesheim.
 ]
 
@@ -51,9 +48,7 @@ MessageKindFormatterToolingRudesheimTest >> testKeywordMessageReceiverKeepsOwnLi
 		Rudesheim Tooling Formatter
 			format:	'at: aClassSymbol ^ Smalltalk at: aClassSymbol'.
 
-	expected :=
-		'at: aClassSymbol' , String cr , String tab , '^ Smalltalk' , String cr ,
-		String tab , String tab , 'at:' , String tab , 'aClassSymbol.'.
+	expected := 'at: aClassSymbol' , String cr , String tab , '^ Smalltalk' , String cr , String tab , String tab , 'at:' , String tab , 'aClassSymbol.'.
 
 	self
 		assert:	formatted
