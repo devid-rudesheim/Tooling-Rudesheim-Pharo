@@ -490,21 +490,47 @@ FormatterToolingRudesheimTest >> testDynamicArrayKeywordMessageElementsDoNotGetW
 		equals:	expected.
 ]
 
-{ #category : 'as yet unclassified' }
-FormatterToolingRudesheimTest >> testEnableAsFormatterInstallsAndDisableAsFormatterRestoresDefault [
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testFormatAsYouReadPolicyAndFormatterSwitch [
 	|
 		previousClass
+		previousPolicy
 	|
 
 	previousClass := OCProgramNode formatterClass.
+	previousPolicy := self targetClass formatAsYouReadPolicy.
 	[
-		self targetClass enableAsFormatter.
+		self targetClass
+			formatAsYouReadPolicy:	false.
+
+		self
+			assert:
+			self
+				targetClass
+				formatAsYouReadPolicy
+			equals:	false.
+
+		self
+			targetClass
+			enableAsFormatter.
 
 		self
 			assert:	OCProgramNode formatterClass
 			equals:	self targetClass.
 
-		self targetClass disableAsFormatter.
+		self targetClass
+			formatAsYouReadPolicy:	true.
+
+		self
+			assert:
+			self
+				targetClass
+				formatAsYouReadPolicy
+			equals:	true.
+
+		self
+			targetClass
+			disableAsFormatter.
 
 		self
 			assert:	OCProgramNode formatterClass
@@ -512,6 +538,9 @@ FormatterToolingRudesheimTest >> testEnableAsFormatterInstallsAndDisableAsFormat
 	]
 		ensure:
 		[
+			self targetClass
+				formatAsYouReadPolicy:	previousPolicy.
+
 			OCProgramNode
 				formatterClass:	previousClass.
 		].

@@ -331,6 +331,25 @@ FormatterToolingRudesheim class >> disableAsFormatter [
 	OCProgramNode resetFormatter.
 ]
 
+{ #category : 'accessing' }
+FormatterToolingRudesheim class >> formatAsYouReadPolicy [
+	^ self
+		propertyAt:	#formatAsYouReadPolicy
+		ifAbsent:
+		[
+			false.
+		].
+]
+
+{ #category : 'accessing' }
+FormatterToolingRudesheim class >> formatAsYouReadPolicy: aBoolean [
+	self
+		propertyAt:	#formatAsYouReadPolicy
+		put:	aBoolean.
+
+	^ aBoolean.
+]
+
 { #category : 'control' }
 FormatterToolingRudesheim class >> enableAsFormatter [
 	OCProgramNode
