@@ -469,7 +469,7 @@ FormatterToolingRudesheimTest >> testDynamicArrayKeywordMessageElementsDoNotGetW
 
 	formatted :=
 		self targetClass
-			format:
+			format:	
 				'sample: aString nextChar: nextChar nextIndex: nextIndex size: size
 	{
 		self
@@ -504,14 +504,10 @@ FormatterToolingRudesheimTest >> testFormatAsYouReadPolicyAndFormatterSwitch [
 			formatAsYouReadPolicy:	false.
 
 		self
-			deny:
-			self
-				targetClass
-				formatAsYouReadPolicy.
+			deny:	
+				self targetClass formatAsYouReadPolicy.
 
-		self
-			targetClass
-			enableAsFormatter.
+		self targetClass enableAsFormatter.
 
 		self
 			assert:	OCProgramNode formatterClass
@@ -521,14 +517,10 @@ FormatterToolingRudesheimTest >> testFormatAsYouReadPolicyAndFormatterSwitch [
 			formatAsYouReadPolicy:	true.
 
 		self
-			assert:
-			self
-				targetClass
-				formatAsYouReadPolicy.
+			assert:	
+				self targetClass formatAsYouReadPolicy.
 
-		self
-			targetClass
-			disableAsFormatter.
+		self targetClass disableAsFormatter.
 
 		self
 			assert:	OCProgramNode formatterClass
@@ -578,13 +570,11 @@ FormatterToolingRudesheimTest >> testFormatsEnsureProcessingClassNamedExample [
 
 	formatted :=
 		self targetClass
-			format:
-				self class sourceEnsureProcessingClassNamedExample.
+			format:	self class sourceEnsureProcessingClassNamedExample.
 
 	self
 		assert:	formatted
-		equals:
-			self class expectedEnsureProcessingClassNamedTarget.
+		equals:	self class expectedEnsureProcessingClassNamedTarget.
 ]
 
 { #category : 'as yet unclassified' }
@@ -903,7 +893,7 @@ FormatterToolingRudesheimTest >> testShortBinaryExpressionWrittenAcrossLinesStay
 
 	formatted :=
 		self targetClass
-			format:
+			format:	
 				'total: total weight: weight value: value
 	^ total +
 		(
