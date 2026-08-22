@@ -90,29 +90,18 @@ indent: anIndentToolingRudesheim [
 
 	keepWalking := true.
 	[
-		[
-			|
-				break
-			|
-
-			break := thisContext.
-
-			keepWalking
-				ifTrue:
-				[
-					(
-						node
-							isKindOf:	OCMessageNode
-					)
-						ifTrue:
-						[
-							break
-								return:	node isKeyword not.
-						].
-				].
-
-			false.
-		] value
+		keepWalking
+			and:
+			[
+				(
+					node
+						isKindOf:	OCMessageNode
+				)
+					and:
+					[
+						node isKeyword not.
+					]
+			]
 	]
 		whileTrue:
 		[
