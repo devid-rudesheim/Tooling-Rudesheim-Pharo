@@ -14,15 +14,8 @@ BaselineOfRudesheimTooling >> baseline: spec [
 		do:
 		[
 			spec
-				baseline: 'RudesheimKernel'
-				with: [ spec repository: 'github://devid-rudesheim/Kernel-Rudesheim-Pharo:develop' ];
-
 				baseline: 'RudesheimUtility'
-				with: [ spec repository: 'github://devid-rudesheim/Utility-Rudesheim-Pharo:develop' ];
-
-				project: 'RudesheimUtilityTests'
-				copyFrom: 'RudesheimUtility'
-				with: [ spec loads: #( 'tests' ) ];
+				with: [ spec repository: 'github://devid-rudesheim/Utility-Rudesheim-Pharo:main' ];
 
 				package: 'Rudesheim-Tooling-Private';
 
@@ -30,7 +23,14 @@ BaselineOfRudesheimTooling >> baseline: spec [
 				with:
 				[
 					spec
-						requires: #( 'RudesheimKernel' 'RudesheimUtility' 'Rudesheim-Tooling-Private' )
+						requires: #( 'RudesheimUtility' 'Rudesheim-Tooling-Private' )
+				];
+
+				project: 'RudesheimUtilityTests'
+				copyFrom: 'RudesheimUtility'
+				with:
+				[
+					spec loads: #( 'tests' )
 				];
 
 				package: 'Rudesheim-Tooling-Private-Tests'

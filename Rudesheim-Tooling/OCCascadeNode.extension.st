@@ -2,18 +2,18 @@ Extension { #name : 'OCCascadeNode' }
 
 { #category : '*Rudesheim-Tooling' }
 OCCascadeNode >> acceptFormatterRudesheim: aFormatter
-indent: anIndentLevelInteger [
-	^ aFormatter
+indent: anIndentToolingRudesheim [
+	^ aFormatter Cascade
 		formatCascadeLines:	self
-		indent:	anIndentLevelInteger.
+		indent:	anIndentToolingRudesheim.
 ]
 
 { #category : '*Rudesheim-Tooling' }
 OCCascadeNode >> acceptFormatterRudesheimAsSubexpression: aFormatter
-indent: anIndentLevelInteger [
+indent: anIndentToolingRudesheim [
 	^ aFormatter
 		formatParenthesizedLines:	self
-		indent:	anIndentLevelInteger.
+		indent:	anIndentToolingRudesheim.
 ]
 
 { #category : '*Rudesheim-Tooling' }

@@ -6,33 +6,9 @@ Class {
 		'targetString',
 		'target'
 	],
-	#category : 'Rudesheim-Tooling-Tests',
+	#category : 'Rudesheim-Tooling-Private-Tests',
 	#package : 'Rudesheim-Tooling-Private-Tests'
 }
-
-{ #category : 'accessing' }
-FormatterToolingRudesheimTest >> defaultTarget [
-	^ self targetClass new.
-]
-
-{ #category : 'accessing' }
-FormatterToolingRudesheimTest >> target [
-	^ target
-		ifNil:
-		[
-			target := self defaultTarget.
-		].
-]
-
-{ #category : 'accessing' }
-FormatterToolingRudesheimTest >> target: anObject [
-	target := anObject.
-]
-
-{ #category : 'accessing' }
-FormatterToolingRudesheimTest >> targetClass [
-	^ self class targetClass.
-]
 
 { #category : 'tests-data' }
 FormatterToolingRudesheimTest class >> defaultSourceString [
@@ -135,7 +111,7 @@ FormatterToolingRudesheimTest class >> expectedEnsureProcessingClassNamedTarget 
 		add:	2 -> 'Smalltalk'.
 
 	specs
-		add:	3 -> ('includesKey:' , String tab , 'aClassSymbol').
+		add:	3 -> ( 'includesKey:' , String tab , 'aClassSymbol' ).
 
 	specs
 		add:	1 -> ')'.
@@ -159,10 +135,10 @@ FormatterToolingRudesheimTest class >> expectedEnsureProcessingClassNamedTarget 
 		add:	5 -> 'builder'.
 
 	specs
-		add:	6 -> ('superclass:' , String tab , 'Object;').
+		add:	6 -> ( 'superclass:' , String tab , 'Object;' ).
 
 	specs
-		add:	6 -> ('name:' , String tab , 'aClassSymbol;').
+		add:	6 -> ( 'name:' , String tab , 'aClassSymbol;' ).
 
 	specs
 		add:	6 -> 'traits:'.
@@ -174,16 +150,16 @@ FormatterToolingRudesheimTest class >> expectedEnsureProcessingClassNamedTarget 
 		add:	7 -> 'Smalltalk'.
 
 	specs
-		add:	8 -> ('at:' , String tab , '#TMethodUtilityGPTAgent').
+		add:	8 -> ( 'at:' , String tab , '#TMethodUtilityGPTAgent' ).
 
 	specs
 		add:	6 -> '};'.
 
 	specs
-		add:	6 -> ('slots:' , String tab , '{};').
+		add:	6 -> ( 'slots:' , String tab , '{};' ).
 
 	specs
-		add:	6 -> ('package:' , String tab , '''AgentWorkspace''.').
+		add:	6 -> ( 'package:' , String tab , '''AgentWorkspace''.' ).
 
 	specs
 		add:	4 -> '].'.
@@ -201,7 +177,7 @@ FormatterToolingRudesheimTest class >> expectedEnsureProcessingClassNamedTarget 
 		add:	2 -> 'Smalltalk'.
 
 	specs
-		add:	3 -> ('at:' , String tab , 'aClassSymbol.').
+		add:	3 -> ( 'at:' , String tab , 'aClassSymbol.' ).
 
 	specs
 		add:	0 -> ''.
@@ -210,7 +186,7 @@ FormatterToolingRudesheimTest class >> expectedEnsureProcessingClassNamedTarget 
 		add:	1 -> 'TMethodUtilityGPTAgent'.
 
 	specs
-		add:	2 -> ('ensureLastUsedMethodsOn:' , String tab , 'cls.').
+		add:	2 -> ( 'ensureLastUsedMethodsOn:' , String tab , 'cls.' ).
 
 	stream :=
 		WriteStream
@@ -219,13 +195,11 @@ FormatterToolingRudesheimTest class >> expectedEnsureProcessingClassNamedTarget 
 	specs
 		doWithIndex:
 		[ :pair :idx |
-			pair
-				key
-				> 0
+			pair key > 0
 				ifTrue:
 				[
 					stream
-						nextPutAll:	
+						nextPutAll:
 						(
 							String
 								new:	pair key
@@ -259,9 +233,22 @@ FormatterToolingRudesheimTest class >> targetClass [
 { #category : 'as yet unclassified' }
 FormatterToolingRudesheimTest class >> testParameters [
 	^ ParametrizedTestMatrix new
-		addCase:	{(#sourceString -> self defaultSourceString) .  (#targetString -> self defaultTargetString)};
-		addCase:	{(#sourceString -> 'sum ^ 1+2') .  (#targetString -> ('sum' , String cr , String tab , '^ 1 + 2.'))};
+		addCase:
+		{
+			( #sourceString -> self defaultSourceString ).
+			( #targetString -> self defaultTargetString )
+		};
+		addCase:
+		{
+			( #sourceString -> 'sum ^ 1+2' ).
+			( #targetString -> ( 'sum' , String cr , String tab , '^ 1 + 2.' ) )
+		};
 		yourself.
+]
+
+{ #category : 'accessing' }
+FormatterToolingRudesheimTest >> defaultTarget [
+	^ self targetClass new.
 ]
 
 { #category : 'as yet unclassified' }
@@ -269,9 +256,7 @@ FormatterToolingRudesheimTest >> sourceString [
 	^ sourceString
 		ifNil:
 		[
-			self
-				class
-				defaultSourceString.
+			self class defaultSourceString.
 		].
 ]
 
@@ -280,14 +265,31 @@ FormatterToolingRudesheimTest >> sourceString: aString [
 	sourceString := aString.
 ]
 
+{ #category : 'accessing' }
+FormatterToolingRudesheimTest >> target [
+	^ target
+		ifNil:
+		[
+			target := self defaultTarget.
+		].
+]
+
+{ #category : 'accessing' }
+FormatterToolingRudesheimTest >> target: anObject [
+	target := anObject.
+]
+
+{ #category : 'accessing' }
+FormatterToolingRudesheimTest >> targetClass [
+	^ self class targetClass.
+]
+
 { #category : 'as yet unclassified' }
 FormatterToolingRudesheimTest >> targetString [
 	^ targetString
 		ifNil:
 		[
-			self
-				class
-				defaultTargetString.
+			self class defaultTargetString.
 		].
 ]
 
@@ -296,8 +298,8 @@ FormatterToolingRudesheimTest >> targetString: aString [
 	targetString := aString.
 ]
 
-{ #category : 'as yet unclassified' }
-FormatterToolingRudesheimTest >> testChainedUnaryMessagesStayInline [
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testAssignmentBinaryWithLiteralArrayKeywordArgumentStaysMultiline [
 	|
 		formatted
 		expected
@@ -305,27 +307,9 @@ FormatterToolingRudesheimTest >> testChainedUnaryMessagesStayInline [
 
 	formatted :=
 		self targetClass
-			format:	'run ^ self foo bar'.
+			format:	'total | ranges | total := (ranges at: 1) + (#( 4 5 6 ) inject: 0 into: [ :sum :each | "inside block" sum + each ])'.
 
-	expected := 'run' , String cr , String tab , '^ self foo bar.'.
-
-	self
-		assert:	formatted
-		equals:	expected.
-]
-
-{ #category : 'as yet unclassified' }
-FormatterToolingRudesheimTest >> testShortBinaryChainStaysInline [
-	|
-		formatted
-		expected
-	|
-
-	formatted :=
-		self targetClass
-			format:	'sum ^ 1 + 2 + 3'.
-
-	expected := 'sum' , String cr , String tab , '^ 1 + 2 + 3.'.
+	expected := 'total' , String cr , String tab , '|' , String cr , String tab , String tab , 'ranges' , String cr , String tab , '|' , String cr , String cr , String tab , 'total :=' , String cr , String tab , '(' , String cr , String tab , String tab , 'ranges' , String cr , String tab , String tab , String tab , 'at:' , String tab , '1' , String cr , String tab , ') +' , String cr , String tab , '(' , String cr , String tab , String tab , '#( 4 5 6 )' , String cr , String tab , String tab , String tab , 'inject:' , String tab , '0' , String cr , String tab , String tab , String tab , 'into:' , String cr , String tab , String tab , String tab , '[ :sum :each |' , String cr , String tab , String tab , String tab , String tab , '"inside block"' , String cr , String tab , String tab , String tab , String tab , 'sum + each.' , String cr , String tab , String tab , String tab , ']' , String cr , String tab , ').'.
 
 	self
 		assert:	formatted
@@ -351,7 +335,7 @@ FormatterToolingRudesheimTest >> testAssignmentBracketStartsAtAssignmentIndent [
 ]
 
 { #category : 'tests' }
-FormatterToolingRudesheimTest >> testDynamicArrayAlwaysUsesMultilineElements [
+FormatterToolingRudesheimTest >> testBinaryAfterParenthesizedMultilineReceiverStaysOnClosingParenthesis [
 	|
 		formatted
 		expected
@@ -359,9 +343,9 @@ FormatterToolingRudesheimTest >> testDynamicArrayAlwaysUsesMultilineElements [
 
 	formatted :=
 		self targetClass
-			format:	'ranges ^ { self rows. self columns }'.
+			format:	'sample ^ (self formatInlineParenthesesIn: text trimBoth) = $"'.
 
-	expected := 'ranges' , String cr , String tab , '^' , String cr , String tab , '{' , String cr , String tab , String tab , 'self rows.' , String cr , String tab , String tab , 'self columns' , String cr , String tab , '}.'.
+	expected := 'sample' , String cr , String tab , '^' , String cr , String tab , '(' , String cr , String tab , String tab , 'self' , String cr , String tab , String tab , String tab , 'formatInlineParenthesesIn:' , String tab , 'text trimBoth' , String cr , String tab , ') = $".'.
 
 	self
 		assert:	formatted
@@ -387,7 +371,7 @@ FormatterToolingRudesheimTest >> testBinaryArgumentKeywordMessageKeepsParenthesi
 ]
 
 { #category : 'tests' }
-FormatterToolingRudesheimTest >> testKeywordArgumentShortBinaryMessageStaysInline [
+FormatterToolingRudesheimTest >> testCascadeCommentsArePreserved [
 	|
 		formatted
 		expected
@@ -395,17 +379,17 @@ FormatterToolingRudesheimTest >> testKeywordArgumentShortBinaryMessageStaysInlin
 
 	formatted :=
 		self targetClass
-			format:	'sample elementLines at: elementLines size put: elementLines last , ''.'''.
+			format:	'sample | builder | builder := Object new. builder "before name" name: #Foo; "before values" values: #( 1 2 3 ); yourself'.
 
-	expected := 'sample' , String cr , String tab , 'elementLines' , String cr , String tab , String tab , 'at:' , String tab , 'elementLines size' , String cr , String tab , String tab , 'put:' , String tab , 'elementLines last , ''.''.'.
+	expected := 'sample' , String cr , String tab , '|' , String cr , String tab , String tab , 'builder' , String cr , String tab , '|' , String cr , String cr , String tab , 'builder := Object new.' , String cr , String cr , String tab , 'builder' , String cr , String tab , String tab , '"before name"' , String cr , String tab , String tab , 'name:' , String tab , '#Foo;' , String cr , String tab , String tab , '"before values"' , String cr , String tab , String tab , 'values:' , String tab , '#( 1 2 3 );' , String cr , String tab , String tab , 'yourself.'.
 
 	self
 		assert:	formatted
 		equals:	expected.
 ]
 
-{ #category : 'tests' }
-FormatterToolingRudesheimTest >> testKeywordArgumentStartingWithVariableIndentsOneLevelDeeper [
+{ #category : 'as yet unclassified' }
+FormatterToolingRudesheimTest >> testChainedUnaryMessagesStayInline [
 	|
 		formatted
 		expected
@@ -413,27 +397,9 @@ FormatterToolingRudesheimTest >> testKeywordArgumentStartingWithVariableIndentsO
 
 	formatted :=
 		self targetClass
-			format:	'store output at: index put: total + (biases at: oc + 1)'.
+			format:	'run ^ self foo bar'.
 
-	expected := 'store' , String cr , String tab , 'output' , String cr , String tab , String tab , 'at:' , String tab , 'index' , String cr , String tab , String tab , 'put:' , String tab , String cr , String tab , String tab , String tab , 'total +' , String cr , String tab , String tab , String tab , '(' , String cr , String tab , String tab , String tab , String tab , 'biases' , String cr , String tab , String tab , String tab , String tab , String tab , 'at:' , String tab , 'oc + 1' , String cr , String tab , String tab , String tab , ').'.
-
-	self
-		assert:	formatted
-		equals:	expected.
-]
-
-{ #category : 'tests' }
-FormatterToolingRudesheimTest >> testKeywordReceiverUnaryChainStaysInline [
-	|
-		formatted
-		expected
-	|
-
-	formatted :=
-		self targetClass
-			format:	'sample ^ Rudesheim MachineLearning NeuralNetwork TensorLayout forOutput: self output'.
-
-	expected := 'sample' , String cr , String tab , '^ Rudesheim MachineLearning NeuralNetwork TensorLayout' , String cr , String tab , String tab , 'forOutput:' , String tab , 'self output.'.
+	expected := 'run' , String cr , String tab , '^ self foo bar.'.
 
 	self
 		assert:	formatted
@@ -459,7 +425,7 @@ FormatterToolingRudesheimTest >> testCommentsArePreserved [
 ]
 
 { #category : 'tests' }
-FormatterToolingRudesheimTest >> testLiteralArrayKeepsInsideSpaces [
+FormatterToolingRudesheimTest >> testDynamicArrayAlwaysUsesMultilineElements [
 	|
 		formatted
 		expected
@@ -467,117 +433,9 @@ FormatterToolingRudesheimTest >> testLiteralArrayKeepsInsideSpaces [
 
 	formatted :=
 		self targetClass
-			format:	'numbers ^ #( 1 2 3 )'.
+			format:	'ranges ^ { self rows. self columns }'.
 
-	expected := 'numbers' , String cr , String tab , '^ #( 1 2 3 ).'.
-
-	self
-		assert:	formatted
-		equals:	expected.
-]
-
-{ #category : 'tests' }
-FormatterToolingRudesheimTest >> testParenthesizedInlineExpressionKeepsInsideSpaces [
-	|
-		formatted
-		expected
-	|
-
-	formatted :=
-		self targetClass
-			format:	'sample ^ columnTotal + (weight * value)'.
-
-	expected := 'sample' , String cr , String tab , '^ columnTotal + ( weight * value ).'.
-
-	self
-		assert:	formatted
-		equals:	expected.
-]
-
-{ #category : 'tests' }
-FormatterToolingRudesheimTest >> testParenthesisSpacingDoesNotChangeStringLiteralContents [
-	|
-		formatted
-		expected
-	|
-
-	formatted :=
-		self targetClass
-			format:	'sample ^ ''(keep)'' , (1 + 2)'.
-
-	expected := 'sample' , String cr , String tab , '^ ''(keep)'' , ( 1 + 2 ).'.
-
-	self
-		assert:	formatted
-		equals:	expected.
-]
-
-{ #category : 'tests' }
-FormatterToolingRudesheimTest >> testParenthesisSpacingDoesNotChangeCharacterLiteralContents [
-	|
-		formatted
-		expected
-	|
-
-	formatted :=
-		self targetClass
-			format:	'sample ^ $) = $('.
-
-	expected := 'sample' , String cr , String tab , '^ $) = $(.'.
-
-	self
-		assert:	formatted
-		equals:	expected.
-]
-
-{ #category : 'tests' }
-FormatterToolingRudesheimTest >> testBinaryAfterParenthesizedMultilineReceiverStaysOnClosingParenthesis [
-	|
-		formatted
-		expected
-	|
-
-	formatted :=
-		self targetClass
-			format:	'sample ^ (self formatInlineParenthesesIn: text trimBoth) = $"'.
-
-	expected := 'sample' , String cr , String tab , '^' , String cr , String tab , '(' , String cr , String tab , String tab , 'self' , String cr , String tab , String tab , String tab , 'formatInlineParenthesesIn:' , String tab , 'text trimBoth' , String cr , String tab , ') = $".'.
-
-	self
-		assert:	formatted
-		equals:	expected.
-]
-
-{ #category : 'tests' }
-FormatterToolingRudesheimTest >> testKeywordParenthesizedMultilineArgumentStartsOnNextLine [
-	|
-		formatted
-		expected
-	|
-
-	formatted :=
-		self targetClass
-			format:	'sample ^ self text: (self formatInlineParenthesesIn: text trimBoth)'.
-
-	expected := 'sample' , String cr , String tab , '^ self' , String cr , String tab , String tab , 'text:' , String cr , String tab , String tab , '(' , String cr , String tab , String tab , String tab , 'self' , String cr , String tab , String tab , String tab , String tab , 'formatInlineParenthesesIn:' , String tab , 'text trimBoth' , String cr , String tab , String tab , ').'.
-
-	self
-		assert:	formatted
-		equals:	expected.
-]
-
-{ #category : 'tests' }
-FormatterToolingRudesheimTest >> testKeywordParenthesizedBinaryArgumentIndentsAsExpression [
-	|
-		formatted
-		expected
-	|
-
-	formatted :=
-		self targetClass
-			format:	'sample self formatCommentLinesInSource: source from: previousEnd + 1 to: (self cascadeMessageStartFor: message) - 1 indent: keywordIndent'.
-
-	expected := 'sample' , String cr , String tab , 'self' , String cr , String tab , String tab , 'formatCommentLinesInSource:' , String tab , 'source' , String cr , String tab , String tab , 'from:' , String tab , 'previousEnd + 1' , String cr , String tab , String tab , 'to:' , String cr , String tab , String tab , '(' , String cr , String tab , String tab , String tab , 'self' , String cr , String tab , String tab , String tab , String tab , 'cascadeMessageStartFor:' , String tab , 'message' , String cr , String tab , String tab , ') - 1' , String cr , String tab , String tab , 'indent:' , String tab , 'keywordIndent.'.
+	expected := 'ranges' , String cr , String tab , '^' , String cr , String tab , '{' , String cr , String tab , String tab , 'self rows.' , String cr , String tab , String tab , 'self columns' , String cr , String tab , '}.'.
 
 	self
 		assert:	formatted
@@ -595,7 +453,7 @@ FormatterToolingRudesheimTest >> testDynamicArrayAssignmentWithLiteralArraysStay
 		self targetClass
 			format:	'sample | output | output := { "inside dynamic array" #( 10 20 ). #( ''a'' ''b'' ) }'.
 
-	expected := 'sample' , String cr , String tab , '|' , String cr , String tab , String tab , 'output' , String cr , String tab , '|' , String cr , String cr , String tab , 'output :=' , String cr , String tab , '{' , String cr , String tab , String tab , '"inside dynamic array"' , String cr , String tab , String tab , '#( 10 20 ).' , String cr , String tab , String tab , '#( ''a'' ''b'' )' , String cr , String tab , '}.'. 
+	expected := 'sample' , String cr , String tab , '|' , String cr , String tab , String tab , 'output' , String cr , String tab , '|' , String cr , String cr , String tab , 'output :=' , String cr , String tab , '{' , String cr , String tab , String tab , '"inside dynamic array"' , String cr , String tab , String tab , '#( 10 20 ).' , String cr , String tab , String tab , '#( ''a'' ''b'' )' , String cr , String tab , '}.'.
 
 	self
 		assert:	formatted
@@ -603,7 +461,7 @@ FormatterToolingRudesheimTest >> testDynamicArrayAssignmentWithLiteralArraysStay
 ]
 
 { #category : 'tests' }
-FormatterToolingRudesheimTest >> testAssignmentBinaryWithLiteralArrayKeywordArgumentStaysMultiline [
+FormatterToolingRudesheimTest >> testDynamicArrayKeywordMessageElementsDoNotGetWrappedInParentheses [
 	|
 		formatted
 		expected
@@ -611,27 +469,21 @@ FormatterToolingRudesheimTest >> testAssignmentBinaryWithLiteralArrayKeywordArgu
 
 	formatted :=
 		self targetClass
-			format:	'total | ranges | total := (ranges at: 1) + (#( 4 5 6 ) inject: 0 into: [ :sum :each | "inside block" sum + each ])'.
+			format:
+				'sample: aString nextChar: nextChar nextIndex: nextIndex size: size
+	{
+		self
+			candidateIdentifierTerminatesWith: nextChar.
+		1 + nextIndex <= size
+			and:
+			[
+				self
+					isAssignmentStartCharacter: nextChar
+					followedBy: (aString at: 1 + nextIndex).
+			]
+	}'.
 
-	expected := 'total' , String cr , String tab , '|' , String cr , String tab , String tab , 'ranges' , String cr , String tab , '|' , String cr , String cr , String tab , 'total :=' , String cr , String tab , '(' , String cr , String tab , String tab , 'ranges' , String cr , String tab , String tab , String tab , 'at:' , String tab , '1' , String cr , String tab , ') +' , String cr , String tab , '(' , String cr , String tab , String tab , '#( 4 5 6 )' , String cr , String tab , String tab , String tab , 'inject:' , String tab , '0' , String cr , String tab , String tab , String tab , 'into:' , String cr , String tab , String tab , String tab , '[ :sum :each |' , String cr , String tab , String tab , String tab , String tab , '"inside block"' , String cr , String tab , String tab , String tab , String tab , 'sum + each.' , String cr , String tab , String tab , String tab , ']' , String cr , String tab , ').'.
-
-	self
-		assert:	formatted
-		equals:	expected.
-]
-
-{ #category : 'tests' }
-FormatterToolingRudesheimTest >> testCascadeCommentsArePreserved [
-	|
-		formatted
-		expected
-	|
-
-	formatted :=
-		self targetClass
-			format:	'sample | builder | builder := Object new. builder "before name" name: #Foo; "before values" values: #( 1 2 3 ); yourself'.
-
-	expected := 'sample' , String cr , String tab , '|' , String cr , String tab , String tab , 'builder' , String cr , String tab , '|' , String cr , String cr , String tab , 'builder := Object new.' , String cr , String cr , String tab , 'builder' , String cr , String tab , String tab , '"before name"' , String cr , String tab , String tab , 'name:' , String tab , '#Foo;' , String cr , String tab , String tab , '"before values"' , String cr , String tab , String tab , 'values:' , String tab , '#( 1 2 3 );' , String cr , String tab , String tab , 'yourself.'.
+	expected := 'sample: aString' , String cr , 'nextChar: nextChar' , String cr , 'nextIndex: nextIndex' , String cr , 'size: size' , String cr , String tab , '{' , String cr , String tab , String tab , 'self' , String cr , String tab , String tab , String tab , 'candidateIdentifierTerminatesWith:' , String tab , 'nextChar.' , String cr , String tab , String tab , '1 + nextIndex <= size' , String cr , String tab , String tab , String tab , 'and:' , String cr , String tab , String tab , String tab , '[' , String cr , String tab , String tab , String tab , String tab , 'self' , String cr , String tab , String tab , String tab , String tab , String tab , 'isAssignmentStartCharacter:' , String tab , 'nextChar' , String cr , String tab , String tab , String tab , String tab , String tab , 'followedBy:' , String cr , String tab , String tab , String tab , String tab , String tab , '(' , String cr , String tab , String tab , String tab , String tab , String tab , String tab , 'aString' , String cr , String tab , String tab , String tab , String tab , String tab , String tab , String tab , 'at:' , String tab , '1 + nextIndex' , String cr , String tab , String tab , String tab , String tab , String tab , ').' , String cr , String tab , String tab , String tab , ']' , String cr , String tab , '}.'.
 
 	self
 		assert:	formatted
@@ -639,46 +491,20 @@ FormatterToolingRudesheimTest >> testCascadeCommentsArePreserved [
 ]
 
 { #category : 'as yet unclassified' }
-FormatterToolingRudesheimTest >> testFormatAsYouReadPolicyAndFormatterSwitch [
+FormatterToolingRudesheimTest >> testEnableAsFormatterInstallsAndDisableAsFormatterRestoresDefault [
 	|
 		previousClass
-		previousPolicy
 	|
 
 	previousClass := OCProgramNode formatterClass.
-	previousPolicy := self targetClass formatAsYouReadPolicy.
 	[
-		self targetClass
-			formatAsYouReadPolicy:	false.
-
-		self
-			assert:	
-			self
-				targetClass
-				formatAsYouReadPolicy
-			equals:	false.
-
-		self
-			targetClass
-			enableAsFormatter.
+		self targetClass enableAsFormatter.
 
 		self
 			assert:	OCProgramNode formatterClass
 			equals:	self targetClass.
 
-		self targetClass
-			formatAsYouReadPolicy:	true.
-
-		self
-			assert:	
-			self
-				targetClass
-				formatAsYouReadPolicy
-			equals:	true.
-
-		self
-			targetClass
-			disableAsFormatter.
+		self targetClass disableAsFormatter.
 
 		self
 			assert:	OCProgramNode formatterClass
@@ -686,9 +512,6 @@ FormatterToolingRudesheimTest >> testFormatAsYouReadPolicyAndFormatterSwitch [
 	]
 		ensure:
 		[
-			self targetClass
-				formatAsYouReadPolicy:	previousPolicy.
-
 			OCProgramNode
 				formatterClass:	previousClass.
 		].
@@ -728,17 +551,13 @@ FormatterToolingRudesheimTest >> testFormatsEnsureProcessingClassNamedExample [
 
 	formatted :=
 		self targetClass
-			format:	
-			self
-				class
-				sourceEnsureProcessingClassNamedExample.
+			format:
+				self class sourceEnsureProcessingClassNamedExample.
 
 	self
 		assert:	formatted
-		equals:	
-		self
-			class
-			expectedEnsureProcessingClassNamedTarget.
+		equals:
+			self class expectedEnsureProcessingClassNamedTarget.
 ]
 
 { #category : 'as yet unclassified' }
@@ -771,6 +590,67 @@ FormatterToolingRudesheimTest >> testInstanceFormatDelegates [
 		equals:	self targetString.
 ]
 
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testKeywordArgumentShortBinaryMessageStaysInline [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'sample elementLines at: elementLines size put: elementLines last , ''.'''.
+
+	expected := 'sample' , String cr , String tab , 'elementLines' , String cr , String tab , String tab , 'at:' , String tab , 'elementLines size' , String cr , String tab , String tab , 'put:' , String tab , 'elementLines last , ''.''.'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testKeywordArgumentStartingWithVariableIndentsOneLevelDeeper [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'store output at: index put: total + (biases at: oc + 1)'.
+
+	expected := 'store' , String cr , String tab , 'output' , String cr , String tab , String tab , 'at:' , String tab , 'index' , String cr , String tab , String tab , 'put:' , String tab , String cr , String tab , String tab , String tab , 'total +' , String cr , String tab , String tab , String tab , '(' , String cr , String tab , String tab , String tab , String tab , 'biases' , String cr , String tab , String tab , String tab , String tab , String tab , 'at:' , String tab , 'oc + 1' , String cr , String tab , String tab , String tab , ').'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testKeywordMessageReceiverKeepsOwnRequiredMultilineInsteadOfCollapsing [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'sample: aString index: anIndex (aString at: anIndex) isAlphaNumeric ifFalse: [ ^ false ]'.
+
+	expected := 'sample: aString' , String cr , 'index: anIndex' , String cr , String tab , '(' , String cr , String tab , String tab , 'aString' , String cr , String tab , String tab , String tab , 'at:' , String tab , 'anIndex' , String cr , String tab , ') isAlphaNumeric' , String cr , String tab , String tab , 'ifFalse:' , String cr , String tab , String tab , '[' , String cr , String tab , String tab , String tab , '^ false.' , String cr , String tab , String tab , '].'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+
+	self
+		deny:
+		(
+			formatted
+				includesSubstring:	'at::'
+		).
+]
+
 { #category : 'as yet unclassified' }
 FormatterToolingRudesheimTest >> testKeywordMessageSplitsWithTabAfterColon [
 	|
@@ -783,6 +663,132 @@ FormatterToolingRudesheimTest >> testKeywordMessageSplitsWithTabAfterColon [
 			format:	'checkKey: aKey ^ Smalltalk includesKey: aKey'.
 
 	expected := 'checkKey: aKey' , String cr , String tab , '^ Smalltalk' , String cr , String tab , String tab , 'includesKey:' , String tab , 'aKey.'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testKeywordParenthesizedBinaryArgumentIndentsAsExpression [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'sample self formatCommentLinesInSource: source from: previousEnd + 1 to: (self cascadeMessageStartFor: message) - 1 indent: keywordIndent'.
+
+	expected := 'sample' , String cr , String tab , 'self' , String cr , String tab , String tab , 'formatCommentLinesInSource:' , String tab , 'source' , String cr , String tab , String tab , 'from:' , String tab , 'previousEnd + 1' , String cr , String tab , String tab , 'to:' , String cr , String tab , String tab , '(' , String cr , String tab , String tab , String tab , 'self' , String cr , String tab , String tab , String tab , String tab , 'cascadeMessageStartFor:' , String tab , 'message' , String cr , String tab , String tab , ') - 1' , String cr , String tab , String tab , 'indent:' , String tab , 'keywordIndent.'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testKeywordParenthesizedMultilineArgumentStartsOnNextLine [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'sample ^ self text: (self formatInlineParenthesesIn: text trimBoth)'.
+
+	expected := 'sample' , String cr , String tab , '^ self' , String cr , String tab , String tab , 'text:' , String cr , String tab , String tab , '(' , String cr , String tab , String tab , String tab , 'self' , String cr , String tab , String tab , String tab , String tab , 'formatInlineParenthesesIn:' , String tab , 'text trimBoth' , String cr , String tab , String tab , ').'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testKeywordReceiverUnaryChainStaysInline [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'sample ^ Rudesheim MachineLearning NeuralNetwork TensorLayout forOutput: self output'.
+
+	expected := 'sample' , String cr , String tab , '^ Rudesheim MachineLearning NeuralNetwork TensorLayout' , String cr , String tab , String tab , 'forOutput:' , String tab , 'self output.'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testLiteralArrayKeepsInsideSpaces [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'numbers ^ #( 1 2 3 )'.
+
+	expected := 'numbers' , String cr , String tab , '^ #( 1 2 3 ).'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testParenthesisSpacingDoesNotChangeCharacterLiteralContents [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'sample ^ $) = $('.
+
+	expected := 'sample' , String cr , String tab , '^ $) = $(.'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testParenthesisSpacingDoesNotChangeStringLiteralContents [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'sample ^ ''(keep)'' , (1 + 2)'.
+
+	expected := 'sample' , String cr , String tab , '^ ''(keep)'' , ( 1 + 2 ).'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testParenthesizedInlineExpressionKeepsInsideSpaces [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'sample ^ columnTotal + (weight * value)'.
+
+	expected := 'sample' , String cr , String tab , '^ columnTotal + ( weight * value ).'.
 
 	self
 		assert:	formatted
@@ -825,55 +831,6 @@ FormatterToolingRudesheimTest >> testReturnNonBracketMultilineJoinsFirstLine [
 		equals:	expected.
 ]
 
-{ #category : 'tests' }
-FormatterToolingRudesheimTest >> testDynamicArrayKeywordMessageElementsDoNotGetWrappedInParentheses [
-	|
-		formatted
-		expected
-	|
-
-	formatted :=
-		self targetClass
-			format:
-			'sample: aString nextChar: nextChar nextIndex: nextIndex size: size
-	{
-		self
-			candidateIdentifierTerminatesWith: nextChar.
-		1 + nextIndex <= size
-			and:
-			[
-				self
-					isAssignmentStartCharacter: nextChar
-					followedBy: (aString at: 1 + nextIndex).
-			]
-	}'.
-
-	expected :=
-		'sample: aString' , String cr ,
-		'nextChar: nextChar' , String cr ,
-		'nextIndex: nextIndex' , String cr ,
-		'size: size' , String cr ,
-		String tab , '{' , String cr ,
-		String tab , String tab , 'self' , String cr ,
-		String tab , String tab , String tab , 'candidateIdentifierTerminatesWith:' , String tab , 'nextChar.' , String cr ,
-		String tab , String tab , '1 + nextIndex <= size' , String cr ,
-		String tab , String tab , String tab , 'and:' , String cr ,
-		String tab , String tab , String tab , '[' , String cr ,
-		String tab , String tab , String tab , String tab , 'self' , String cr ,
-		String tab , String tab , String tab , String tab , String tab , 'isAssignmentStartCharacter:' , String tab , 'nextChar' , String cr ,
-		String tab , String tab , String tab , String tab , String tab , 'followedBy:' , String cr ,
-		String tab , String tab , String tab , String tab , String tab , '(' , String cr ,
-		String tab , String tab , String tab , String tab , String tab , String tab , 'aString' , String cr ,
-		String tab , String tab , String tab , String tab , String tab , String tab , String tab , 'at:' , String tab , '1 + nextIndex' , String cr ,
-		String tab , String tab , String tab , String tab , String tab , ').' , String cr ,
-		String tab , String tab , String tab , ']' , String cr ,
-		String tab , '}.'.
-
-	self
-		assert:	formatted
-		equals:	expected.
-]
-
 { #category : 'as yet unclassified' }
 FormatterToolingRudesheimTest >> testReturnSimpleValueStaysInline [
 	|
@@ -892,8 +849,8 @@ FormatterToolingRudesheimTest >> testReturnSimpleValueStaysInline [
 		equals:	expected.
 ]
 
-{ #category : 'tests' }
-FormatterToolingRudesheimTest >> testKeywordMessageReceiverKeepsOwnRequiredMultilineInsteadOfCollapsing [
+{ #category : 'as yet unclassified' }
+FormatterToolingRudesheimTest >> testShortBinaryChainStaysInline [
 	|
 		formatted
 		expected
@@ -901,48 +858,9 @@ FormatterToolingRudesheimTest >> testKeywordMessageReceiverKeepsOwnRequiredMulti
 
 	formatted :=
 		self targetClass
-			format:	'sample: aString index: anIndex (aString at: anIndex) isAlphaNumeric ifFalse: [ ^ false ]'.
+			format:	'sum ^ 1 + 2 + 3'.
 
-	expected :=
-		'sample: aString' , String cr ,
-		'index: anIndex' , String cr ,
-		String tab , '(' , String cr ,
-		String tab , String tab , 'aString' , String cr ,
-		String tab , String tab , String tab , 'at:' , String tab , 'anIndex' , String cr ,
-		String tab , ') isAlphaNumeric' , String cr ,
-		String tab , String tab , 'ifFalse:' , String cr ,
-		String tab , String tab , '[' , String cr ,
-		String tab , String tab , String tab , '^ false.' , String cr ,
-		String tab , String tab , '].'.
-
-	self
-		assert:	formatted
-		equals:	expected.
-
-	self
-		deny:
-		(
-			formatted
-				includesSubstring:	'at::'
-		).
-]
-
-{ #category : 'tests' }
-FormatterToolingRudesheimTest >> testShortBinaryExpressionWrittenOnOneLineStaysOnOneLine [
-	|
-		formatted
-		expected
-	|
-
-	formatted :=
-		self targetClass
-			format:	'total: total weight: weight value: value ^ total + (weight * value)'.
-
-	expected :=
-		'total: total' , String cr ,
-		'weight: weight' , String cr ,
-		'value: value' , String cr ,
-		String tab , '^ total + ( weight * value ).'.
+	expected := 'sum' , String cr , String tab , '^ 1 + 2 + 3.'.
 
 	self
 		assert:	formatted
@@ -959,7 +877,7 @@ FormatterToolingRudesheimTest >> testShortBinaryExpressionWrittenAcrossLinesStay
 	formatted :=
 		self targetClass
 			format:
-			'total: total weight: weight value: value
+				'total: total weight: weight value: value
 	^ total +
 		(
 			weight
@@ -967,12 +885,25 @@ FormatterToolingRudesheimTest >> testShortBinaryExpressionWrittenAcrossLinesStay
 				value
 		)'.
 
-	expected :=
-		'total: total' , String cr ,
-		'weight: weight' , String cr ,
-		'value: value' , String cr ,
-		String tab , '^ total +' , String cr ,
-		String tab , 'weight * value.'.
+	expected := 'total: total' , String cr , 'weight: weight' , String cr , 'value: value' , String cr , String tab , '^ total +' , String cr , String tab , 'weight * value.'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testShortBinaryExpressionWrittenOnOneLineStaysOnOneLine [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'total: total weight: weight value: value ^ total + (weight * value)'.
+
+	expected := 'total: total' , String cr , 'weight: weight' , String cr , 'value: value' , String cr , String tab , '^ total + ( weight * value ).'.
 
 	self
 		assert:	formatted

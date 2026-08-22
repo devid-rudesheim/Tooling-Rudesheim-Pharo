@@ -2,10 +2,10 @@ Extension { #name : 'OCArrayNode' }
 
 { #category : '*Rudesheim-Tooling' }
 OCArrayNode >> acceptFormatterRudesheim: aFormatter
-indent: anIndentLevelInteger [
-	^ aFormatter
+indent: anIndentToolingRudesheim [
+	^ aFormatter Array
 		formatArrayLines:	self
-		indent:	anIndentLevelInteger.
+		indent:	anIndentToolingRudesheim.
 ]
 
 { #category : '*Rudesheim-Tooling' }

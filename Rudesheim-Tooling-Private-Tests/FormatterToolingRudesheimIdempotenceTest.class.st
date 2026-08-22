@@ -16,14 +16,9 @@ Class {
 	#instVars : [
 		'targetMethod'
 	],
-	#category : 'Rudesheim-Tooling-Tests',
+	#category : 'Rudesheim-Tooling-Private-Tests',
 	#package : 'Rudesheim-Tooling-Private-Tests'
 }
-
-{ #category : 'sweep' }
-FormatterToolingRudesheimIdempotenceTest class >> targetPackageNames [
-	^ #( 'Rudesheim-Tooling-Private' 'Rudesheim-Tooling' ).
-]
 
 { #category : 'sweep' }
 FormatterToolingRudesheimIdempotenceTest class >> methodsToSweep [
@@ -45,7 +40,10 @@ FormatterToolingRudesheimIdempotenceTest class >> methodsToSweep [
 			package :=
 				organizer
 					packageNamed:	packageName
-					ifAbsent:	[ nil ].
+					ifAbsent:
+					[
+						nil.
+					].
 
 			package isNil
 				ifTrue:
@@ -57,7 +55,10 @@ FormatterToolingRudesheimIdempotenceTest class >> methodsToSweep [
 			package definedClasses
 				do:
 				[ :aClass |
-					{ aClass. aClass class }
+					{
+						aClass.
+						aClass class
+					}
 						do:
 						[ :aBehavior |
 							methods
@@ -84,8 +85,13 @@ FormatterToolingRudesheimIdempotenceTest class >> methodsToSweep [
 	^ methods
 		asSortedCollection:
 		[ :a :b |
-			a printString < b printString
+			a printString < b printString.
 		].
+]
+
+{ #category : 'sweep' }
+FormatterToolingRudesheimIdempotenceTest class >> targetPackageNames [
+	^ #( 'Rudesheim-Tooling-Private' 'Rudesheim-Tooling' ).
 ]
 
 { #category : 'tests-data' }
@@ -100,7 +106,10 @@ FormatterToolingRudesheimIdempotenceTest class >> testParameters [
 		do:
 		[ :each |
 			matrix
-				addCase:	{ #targetMethod -> each }.
+				addCase:
+				{
+					( #targetMethod -> each )
+				}.
 		].
 
 	^ matrix.

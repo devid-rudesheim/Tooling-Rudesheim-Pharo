@@ -2,10 +2,10 @@ Extension { #name : 'OCBlockNode' }
 
 { #category : '*Rudesheim-Tooling' }
 OCBlockNode >> acceptFormatterRudesheim: aFormatter
-indent: anIndentLevelInteger [
-	^ aFormatter
+indent: anIndentToolingRudesheim [
+	^ aFormatter Block
 		formatBlockLines:	self
-		indent:	anIndentLevelInteger.
+		indent:	anIndentToolingRudesheim.
 ]
 
 { #category : '*Rudesheim-Tooling' }

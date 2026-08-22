@@ -22,13 +22,13 @@ ClassDescription >> createGetMethodWithDefault: aVariableNameString [
 	selectorForDefault := 'default' , aVariableNameString first uppercase asString , aVariableNameString copyWithoutFirst.
 
 	self
-		compile:	
+		compile:
 		(
 			'{1}
 
 	^ 0.
 '
-				format:	
+				format:
 				{
 					selectorForDefault
 				}
@@ -36,7 +36,7 @@ ClassDescription >> createGetMethodWithDefault: aVariableNameString [
 		classified:	classified.
 
 	self
-		compile:	
+		compile:
 		(
 			'{1}
 
@@ -46,7 +46,7 @@ ClassDescription >> createGetMethodWithDefault: aVariableNameString [
 			{1} := self {2}.
 		].
 '
-				format:	
+				format:
 				{
 					aVariableNameString.
 					selectorForDefault
