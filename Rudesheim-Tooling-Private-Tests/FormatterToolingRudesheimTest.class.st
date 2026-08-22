@@ -490,19 +490,33 @@ FormatterToolingRudesheimTest >> testDynamicArrayKeywordMessageElementsDoNotGetW
 		equals:	expected.
 ]
 
-{ #category : 'as yet unclassified' }
-FormatterToolingRudesheimTest >> testEnableAsFormatterInstallsAndDisableAsFormatterRestoresDefault [
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testFormatAsYouReadPolicyAndFormatterSwitch [
 	|
 		previousClass
+		previousPolicy
 	|
 
 	previousClass := OCProgramNode formatterClass.
+	previousPolicy := self targetClass formatAsYouReadPolicy.
 	[
+		self targetClass
+			formatAsYouReadPolicy:	false.
+
+		self
+			deny:	self targetClass formatAsYouReadPolicy.
+
 		self targetClass enableAsFormatter.
 
 		self
 			assert:	OCProgramNode formatterClass
 			equals:	self targetClass.
+
+		self targetClass
+			formatAsYouReadPolicy:	true.
+
+		self
+			assert:	self targetClass formatAsYouReadPolicy.
 
 		self targetClass disableAsFormatter.
 
@@ -512,6 +526,9 @@ FormatterToolingRudesheimTest >> testEnableAsFormatterInstallsAndDisableAsFormat
 	]
 		ensure:
 		[
+			self targetClass
+				formatAsYouReadPolicy:	previousPolicy.
+
 			OCProgramNode
 				formatterClass:	previousClass.
 		].
@@ -551,13 +568,11 @@ FormatterToolingRudesheimTest >> testFormatsEnsureProcessingClassNamedExample [
 
 	formatted :=
 		self targetClass
-			format:
-				self class sourceEnsureProcessingClassNamedExample.
+			format:	self class sourceEnsureProcessingClassNamedExample.
 
 	self
 		assert:	formatted
-		equals:
-			self class expectedEnsureProcessingClassNamedTarget.
+		equals:	self class expectedEnsureProcessingClassNamedTarget.
 ]
 
 { #category : 'as yet unclassified' }
@@ -619,7 +634,7 @@ FormatterToolingRudesheimTest >> testKeywordArgumentStartingWithVariableIndentsO
 		self targetClass
 			format:	'store output at: index put: total + (biases at: oc + 1)'.
 
-	expected := 'store' , String cr , String tab , 'output' , String cr , String tab , String tab , 'at:' , String tab , 'index' , String cr , String tab , String tab , 'put:' , String tab , String cr , String tab , String tab , String tab , 'total +' , String cr , String tab , String tab , String tab , '(' , String cr , String tab , String tab , String tab , String tab , 'biases' , String cr , String tab , String tab , String tab , String tab , String tab , 'at:' , String tab , 'oc + 1' , String cr , String tab , String tab , String tab , ').'.
+	expected := 'store' , String cr , String tab , 'output' , String cr , String tab , String tab , 'at:' , String tab , 'index' , String cr , String tab , String tab , 'put:' , String cr , String tab , String tab , String tab , 'total +' , String cr , String tab , String tab , String tab , '(' , String cr , String tab , String tab , String tab , String tab , 'biases' , String cr , String tab , String tab , String tab , String tab , String tab , 'at:' , String tab , 'oc + 1' , String cr , String tab , String tab , String tab , ').'.
 
 	self
 		assert:	formatted
