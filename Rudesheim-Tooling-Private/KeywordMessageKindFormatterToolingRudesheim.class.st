@@ -105,7 +105,7 @@ indent: anIndentToolingRudesheim [
 	argumentLineAction :=
 	[
 		lines
-			add:	indentString , aKeywordPart , String tab.
+			add:	indentString , aKeywordPart.
 
 		argumentLines :=
 			formatter
