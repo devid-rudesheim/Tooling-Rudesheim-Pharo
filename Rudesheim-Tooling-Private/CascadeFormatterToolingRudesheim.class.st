@@ -36,6 +36,7 @@ CascadeFormatterToolingRudesheim class >> cascadeMessageStartFor: aMessageNode [
 CascadeFormatterToolingRudesheim class >> formatCascadeLines: aCascadeNode
 indent: anIndentToolingRudesheim [
 	|
+		formatter
 		lines
 		receiver
 		keywordIndent
@@ -43,16 +44,17 @@ indent: anIndentToolingRudesheim [
 		previousEnd
 	|
 
-	lines := OrderedCollection new.
+	formatter := Rudesheim Tooling Formatter.
 	receiver := aCascadeNode receiver.
 
-	lines
-		addAll:
-		(
-			FormatterToolingRudesheim
-				formatSubexpressionLines:	receiver
-				indent:	anIndentToolingRudesheim
-		).
+	lines :=
+		OrderedCollection
+			newFrom:
+			(
+				formatter
+					formatSubexpressionLines:	receiver
+					indent:	anIndentToolingRudesheim
+			).
 
 	keywordIndent := anIndentToolingRudesheim oneLevelDeeper.
 	messages := aCascadeNode messages.
@@ -74,7 +76,7 @@ indent: anIndentToolingRudesheim [
 			lines
 				addAll:
 				(
-					FormatterToolingRudesheim
+					formatter
 						formatCommentLinesInSource:	aCascadeNode source
 						from:	previousEnd + 1
 						to:
@@ -125,7 +127,7 @@ indent: anIndentToolingRudesheim [
 					with: aMessageNode arguments
 					collect:
 					[ :part :argument |
-						KeywordMessageKindFormatterToolingRudesheim
+						Rudesheim Tooling Formatter MessageKind Keyword
 							formatKeywordPart:	part
 							argument:	argument
 							indent:	anIndentToolingRudesheim
@@ -142,7 +144,7 @@ indent: anIndentToolingRudesheim [
 			line :=
 				line , ' ' ,
 				(
-					FormatterToolingRudesheim
+					Rudesheim Tooling Formatter
 						formatInline:	aMessageNode arguments first
 				).
 		].

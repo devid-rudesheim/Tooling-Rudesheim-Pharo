@@ -17,16 +17,16 @@ indent: anIndentToolingRudesheim [
 		keywordIndent
 	|
 
-	lines := OrderedCollection new.
 	receiver := aMessageNode receiver.
 
-	lines
-		addAll:
-		(
-			self
-				formatKeywordReceiverLines:	receiver
-				indent:	anIndentToolingRudesheim
-		).
+	lines :=
+		OrderedCollection
+			newFrom:
+			(
+				self
+					formatKeywordReceiverLines:	receiver
+					indent:	anIndentToolingRudesheim
+			).
 
 	keywordIndent := anIndentToolingRudesheim oneLevelDeeper.
 
@@ -52,6 +52,7 @@ KeywordMessageKindFormatterToolingRudesheim class >> formatKeywordPart: aKeyword
 argument: aNode
 indent: anIndentToolingRudesheim [
 	|
+		formatter
 		indentString
 		lines
 		argumentLines
@@ -59,6 +60,7 @@ indent: anIndentToolingRudesheim [
 		argumentLineAction
 	|
 
+	formatter := Rudesheim Tooling Formatter.
 	indentString := anIndentToolingRudesheim asString.
 
 	aNode isBlock
@@ -68,7 +70,7 @@ indent: anIndentToolingRudesheim [
 				add:	indentString , aKeywordPart;
 				addAll:
 				(
-					BlockFormatterToolingRudesheim
+					formatter Block
 						formatBlockLines:	aNode
 						indent:	anIndentToolingRudesheim
 				);
@@ -76,7 +78,7 @@ indent: anIndentToolingRudesheim [
 		].
 
 	(
-		FormatterToolingRudesheim
+		formatter
 			needsMultilineFor:	aNode
 	)
 		ifFalse:
@@ -85,7 +87,7 @@ indent: anIndentToolingRudesheim [
 			{
 				indentString , aKeywordPart , String tab ,
 				(
-					FormatterToolingRudesheim
+					formatter
 						formatInline:	aNode
 				)
 			}.
@@ -94,7 +96,7 @@ indent: anIndentToolingRudesheim [
 	lines := OrderedCollection new.
 
 	argumentLines :=
-		FormatterToolingRudesheim
+		formatter
 			formatSubexpressionLines:	aNode
 			indent:	anIndentToolingRudesheim.
 
@@ -106,7 +108,7 @@ indent: anIndentToolingRudesheim [
 			add:	indentString , aKeywordPart , String tab.
 
 		argumentLines :=
-			FormatterToolingRudesheim
+			formatter
 				formatSubexpressionLines:	aNode
 				indent:	anIndentToolingRudesheim oneLevelDeeper.
 	].
@@ -115,7 +117,7 @@ indent: anIndentToolingRudesheim [
 		ifTrue:
 		[
 			(
-				FormatterToolingRudesheim
+				formatter
 					isOpeningBracketCharacter:	firstArgumentLine first
 			)
 				ifTrue:
@@ -139,7 +141,7 @@ indent: anIndentToolingRudesheim [
 { #category : 'formatting' }
 KeywordMessageKindFormatterToolingRudesheim class >> formatKeywordReceiverLines: aParseNode
 indent: anIndentToolingRudesheim [
-	^ FormatterToolingRudesheim
+	^ Rudesheim Tooling Formatter
 		formatSubexpressionLines:	aParseNode
 		indent:	anIndentToolingRudesheim.
 ]

@@ -26,19 +26,25 @@ indent: anIndentToolingRudesheim [
 
 { #category : '*Rudesheim-Tooling' }
 OCMessageNode >> formatterKindForRudesheim [
+	|
+		messageKind
+	|
+
+	messageKind := Rudesheim Tooling Formatter MessageKind.
+
 	self isKeyword
 		ifTrue:
 		[
-			^ KeywordMessageKindFormatterToolingRudesheim.
+			^ messageKind Keyword.
 		].
 
 	self isBinary
 		ifTrue:
 		[
-			^ BinaryMessageKindFormatterToolingRudesheim.
+			^ messageKind Binary.
 		].
 
-	^ UnaryMessageKindFormatterToolingRudesheim.
+	^ messageKind Unary.
 ]
 
 { #category : '*Rudesheim-Tooling' }

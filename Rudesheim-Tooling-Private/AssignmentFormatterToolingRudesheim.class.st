@@ -37,6 +37,7 @@ AssignmentFormatterToolingRudesheim class >> assignmentPrefixForVariables: aVari
 AssignmentFormatterToolingRudesheim class >> formatAssignmentLines: anAssignmentNode
 indent: anIndentToolingRudesheim [
 	|
+		formatter
 		vars
 		value
 		prefix
@@ -46,6 +47,7 @@ indent: anIndentToolingRudesheim [
 		firstValueLine
 	|
 
+	formatter := Rudesheim Tooling Formatter.
 	vars := OrderedCollection new.
 	value := anAssignmentNode.
 	[
@@ -65,12 +67,12 @@ indent: anIndentToolingRudesheim [
 
 	(
 		value
-			needsExpressionLinesAsAssignmentValueForFormatterRudesheim:	FormatterToolingRudesheim
+			needsExpressionLinesAsAssignmentValueForFormatterRudesheim:	formatter
 	)
 		ifFalse:
 		[
 			inline :=
-				FormatterToolingRudesheim
+				formatter
 					formatInline:	value.
 
 			^
@@ -86,7 +88,7 @@ indent: anIndentToolingRudesheim [
 		anIndentToolingRudesheim asString , prefix.
 
 	valueLines :=
-		FormatterToolingRudesheim
+		formatter
 			formatExpressionLines:	value
 			indent:	anIndentToolingRudesheim oneLevelDeeper.
 
@@ -96,13 +98,13 @@ indent: anIndentToolingRudesheim [
 		ifTrue:
 		[
 			(
-				FormatterToolingRudesheim
+				formatter
 					isOpeningBracketCharacter:	firstValueLine first
 			)
 				ifTrue:
 				[
 					valueLines :=
-						FormatterToolingRudesheim
+						formatter
 							formatExpressionLines:	value
 							indent:	anIndentToolingRudesheim.
 				].

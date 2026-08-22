@@ -3,7 +3,7 @@ Extension { #name : 'OCArrayNode' }
 { #category : '*Rudesheim-Tooling' }
 OCArrayNode >> acceptFormatterRudesheim: aFormatter
 indent: anIndentToolingRudesheim [
-	^ ArrayFormatterToolingRudesheim
+	^ aFormatter Array
 		formatArrayLines:	self
 		indent:	anIndentToolingRudesheim.
 ]

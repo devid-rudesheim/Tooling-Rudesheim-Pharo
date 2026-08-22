@@ -3,7 +3,7 @@ Extension { #name : 'OCBlockNode' }
 { #category : '*Rudesheim-Tooling' }
 OCBlockNode >> acceptFormatterRudesheim: aFormatter
 indent: anIndentToolingRudesheim [
-	^ BlockFormatterToolingRudesheim
+	^ aFormatter Block
 		formatBlockLines:	self
 		indent:	anIndentToolingRudesheim.
 ]

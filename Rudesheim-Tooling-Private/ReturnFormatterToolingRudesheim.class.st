@@ -12,15 +12,17 @@ Class {
 ReturnFormatterToolingRudesheim class >> formatReturnLines: aReturnNode
 indent: anIndentToolingRudesheim [
 	|
+		formatter
 		indentString
 		exprLines
 		firstLineBody
 	|
 
+	formatter := Rudesheim Tooling Formatter.
 	indentString := anIndentToolingRudesheim asString.
 
 	exprLines :=
-		FormatterToolingRudesheim
+		formatter
 			formatExpressionLines:	aReturnNode value
 			indent:	anIndentToolingRudesheim.
 
@@ -38,28 +40,38 @@ indent: anIndentToolingRudesheim [
 					to:	exprLines first size.
 		].
 
-	firstLineBody notEmpty
+	firstLineBody isEmpty
 		ifTrue:
 		[
-			(
-				FormatterToolingRudesheim
-					isOpeningBracketCharacter:	firstLineBody first
-			)
-				ifTrue:
-				[
-					1 < exprLines size
-						ifTrue:
-						[
-							^ OrderedCollection new
-								add:	indentString , '^';
-								addAll:	exprLines;
-								yourself.
-						].
-				].
+			^ OrderedCollection new
+				add:	indentString , '^ ' , firstLineBody;
+				addAll:	exprLines allButFirst;
+				yourself.
+		].
+
+	(
+		formatter
+			isOpeningBracketCharacter:	firstLineBody first
+	)
+		ifFalse:
+		[
+			^ OrderedCollection new
+				add:	indentString , '^ ' , firstLineBody;
+				addAll:	exprLines allButFirst;
+				yourself.
+		].
+
+	1 < exprLines size
+		ifFalse:
+		[
+			^ OrderedCollection new
+				add:	indentString , '^ ' , firstLineBody;
+				addAll:	exprLines allButFirst;
+				yourself.
 		].
 
 	^ OrderedCollection new
-		add:	indentString , '^ ' , firstLineBody;
-		addAll:	exprLines allButFirst;
+		add:	indentString , '^';
+		addAll:	exprLines;
 		yourself.
 ]

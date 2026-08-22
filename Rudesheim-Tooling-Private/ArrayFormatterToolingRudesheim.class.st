@@ -12,11 +12,13 @@ Class {
 ArrayFormatterToolingRudesheim class >> formatArrayLines: anArrayNode
 indent: anIndentToolingRudesheim [
 	|
+		formatter
 		lines
 		statements
 		previousEnd
 	|
 
+	formatter := Rudesheim Tooling Formatter.
 	statements := anArrayNode statements.
 
 	statements isEmpty
@@ -29,7 +31,7 @@ indent: anIndentToolingRudesheim [
 		].
 
 	(
-		FormatterToolingRudesheim
+		formatter
 			needsMultilineFor:	anArrayNode
 	)
 		ifFalse:
@@ -38,7 +40,7 @@ indent: anIndentToolingRudesheim [
 			{
 				anIndentToolingRudesheim asString ,
 				(
-					FormatterToolingRudesheim
+					formatter
 						formatInline:	anArrayNode
 				)
 			}.
@@ -62,7 +64,7 @@ indent: anIndentToolingRudesheim [
 			lines
 				addAll:
 				(
-					FormatterToolingRudesheim
+					formatter
 						formatCommentLinesInSource:	anArrayNode source
 						from:	previousEnd + 1
 						to:	each sourceInterval first - 1
@@ -70,7 +72,7 @@ indent: anIndentToolingRudesheim [
 				).
 
 			elementLines :=
-				FormatterToolingRudesheim
+				formatter
 					formatExpressionLines:	each
 					indent:	anIndentToolingRudesheim oneLevelDeeper.
 

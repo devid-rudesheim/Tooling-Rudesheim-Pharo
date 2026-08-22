@@ -12,6 +12,7 @@ Class {
 BlockFormatterToolingRudesheim class >> formatBlockLines: aBlockNode
 indent: anIndentToolingRudesheim [
 	|
+		formatter
 		lines
 		header
 		argumentNames
@@ -19,6 +20,7 @@ indent: anIndentToolingRudesheim [
 		temps
 	|
 
+	formatter := Rudesheim Tooling Formatter.
 	lines := OrderedCollection new.
 	argumentNames := aBlockNode argumentNames.
 	header := anIndentToolingRudesheim asString , '['.
@@ -61,7 +63,7 @@ indent: anIndentToolingRudesheim [
 			lines
 				addAll:
 				(
-					FormatterToolingRudesheim
+					formatter
 						formatTempsLinesFor:	temps
 						indent:	anIndentToolingRudesheim oneLevelDeeper
 				).
@@ -73,7 +75,7 @@ indent: anIndentToolingRudesheim [
 	lines
 		addAll:
 		(
-			FormatterToolingRudesheim
+			formatter
 				formatSequenceLines:	aBlockNode body
 				indent:	anIndentToolingRudesheim oneLevelDeeper
 		).

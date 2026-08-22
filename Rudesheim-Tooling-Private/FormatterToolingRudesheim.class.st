@@ -8,6 +8,36 @@ Class {
 	#package : 'Rudesheim-Tooling-Private'
 }
 
+{ #category : 'namespace' }
+FormatterToolingRudesheim class >> Array [
+	^ ArrayFormatterToolingRudesheim.
+]
+
+{ #category : 'namespace' }
+FormatterToolingRudesheim class >> Assignment [
+	^ AssignmentFormatterToolingRudesheim.
+]
+
+{ #category : 'namespace' }
+FormatterToolingRudesheim class >> Block [
+	^ BlockFormatterToolingRudesheim.
+]
+
+{ #category : 'namespace' }
+FormatterToolingRudesheim class >> Cascade [
+	^ CascadeFormatterToolingRudesheim.
+]
+
+{ #category : 'namespace' }
+FormatterToolingRudesheim class >> MessageKind [
+	^ MessageKindFormatterToolingRudesheim.
+]
+
+{ #category : 'namespace' }
+FormatterToolingRudesheim class >> Return [
+	^ ReturnFormatterToolingRudesheim.
+]
+
 { #category : 'functions' }
 FormatterToolingRudesheim class >> appendPeriodToLastLine: aLineCollection [
 	|
@@ -488,7 +518,10 @@ FormatterToolingRudesheim class >> formatInlineParenthesesFor: aParseNode
 text: aString [
 	|
 		text
+		parenthesesCharacterKind
 	|
+
+	parenthesesCharacterKind := Rudesheim Tooling CharacterKind Parentheses.
 
 	(
 		aParseNode
@@ -508,13 +541,13 @@ text: aString [
 					^ aString.
 				].
 
-			aString first ~= ParenthesesCharacterKindFormatterToolingRudesheim openingCharacter
+			aString first ~= parenthesesCharacterKind openingCharacter
 				ifTrue:
 				[
 					^ aString.
 				].
 
-			aString last ~= ParenthesesCharacterKindFormatterToolingRudesheim closingCharacter
+			aString last ~= parenthesesCharacterKind closingCharacter
 				ifTrue:
 				[
 					^ aString.
@@ -597,15 +630,18 @@ FormatterToolingRudesheim class >> formatLiteralArrayInline: aParseNode [
 	|
 		text
 		body
+		parenthesesCharacterKind
 	|
 
 	text :=
 		OCSimpleFormatter
 			format:	aParseNode.
 
+	parenthesesCharacterKind := Rudesheim Tooling CharacterKind Parentheses.
+
 	(
 		text
-			beginsWith:	'#' , ParenthesesCharacterKindFormatterToolingRudesheim openingCharacter asString
+			beginsWith:	'#' , parenthesesCharacterKind openingCharacter asString
 	)
 		ifTrue:
 		[
@@ -615,9 +651,9 @@ FormatterToolingRudesheim class >> formatLiteralArrayInline: aParseNode [
 					to:	text size - 1.
 
 			^
-			'#' , ParenthesesCharacterKindFormatterToolingRudesheim openingCharacter asString ,
+			'#' , parenthesesCharacterKind openingCharacter asString ,
 			' ' , body trimBoth , ' ' ,
-			ParenthesesCharacterKindFormatterToolingRudesheim closingCharacter asString.
+			parenthesesCharacterKind closingCharacter asString.
 		].
 
 	^ text.
@@ -787,24 +823,46 @@ indent: anIndentToolingRudesheim [
 					appendPeriodToLastLine:	statementLines.
 			].
 
-			index = statements size
-				ifTrue:
+			(
 				[
+					|
+						break
+					|
+
+					break := thisContext.
+
+					index = statements size
+						ifFalse:
+						[
+							break return: false.
+						].
+
 					statement isMessage
+						ifFalse:
+						[
+							break return: false.
+						].
+
+					statement isBlockStatementForFormatterRudesheim
+						ifFalse:
+						[
+							break return: false.
+						].
+
+					statement isKeyword
 						ifTrue:
 						[
-							statement isBlockStatementForFormatterRudesheim
-								ifTrue:
-								[
-									statement isKeyword
-										ifFalse:
-										[
-											appendPeriodAction :=
-											[
-											].
-										].
-								].
+							break return: false.
 						].
+
+					true.
+				] value
+			)
+				ifTrue:
+				[
+					appendPeriodAction :=
+					[
+					].
 				].
 
 			appendPeriodAction value.

@@ -3,7 +3,7 @@ Extension { #name : 'OCReturnNode' }
 { #category : '*Rudesheim-Tooling' }
 OCReturnNode >> acceptFormatterRudesheimAsStatement: aFormatter
 indent: anIndentToolingRudesheim [
-	^ ReturnFormatterToolingRudesheim
+	^ aFormatter Return
 		formatReturnLines:	self
 		indent:	anIndentToolingRudesheim.
 ]

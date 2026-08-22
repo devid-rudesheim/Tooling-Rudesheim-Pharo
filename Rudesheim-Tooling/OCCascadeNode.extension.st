@@ -3,7 +3,7 @@ Extension { #name : 'OCCascadeNode' }
 { #category : '*Rudesheim-Tooling' }
 OCCascadeNode >> acceptFormatterRudesheim: aFormatter
 indent: anIndentToolingRudesheim [
-	^ CascadeFormatterToolingRudesheim
+	^ aFormatter Cascade
 		formatCascadeLines:	self
 		indent:	anIndentToolingRudesheim.
 ]

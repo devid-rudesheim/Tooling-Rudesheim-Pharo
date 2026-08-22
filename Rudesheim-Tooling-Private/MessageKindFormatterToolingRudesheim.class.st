@@ -10,9 +10,30 @@ Class {
 	#package : 'Rudesheim-Tooling-Private'
 }
 
+{ #category : 'namespace' }
+MessageKindFormatterToolingRudesheim class >> Binary [
+	^ BinaryMessageKindFormatterToolingRudesheim.
+]
+
+{ #category : 'namespace' }
+MessageKindFormatterToolingRudesheim class >> Keyword [
+	^ KeywordMessageKindFormatterToolingRudesheim.
+]
+
+{ #category : 'namespace' }
+MessageKindFormatterToolingRudesheim class >> Unary [
+	^ UnaryMessageKindFormatterToolingRudesheim.
+]
+
 { #category : 'formatting' }
 MessageKindFormatterToolingRudesheim class >> formatLines: aMessageNode
 indent: anIndentToolingRudesheim [
+	|
+		formatter
+	|
+
+	formatter := Rudesheim Tooling Formatter.
+
 	aMessageNode receiver isBlock
 		ifTrue:
 		[
@@ -22,7 +43,7 @@ indent: anIndentToolingRudesheim [
 			|
 
 			receiverLines :=
-				BlockFormatterToolingRudesheim
+				formatter Block
 					formatBlockLines:	aMessageNode receiver
 					indent:	anIndentToolingRudesheim.
 
@@ -33,7 +54,7 @@ indent: anIndentToolingRudesheim [
 					argumentString :=
 						' ' ,
 						(
-							FormatterToolingRudesheim
+							formatter
 								formatInline:	aMessageNode arguments first
 						).
 				].
@@ -46,7 +67,7 @@ indent: anIndentToolingRudesheim [
 		].
 
 	(
-		FormatterToolingRudesheim
+		formatter
 			needsMultilineFor:	aMessageNode
 	)
 		ifTrue:
@@ -60,7 +81,7 @@ indent: anIndentToolingRudesheim [
 	{
 		anIndentToolingRudesheim asString ,
 		(
-			FormatterToolingRudesheim
+			formatter
 				formatInline:	aMessageNode
 		)
 	}.
@@ -70,6 +91,7 @@ indent: anIndentToolingRudesheim [
 MessageKindFormatterToolingRudesheim class >> formatUnaryOrBinaryChainLines: aMessageNode
 indent: anIndentToolingRudesheim [
 	|
+		formatter
 		steps
 		node
 		lines
@@ -78,12 +100,13 @@ indent: anIndentToolingRudesheim [
 		keepWalking
 	|
 
+	formatter := Rudesheim Tooling Formatter.
 	steps := OrderedCollection new.
 	node := aMessageNode.
 
 	receiverLinesAction :=
 	[
-		FormatterToolingRudesheim
+		formatter
 			formatSubexpressionLines:	node
 			indent:	anIndentToolingRudesheim.
 	].
@@ -108,8 +131,8 @@ indent: anIndentToolingRudesheim [
 			steps
 				addFirst:	node.
 
-			node isBinary not
-				ifTrue:
+			node isBinary
+				ifFalse:
 				[
 					(
 						node receiver
@@ -122,7 +145,7 @@ indent: anIndentToolingRudesheim [
 								[
 									receiverLinesAction :=
 									[
-										FormatterToolingRudesheim
+										formatter
 											formatParenthesizedLines:	node
 											indent:	anIndentToolingRudesheim.
 									].
@@ -160,7 +183,7 @@ indent: anIndentToolingRudesheim [
 						stepText :=
 							step selector asString , ' ' ,
 							(
-								FormatterToolingRudesheim
+								formatter
 									formatInline:	step arguments first
 							).
 					].
@@ -176,7 +199,7 @@ indent: anIndentToolingRudesheim [
 					argument := step arguments first.
 
 					(
-						FormatterToolingRudesheim
+						formatter
 							needsMultilineFor:	argument
 					)
 						ifTrue:
@@ -190,7 +213,7 @@ indent: anIndentToolingRudesheim [
 								lines
 									addAll:
 									(
-										FormatterToolingRudesheim
+										formatter
 											formatSubexpressionLines:	argument
 											indent:	anIndentToolingRudesheim
 									).
