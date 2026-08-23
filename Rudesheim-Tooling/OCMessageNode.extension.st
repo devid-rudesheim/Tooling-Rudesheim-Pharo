@@ -48,6 +48,17 @@ OCMessageNode >> formatterKindForRudesheim [
 ]
 
 { #category : '*Rudesheim-Tooling' }
+OCMessageNode >> isBlockStatementForFormatterRudesheim [
+	^ self receiver isBlock.
+]
+
+{ #category : '*Rudesheim-Tooling' }
+OCMessageNode >> needsExpressionLinesAsAssignmentValueForFormatterRudesheim: aFormatter [
+	^ self
+		needsMultilineForFormatterRudesheim:	aFormatter.
+]
+
+{ #category : '*Rudesheim-Tooling' }
 OCMessageNode >> hasParenthesizedBinaryReceiverForFormatterRudesheim [
 	"Binary messages are left-associative with equal precedence, so a receiver at the very
 	start of a chain never structurally needs parentheses -- but a receiver further inside the
@@ -58,6 +69,7 @@ OCMessageNode >> hasParenthesizedBinaryReceiverForFormatterRudesheim [
 	it, but only once it is actually reached via the multiline path -- this answers whether
 	that will happen, so a message short enough to otherwise stay on one inline line is still
 	routed through the chain formatting instead of losing those parentheses."
+
 	self isBinary
 		ifFalse:
 		[
@@ -79,18 +91,8 @@ OCMessageNode >> hasParenthesizedBinaryReceiverForFormatterRudesheim [
 			^ true.
 		].
 
-	^ self receiver hasParenthesizedBinaryReceiverForFormatterRudesheim.
-]
-
-{ #category : '*Rudesheim-Tooling' }
-OCMessageNode >> isBlockStatementForFormatterRudesheim [
-	^ self receiver isBlock.
-]
-
-{ #category : '*Rudesheim-Tooling' }
-OCMessageNode >> needsExpressionLinesAsAssignmentValueForFormatterRudesheim: aFormatter [
-	^ self
-		needsMultilineForFormatterRudesheim:	aFormatter.
+	^ self receiver
+		hasParenthesizedBinaryReceiverForFormatterRudesheim.
 ]
 
 { #category : '*Rudesheim-Tooling' }

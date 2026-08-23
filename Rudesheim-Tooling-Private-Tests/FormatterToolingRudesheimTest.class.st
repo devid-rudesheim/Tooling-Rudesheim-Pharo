@@ -377,6 +377,7 @@ FormatterToolingRudesheimTest >> testBinaryMessageChainKeepsExplicitGroupingPare
 	changes the AST because Smalltalk binary messages are left-associative with equal
 	precedence. Each `( ... = ... )` group here is semantically required and must survive
 	formatting unchanged."
+
 	|
 		formatted
 		expected
@@ -402,6 +403,7 @@ FormatterToolingRudesheimTest >> testBinaryMessageChainKeepsExplicitGroupingPare
 	binary message's argument was dropping its parentheses instead of keeping them. Without
 	the parentheses this would reparse as `((A & rows second value) = rows last)` instead of
 	`(A & (rows second value = rows last))`, changing the AST."
+
 	|
 		formatted
 		expected
@@ -696,6 +698,7 @@ FormatterToolingRudesheimTest >> testKeywordMessageArgumentUnaryChainDoesNotBrea
 	while a sibling argument of the same message forces the message onto multiple lines.
 	`self basicTarget lastArguments` must stay on `assert:`'s own line even though `equals:`'s
 	dynamic-array argument forces the rest of the message multiline."
+
 	|
 		formatted
 		expected
@@ -862,7 +865,29 @@ FormatterToolingRudesheimTest >> testNestedConditionalInsideParenthesizedBlockCo
 	threeTabs := twoTabs , oneTab.
 	fourTabs := threeTabs , oneTab.
 	fiveTabs := fourTabs , oneTab.
-	expected := 'sample' , String cr , oneTab , '[' , String cr , twoTabs , '^' , String cr , twoTabs , '(' , String cr , threeTabs , 'fieldSelector isNil' , String cr , fourTabs , 'and:' , String cr , fourTabs , '[' , String cr , fiveTabs , 'aMessage selector isUnary.' , String cr , fourTabs , ']' , String cr , twoTabs , ')' , String cr , threeTabs , 'ifTrue:' , String cr , threeTabs , '[' , String cr , fourTabs , 'self class' , String cr , fiveTabs , 'table:' , String tab , 'tableIndex' , String cr , fiveTabs , 'field:' , String tab , 'aMessage selector.' , String cr , threeTabs , ']' , String cr , threeTabs , 'ifFalse:' , String cr , threeTabs , '[' , String cr , fourTabs , 'super' , String cr , fiveTabs , 'processMessage:' , String tab , 'aMessage.' , String cr , threeTabs , '].' , String cr , oneTab , '].'.
+
+	expected := 'sample' , String cr ,
+		oneTab , '[' , String cr ,
+		twoTabs , '^' , String cr ,
+		twoTabs , '(' , String cr ,
+		threeTabs , 'fieldSelector isNil' , String cr ,
+		fourTabs , 'and:' , String cr ,
+		fourTabs , '[' , String cr ,
+		fiveTabs , 'aMessage selector isUnary.' , String cr ,
+		fourTabs , ']' , String cr ,
+		twoTabs , ')' , String cr ,
+		threeTabs , 'ifTrue:' , String cr ,
+		threeTabs , '[' , String cr ,
+		fourTabs , 'self class' , String cr ,
+		fiveTabs , 'table:' , String tab , 'tableIndex' , String cr ,
+		fiveTabs , 'field:' , String tab , 'aMessage selector.' , String cr ,
+		threeTabs , ']' , String cr ,
+		threeTabs , 'ifFalse:' , String cr ,
+		threeTabs , '[' , String cr ,
+		fourTabs , 'super' , String cr ,
+		fiveTabs , 'processMessage:' , String tab , 'aMessage.' , String cr ,
+		threeTabs , '].' , String cr ,
+		oneTab , '].'.
 
 	formatted :=
 		self targetClass
@@ -954,25 +979,28 @@ FormatterToolingRudesheimTest >> testParenthesizedKeywordArgumentChainKeepsEachL
 	eightTabs := sevenTabs , oneTab.
 	nineTabs := eightTabs , oneTab.
 	tenTabs := nineTabs , oneTab.
-	expected := 'sample' , String cr , oneTab , '^ aService' , String cr , twoTabs , 'checkResponse:' , String cr , twoTabs , '(' , String cr , threeTabs , 'aStringParser' , String cr , fourTabs , 'fromString:' , String cr , fourTabs , '(' , String cr , fiveTabs , 'aHttpMethodRudesheim' , String cr , sixTabs , 'sendRequestBy:' , String cr , sixTabs , '(' , String cr , sevenTabs , 'aHttpMethodRudesheim' , String cr , eightTabs , 'convertClient:' , String cr , eightTabs , '(' , String cr , nineTabs , 'aService templateAsHttpClient' , String cr , tenTabs , 'url:' , String tab , 'aUrl;' , String cr , tenTabs , 'yourself' , String cr , eightTabs , ')' , String cr , eightTabs , 'withProperties:' , String tab , 'properties' , String cr , sixTabs , ')' , String cr , fourTabs , ')' , String cr , twoTabs , ').'.
 
-	formatted :=
-		self targetClass
-			format:	expected.
-
-	self
-		assert:	formatted
-		equals:	expected.
-]
-
-{ #category : 'tests' }
-FormatterToolingRudesheimTest >> testPragmaWithIntegerArgumentIsPreserved [
-	|
-		formatted
-		expected
-	|
-
-	expected := 'sample' , String cr , String tab , '<primitive: 60>' , String cr , String cr , String tab , '^ 1.'.
+	expected := 'sample' , String cr ,
+		oneTab , '^ aService' , String cr ,
+		twoTabs , 'checkResponse:' , String cr ,
+		twoTabs , '(' , String cr ,
+		threeTabs , 'aStringParser' , String cr ,
+		fourTabs , 'fromString:' , String cr ,
+		fourTabs , '(' , String cr ,
+		fiveTabs , 'aHttpMethodRudesheim' , String cr ,
+		sixTabs , 'sendRequestBy:' , String cr ,
+		sixTabs , '(' , String cr ,
+		sevenTabs , 'aHttpMethodRudesheim' , String cr ,
+		eightTabs , 'convertClient:' , String cr ,
+		eightTabs , '(' , String cr ,
+		nineTabs , 'aService templateAsHttpClient' , String cr ,
+		tenTabs , 'url:' , String tab , 'aUrl;' , String cr ,
+		tenTabs , 'yourself' , String cr ,
+		eightTabs , ')' , String cr ,
+		eightTabs , 'withProperties:' , String tab , 'properties' , String cr ,
+		sixTabs , ')' , String cr ,
+		fourTabs , ')' , String cr ,
+		twoTabs , ').'.
 
 	formatted :=
 		self targetClass
@@ -991,6 +1019,7 @@ FormatterToolingRudesheimTest >> testPragmaWithNoArgumentsIsPreserved [
 	a baseline. `<baseline>` is a unary (no-argument) pragma; see the other
 	testPragma*Preserved tests for keyword pragmas with varying argument counts and value
 	types."
+
 	|
 		formatted
 		expected
@@ -1026,13 +1055,13 @@ FormatterToolingRudesheimTest >> testPragmaWithOneKeywordArgumentIsPreserved [
 ]
 
 { #category : 'tests' }
-FormatterToolingRudesheimTest >> testPragmaWithThreeKeywordArgumentsOfMixedTypesIsPreserved [
+FormatterToolingRudesheimTest >> testPragmaWithTwoKeywordArgumentsIsPreserved [
 	|
 		formatted
 		expected
 	|
 
-	expected := 'sample' , String cr , String tab , '<example: ''one'' some: 2 more: #three>' , String cr , String cr , String tab , '^ 1.'.
+	expected := 'sample' , String cr , String tab , '<example: ''one'' some: ''two''>' , String cr , String cr , String tab , '^ 1.'.
 
 	formatted :=
 		self targetClass
@@ -1044,13 +1073,31 @@ FormatterToolingRudesheimTest >> testPragmaWithThreeKeywordArgumentsOfMixedTypes
 ]
 
 { #category : 'tests' }
-FormatterToolingRudesheimTest >> testPragmaWithTwoKeywordArgumentsIsPreserved [
+FormatterToolingRudesheimTest >> testPragmaWithIntegerArgumentIsPreserved [
 	|
 		formatted
 		expected
 	|
 
-	expected := 'sample' , String cr , String tab , '<example: ''one'' some: ''two''>' , String cr , String cr , String tab , '^ 1.'.
+	expected := 'sample' , String cr , String tab , '<primitive: 60>' , String cr , String cr , String tab , '^ 1.'.
+
+	formatted :=
+		self targetClass
+			format:	expected.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testPragmaWithThreeKeywordArgumentsOfMixedTypesIsPreserved [
+	|
+		formatted
+		expected
+	|
+
+	expected := 'sample' , String cr , String tab , '<example: ''one'' some: 2 more: #three>' , String cr , String cr , String tab , '^ 1.'.
 
 	formatted :=
 		self targetClass
@@ -1142,6 +1189,7 @@ FormatterToolingRudesheimTest >> testShortBinaryExpressionWrittenAcrossLinesStay
 	note/formatter-tooling-rudesheim-bugs.md's 2026-08-23 entry and the PR that fixed
 	MessageKindFormatterToolingRudesheim class>>formatUnaryOrBinaryChainLines:indent: to keep
 	them."
+
 	|
 		formatted
 		expected

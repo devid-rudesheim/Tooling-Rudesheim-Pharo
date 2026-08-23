@@ -157,6 +157,7 @@ indent: anIndentToolingRudesheim [
 						(and, for a chain nested more than one level deep, can change the AST).
 						Stop walking here and format the parenthesized receiver as its own
 						subexpression instead of flattening through it."
+
 						receiverLinesAction :=
 						[
 							formatter
@@ -165,6 +166,7 @@ indent: anIndentToolingRudesheim [
 						].
 
 						keepWalking := false.
+
 						continue return.
 					].
 
