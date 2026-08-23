@@ -759,6 +759,39 @@ indent: anIndentToolingRudesheim [
 ]
 
 { #category : 'formatting' }
+FormatterToolingRudesheim class >> formatParenthesizedReceiverLines: aNode
+indent: anIndentToolingRudesheim [
+	"Used for a receiver that the chain-walking code in
+	MessageKindFormatterToolingRudesheim class>>formatUnaryOrBinaryChainLines:indent:
+	stopped at because the author wrote explicit parentheses around it. Unlike
+	#formatSubexpressionLines:indent: (which, for a plain binary/unary message, just renders
+	aNode as if it were being printed on its own -- correctly dropping parentheses that would
+	be structurally redundant there, e.g. an assignment's `(1 + 2)` value), this always keeps
+	the parentheses, because here they are the very reason the chain walk stopped at aNode
+	instead of flattening through it."
+
+	(
+		self
+			needsMultilineFor:	aNode
+	)
+		ifTrue:
+		[
+			^ self
+				formatParenthesizedLines:	aNode
+				indent:	anIndentToolingRudesheim.
+		].
+
+	^
+	{
+		anIndentToolingRudesheim asString , '( ' ,
+		(
+			self
+				formatInline:	aNode
+		) , ' )'
+	}.
+]
+
+{ #category : 'formatting' }
 FormatterToolingRudesheim class >> formatSequenceLines: aSequenceNode
 indent: anIndentToolingRudesheim [
 	|

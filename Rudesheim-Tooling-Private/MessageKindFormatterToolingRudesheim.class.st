@@ -139,17 +139,39 @@ indent: anIndentToolingRudesheim [
 
 				continue := thisContext.
 
-				node isBinary
-					ifTrue:
-					[
-						continue return.
-					].
-
 				(
 					node receiver
 						isKindOf:	OCMessageNode
 				)
 					ifFalse:
+					[
+						continue return.
+					].
+
+				node receiver parentheses isEmpty
+					ifFalse:
+					[
+						"The author wrote explicit parentheses around this receiver. Binary
+						messages are left-associative with equal precedence, so folding it into
+						the flat chain below would silently drop grouping the author asked for
+						(and, for a chain nested more than one level deep, can change the AST).
+						Stop walking here and format the parenthesized receiver as its own
+						subexpression instead of flattening through it."
+
+						receiverLinesAction :=
+						[
+							formatter
+								formatParenthesizedReceiverLines:	node
+								indent:	anIndentToolingRudesheim.
+						].
+
+						keepWalking := false.
+
+						continue return.
+					].
+
+				node isBinary
+					ifTrue:
 					[
 						continue return.
 					].
