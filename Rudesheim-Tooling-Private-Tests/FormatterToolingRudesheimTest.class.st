@@ -395,6 +395,32 @@ FormatterToolingRudesheimTest >> testBinaryMessageChainKeepsExplicitGroupingPare
 ]
 
 { #category : 'tests' }
+FormatterToolingRudesheimTest >> testBinaryMessageChainKeepsExplicitGroupingParenthesesOnMultilineArgument [
+	"Companion to testBinaryMessageChainKeepsExplicitGroupingParentheses: that test covers
+	explicit parentheses disappearing from the receiver side of a binary chain; this one
+	covers the argument side, which was a separate bug -- the argument of `&` here needs its
+	own multiple lines (it has a hand-written line break), and the multiline path for a
+	binary message's argument was dropping its parentheses instead of keeping them. Without
+	the parentheses this would reparse as `((A & rows second value) = rows last)` instead of
+	`(A & (rows second value = rows last))`, changing the AST."
+
+	|
+		formatted
+		expected
+	|
+
+	expected := 'sample' , String cr , String tab , '^' , String cr , String tab , '( rows first value = rows second value ) &' , String cr , String tab , '(' , String cr , String tab , String tab , 'rows second value = rows last' , String cr , String tab , ').'.
+
+	formatted :=
+		self targetClass
+			format:	expected.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
 FormatterToolingRudesheimTest >> testCascadeCommentsArePreserved [
 	|
 		formatted
@@ -1059,6 +1085,14 @@ FormatterToolingRudesheimTest >> testShortBinaryChainStaysInline [
 
 { #category : 'tests' }
 FormatterToolingRudesheimTest >> testShortBinaryExpressionWrittenAcrossLinesStaysMultiline [
+	"The argument of `+` (`weight * value`) is itself a binary send, so `total + weight *
+	value` (no parentheses) is not the same AST as `total + (weight * value)` -- Smalltalk
+	binary messages are left-associative with equal precedence, so the unparenthesized form
+	reparses as `(total + weight) * value`. This fixture used to drop those parentheses; see
+	note/formatter-tooling-rudesheim-bugs.md's 2026-08-23 entry and the PR that fixed
+	MessageKindFormatterToolingRudesheim class>>formatUnaryOrBinaryChainLines:indent: to keep
+	them."
+
 	|
 		formatted
 		expected
@@ -1075,7 +1109,7 @@ FormatterToolingRudesheimTest >> testShortBinaryExpressionWrittenAcrossLinesStay
 				value
 		)'.
 
-	expected := 'total: total' , String cr , 'weight: weight' , String cr , 'value: value' , String cr , String tab , '^ total +' , String cr , String tab , 'weight * value.'.
+	expected := 'total: total' , String cr , 'weight: weight' , String cr , 'value: value' , String cr , String tab , '^ total +' , String cr , String tab , '(' , String cr , String tab , String tab , 'weight * value' , String cr , String tab , ').'.
 
 	self
 		assert:	formatted

@@ -759,16 +759,26 @@ indent: anIndentToolingRudesheim [
 ]
 
 { #category : 'formatting' }
-FormatterToolingRudesheim class >> formatParenthesizedReceiverLines: aNode
+FormatterToolingRudesheim class >> formatParenthesizedSubexpressionLines: aNode
 indent: anIndentToolingRudesheim [
-	"Used for a receiver that the chain-walking code in
-	MessageKindFormatterToolingRudesheim class>>formatUnaryOrBinaryChainLines:indent:
-	stopped at because the author wrote explicit parentheses around it. Unlike
-	#formatSubexpressionLines:indent: (which, for a plain binary/unary message, just renders
-	aNode as if it were being printed on its own -- correctly dropping parentheses that would
-	be structurally redundant there, e.g. an assignment's `(1 + 2)` value), this always keeps
-	the parentheses, because here they are the very reason the chain walk stopped at aNode
-	instead of flattening through it."
+	"Used in two places by MessageKindFormatterToolingRudesheim class>>
+	formatUnaryOrBinaryChainLines:indent: where aNode's own parentheses must never be
+	dropped, unlike #formatSubexpressionLines:indent: (which, for a plain binary/unary
+	message, just renders aNode as if it were being printed on its own -- correctly dropping
+	parentheses that would be structurally redundant there, e.g. an assignment's `(1 + 2)`
+	value):
+
+	1. a receiver the chain walk stopped at because the author wrote explicit parentheses
+	around it -- here the parentheses are the very reason the walk stopped instead of
+	flattening through it;
+	2. a binary message's argument that is itself a compound (binary/keyword) send and needs
+	multiple lines -- such an argument always needs parentheses to keep its own grouping, or
+	it would be reparsed as belonging to the *next* operator in the chain instead (Smalltalk
+	binary messages are left-associative with equal precedence). See
+	formatMultilineBinaryArgumentLines:indent: for the caller that decides when case 2
+	applies. formatInline: already gets case 2 right when such an argument fits on one line,
+	by relying on OCSimpleFormatter's own structural (receiver/argument-position) awareness;
+	this is the multiline counterpart."
 
 	(
 		self
@@ -789,6 +799,52 @@ indent: anIndentToolingRudesheim [
 				formatInline:	aNode
 		) , ' )'
 	}.
+]
+
+{ #category : 'formatting' }
+FormatterToolingRudesheim class >> formatMultilineBinaryArgumentLines: aNode
+indent: anIndentToolingRudesheim [
+	"A binary message's argument only needs its own parentheses preserved when it is itself a
+	compound (binary/keyword) send -- anything else (a unary chain, a literal, ...) binds
+	tighter than any binary operator and is never ambiguous as a binary argument, so wrapping
+	it in parentheses here would just be visual noise instead of fixing anything. See
+	formatParenthesizedSubexpressionLines:indent: for why the compound case must always be
+	wrapped once it needs its own multiple lines."
+
+	(
+		self
+			needsParenthesesAsBinaryArgumentForRudesheim:	aNode
+	)
+		ifTrue:
+		[
+			^ self
+				formatParenthesizedSubexpressionLines:	aNode
+				indent:	anIndentToolingRudesheim.
+		].
+
+	^ self
+		formatSubexpressionLines:	aNode
+		indent:	anIndentToolingRudesheim.
+]
+
+{ #category : 'testing' }
+FormatterToolingRudesheim class >> needsParenthesesAsBinaryArgumentForRudesheim: aNode [
+	(
+		aNode
+			isKindOf:	OCMessageNode
+	)
+		ifFalse:
+		[
+			^ false.
+		].
+
+	aNode isKeyword
+		ifTrue:
+		[
+			^ true.
+		].
+
+	^ aNode isBinary.
 ]
 
 { #category : 'formatting' }
