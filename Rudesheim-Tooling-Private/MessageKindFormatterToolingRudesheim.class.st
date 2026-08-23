@@ -161,7 +161,7 @@ indent: anIndentToolingRudesheim [
 						receiverLinesAction :=
 						[
 							formatter
-								formatParenthesizedReceiverLines:	node
+								formatParenthesizedSubexpressionLines:	node
 								indent:	anIndentToolingRudesheim.
 						].
 
@@ -263,7 +263,7 @@ indent: anIndentToolingRudesheim [
 						addAll:
 						(
 							formatter
-								formatSubexpressionLines:	argument
+								formatMultilineBinaryArgumentLines:	argument
 								indent:	anIndentToolingRudesheim
 						).
 				].
