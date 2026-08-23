@@ -985,6 +985,103 @@ FormatterToolingRudesheimTest >> testParenthesizedKeywordArgumentChainKeepsEachL
 		equals:	expected.
 ]
 
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testPragmaWithNoArgumentsIsPreserved [
+	"Regression test for note/formatter-tooling-rudesheim-bugs.md's 2026-08-23 entry:
+	`FormatterToolingRudesheim class>>format:` silently drops every method pragma, including
+	the `<baseline>` pragma every `BaselineOf...>>baseline:` method needs to actually run as
+	a baseline. `<baseline>` is a unary (no-argument) pragma; see the other
+	testPragma*Preserved tests for keyword pragmas with varying argument counts and value
+	types."
+
+	|
+		formatted
+		expected
+	|
+
+	expected := 'sample' , String cr , String tab , '<baseline>' , String cr , String cr , String tab , '^ 1.'.
+
+	formatted :=
+		self targetClass
+			format:	expected.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testPragmaWithOneKeywordArgumentIsPreserved [
+	|
+		formatted
+		expected
+	|
+
+	expected := 'sample' , String cr , String tab , '<example: ''one''>' , String cr , String cr , String tab , '^ 1.'.
+
+	formatted :=
+		self targetClass
+			format:	expected.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testPragmaWithTwoKeywordArgumentsIsPreserved [
+	|
+		formatted
+		expected
+	|
+
+	expected := 'sample' , String cr , String tab , '<example: ''one'' some: ''two''>' , String cr , String cr , String tab , '^ 1.'.
+
+	formatted :=
+		self targetClass
+			format:	expected.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testPragmaWithIntegerArgumentIsPreserved [
+	|
+		formatted
+		expected
+	|
+
+	expected := 'sample' , String cr , String tab , '<primitive: 60>' , String cr , String cr , String tab , '^ 1.'.
+
+	formatted :=
+		self targetClass
+			format:	expected.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testPragmaWithThreeKeywordArgumentsOfMixedTypesIsPreserved [
+	|
+		formatted
+		expected
+	|
+
+	expected := 'sample' , String cr , String tab , '<example: ''one'' some: 2 more: #three>' , String cr , String cr , String tab , '^ 1.'.
+
+	formatted :=
+		self targetClass
+			format:	expected.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
 { #category : 'as yet unclassified' }
 FormatterToolingRudesheimTest >> testReturnBracketedMultilineKeepsNewlineAfterCaret [
 	|
