@@ -371,6 +371,30 @@ FormatterToolingRudesheimTest >> testBinaryArgumentKeywordMessageKeepsParenthesi
 ]
 
 { #category : 'tests' }
+FormatterToolingRudesheimTest >> testBinaryMessageChainKeepsExplicitGroupingParentheses [
+	"Regression test for note/formatter-tooling-rudesheim-bugs.md's 2026-08-23 entry: the
+	formatter was dropping parentheses around same-precedence binary sub-expressions, which
+	changes the AST because Smalltalk binary messages are left-associative with equal
+	precedence. Each `( ... = ... )` group here is semantically required and must survive
+	formatting unchanged."
+
+	|
+		formatted
+		expected
+	|
+
+	expected := 'sample' , String cr , String tab , '[' , String cr , String tab , String tab , '( rows first key = rows second key ) & ( rows first key = rows last key ) & ( rows first key = parameters first ).' , String cr , String tab , '].'.
+
+	formatted :=
+		self targetClass
+			format:	expected.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
 FormatterToolingRudesheimTest >> testCascadeCommentsArePreserved [
 	|
 		formatted
@@ -642,6 +666,48 @@ FormatterToolingRudesheimTest >> testKeywordArgumentStartingWithVariableIndentsO
 ]
 
 { #category : 'tests' }
+FormatterToolingRudesheimTest >> testKeywordMessageArgumentUnaryChainDoesNotBreakBeforeMultilineArgument [
+	"Regression test for note/formatter-tooling-rudesheim-bugs.md's report that a newline
+	could get inserted before a unary message chain written as one keyword message argument
+	while a sibling argument of the same message forces the message onto multiple lines.
+	`self basicTarget lastArguments` must stay on `assert:`'s own line even though `equals:`'s
+	dynamic-array argument forces the rest of the message multiline."
+
+	|
+		formatted
+		expected
+	|
+
+	expected := 'sample' , String cr , String tab , 'self' , String cr , String tab , String tab , 'assert:' , String tab , 'self basicTarget lastArguments' , String cr , String tab , String tab , 'equals:' , String cr , String tab , String tab , '{' , String cr , String tab , String tab , String tab , '1.' , String cr , String tab , String tab , String tab , '2.' , String cr , String tab , String tab , String tab , '3' , String cr , String tab , String tab , '}.'.
+
+	formatted :=
+		self targetClass
+			format:	expected.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testKeywordMessageInsideBlockKeepsEachKeywordPartOnOwnLine [
+	|
+		formatted
+		expected
+	|
+
+	expected := 'sample' , String cr , String tab , '[' , String cr , String tab , String tab , 'self targetClass' , String cr , String tab , String tab , String tab , 'inClass:' , String tab , 'self class' , String cr , String tab , String tab , String tab , 'withCode:' , String tab , '''''' , String cr , String tab , String tab , String tab , 'doitFlag:' , String tab , 'false' , String cr , String tab , String tab , String tab , 'errorMessage:' , String tab , '''Message pattern expected''' , String cr , String tab , String tab , String tab , 'location:' , String tab , '1.' , String cr , String tab , '].'.
+
+	formatted :=
+		self targetClass
+			format:	expected.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
 FormatterToolingRudesheimTest >> testKeywordMessageReceiverKeepsOwnRequiredMultilineInsteadOfCollapsing [
 	|
 		formatted
@@ -757,6 +823,56 @@ FormatterToolingRudesheimTest >> testLiteralArrayKeepsInsideSpaces [
 ]
 
 { #category : 'tests' }
+FormatterToolingRudesheimTest >> testNestedConditionalInsideParenthesizedBlockConditionKeepsStructure [
+	|
+		formatted
+		expected
+		oneTab
+		twoTabs
+		threeTabs
+		fourTabs
+		fiveTabs
+	|
+
+	oneTab := String tab.
+	twoTabs := oneTab , oneTab.
+	threeTabs := twoTabs , oneTab.
+	fourTabs := threeTabs , oneTab.
+	fiveTabs := fourTabs , oneTab.
+
+	expected := 'sample' , String cr ,
+		oneTab , '[' , String cr ,
+		twoTabs , '^' , String cr ,
+		twoTabs , '(' , String cr ,
+		threeTabs , 'fieldSelector isNil' , String cr ,
+		fourTabs , 'and:' , String cr ,
+		fourTabs , '[' , String cr ,
+		fiveTabs , 'aMessage selector isUnary.' , String cr ,
+		fourTabs , ']' , String cr ,
+		twoTabs , ')' , String cr ,
+		threeTabs , 'ifTrue:' , String cr ,
+		threeTabs , '[' , String cr ,
+		fourTabs , 'self class' , String cr ,
+		fiveTabs , 'table:' , String tab , 'tableIndex' , String cr ,
+		fiveTabs , 'field:' , String tab , 'aMessage selector.' , String cr ,
+		threeTabs , ']' , String cr ,
+		threeTabs , 'ifFalse:' , String cr ,
+		threeTabs , '[' , String cr ,
+		fourTabs , 'super' , String cr ,
+		fiveTabs , 'processMessage:' , String tab , 'aMessage.' , String cr ,
+		threeTabs , '].' , String cr ,
+		oneTab , '].'.
+
+	formatted :=
+		self targetClass
+			format:	expected.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
 FormatterToolingRudesheimTest >> testParenthesisSpacingDoesNotChangeCharacterLiteralContents [
 	|
 		formatted
@@ -804,6 +920,65 @@ FormatterToolingRudesheimTest >> testParenthesizedInlineExpressionKeepsInsideSpa
 			format:	'sample ^ columnTotal + (weight * value)'.
 
 	expected := 'sample' , String cr , String tab , '^ columnTotal + ( weight * value ).'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testParenthesizedKeywordArgumentChainKeepsEachLevelIndented [
+	|
+		formatted
+		expected
+		oneTab
+		twoTabs
+		threeTabs
+		fourTabs
+		fiveTabs
+		sixTabs
+		sevenTabs
+		eightTabs
+		nineTabs
+		tenTabs
+	|
+
+	oneTab := String tab.
+	twoTabs := oneTab , oneTab.
+	threeTabs := twoTabs , oneTab.
+	fourTabs := threeTabs , oneTab.
+	fiveTabs := fourTabs , oneTab.
+	sixTabs := fiveTabs , oneTab.
+	sevenTabs := sixTabs , oneTab.
+	eightTabs := sevenTabs , oneTab.
+	nineTabs := eightTabs , oneTab.
+	tenTabs := nineTabs , oneTab.
+
+	expected := 'sample' , String cr ,
+		oneTab , '^ aService' , String cr ,
+		twoTabs , 'checkResponse:' , String cr ,
+		twoTabs , '(' , String cr ,
+		threeTabs , 'aStringParser' , String cr ,
+		fourTabs , 'fromString:' , String cr ,
+		fourTabs , '(' , String cr ,
+		fiveTabs , 'aHttpMethodRudesheim' , String cr ,
+		sixTabs , 'sendRequestBy:' , String cr ,
+		sixTabs , '(' , String cr ,
+		sevenTabs , 'aHttpMethodRudesheim' , String cr ,
+		eightTabs , 'convertClient:' , String cr ,
+		eightTabs , '(' , String cr ,
+		nineTabs , 'aService templateAsHttpClient' , String cr ,
+		tenTabs , 'url:' , String tab , 'aUrl;' , String cr ,
+		tenTabs , 'yourself' , String cr ,
+		eightTabs , ')' , String cr ,
+		eightTabs , 'withProperties:' , String tab , 'properties' , String cr ,
+		sixTabs , ')' , String cr ,
+		fourTabs , ')' , String cr ,
+		twoTabs , ').'.
+
+	formatted :=
+		self targetClass
+			format:	expected.
 
 	self
 		assert:	formatted
