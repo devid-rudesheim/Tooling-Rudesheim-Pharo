@@ -675,6 +675,7 @@ FormatterToolingRudesheim class >> formatMethodNode: aMethodNode [
 		lines
 		temps
 		comment
+		pragmas
 	|
 
 	lines := OrderedCollection new.
@@ -685,6 +686,25 @@ FormatterToolingRudesheim class >> formatMethodNode: aMethodNode [
 			self
 				formatSignatureLinesFor:	aMethodNode
 		).
+
+	pragmas := aMethodNode pragmas.
+
+	pragmas
+		ifNotEmpty:
+		[
+			lines
+				addAll:
+				(
+					pragmas
+						collect:
+						[ :each |
+							String tab , each formattedCode.
+						]
+				).
+
+			lines
+				add:	''.
+		].
 
 	comment := aMethodNode firstPrecodeComment.
 
