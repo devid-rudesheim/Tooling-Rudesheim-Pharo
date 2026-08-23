@@ -10,50 +10,47 @@ BaselineOfRudesheimTooling >> baseline: spec [
 	<baseline>
 
 	spec
-		for: #common
+		for:	#common
 		do:
 		[
 			spec
-				baseline: 'RudesheimUtility'
-				with: [ spec repository: 'github://devid-rudesheim/Utility-Rudesheim-Pharo:main' ];
-
-				package: 'Rudesheim-Tooling-Private';
-
-				package: 'Rudesheim-Tooling'
+				baseline:	'RudesheimUtility'
 				with:
 				[
 					spec
-						requires: #( 'RudesheimUtility' 'Rudesheim-Tooling-Private' )
+						repository:	'github://devid-rudesheim/Utility-Rudesheim-Pharo:main'.
 				];
-
-				project: 'RudesheimUtilityTests'
-				copyFrom: 'RudesheimUtility'
-				with:
-				[
-					spec loads: #( 'tests' )
-				];
-
-				package: 'Rudesheim-Tooling-Private-Tests'
+				package:	'Rudesheim-Tooling-Private';
+				package:	'Rudesheim-Tooling'
 				with:
 				[
 					spec
-						requires: #( 'Rudesheim-Tooling' 'RudesheimUtilityTests' )
+						requires:	#( 'RudesheimUtility' 'Rudesheim-Tooling-Private' ).
 				];
-
-				package: 'Rudesheim-Tooling-Tests'
+				project:	'RudesheimUtilityTests'
+				copyFrom:	'RudesheimUtility'
 				with:
 				[
 					spec
-						requires: #( 'Rudesheim-Tooling' 'RudesheimUtilityTests' )
+						loads:	#( 'tests' ).
 				];
-
-				group:		#core
-				with:		#( 'Rudesheim-Tooling-Private' 'Rudesheim-Tooling' );
-
-				group:		#tests
-				with:		#( 'Rudesheim-Tooling-Private-Tests' 'Rudesheim-Tooling-Tests' );
-
-				group:		#default
-				with:		#( #core ).
-		]
+				package:	'Rudesheim-Tooling-Private-Tests'
+				with:
+				[
+					spec
+						requires:	#( 'Rudesheim-Tooling' 'RudesheimUtilityTests' ).
+				];
+				package:	'Rudesheim-Tooling-Tests'
+				with:
+				[
+					spec
+						requires:	#( 'Rudesheim-Tooling' 'RudesheimUtilityTests' ).
+				];
+				group:	#core
+				with:	#( 'Rudesheim-Tooling-Private' 'Rudesheim-Tooling' );
+				group:	#tests
+				with:	#( 'Rudesheim-Tooling-Private-Tests' 'Rudesheim-Tooling-Tests' );
+				group:	#default
+				with:	#( #core ).
+		].
 ]

@@ -331,25 +331,6 @@ FormatterToolingRudesheim class >> disableAsFormatter [
 	OCProgramNode resetFormatter.
 ]
 
-{ #category : 'accessing' }
-FormatterToolingRudesheim class >> formatAsYouReadPolicy [
-	^ self
-		propertyAt:	#formatAsYouReadPolicy
-		ifAbsent:
-		[
-			false.
-		].
-]
-
-{ #category : 'accessing' }
-FormatterToolingRudesheim class >> formatAsYouReadPolicy: aBoolean [
-	self
-		propertyAt:	#formatAsYouReadPolicy
-		put:	aBoolean.
-
-	^ aBoolean.
-]
-
 { #category : 'control' }
 FormatterToolingRudesheim class >> enableAsFormatter [
 	OCProgramNode
@@ -409,6 +390,25 @@ withIndents: anInteger [
 					writer cr.
 				].
 		].
+]
+
+{ #category : 'accessing' }
+FormatterToolingRudesheim class >> formatAsYouReadPolicy [
+	^ self
+		propertyAt:	#formatAsYouReadPolicy
+		ifAbsent:
+		[
+			false.
+		].
+]
+
+{ #category : 'accessing' }
+FormatterToolingRudesheim class >> formatAsYouReadPolicy: aBoolean [
+	self
+		propertyAt:	#formatAsYouReadPolicy
+		put:	aBoolean.
+
+	^ aBoolean.
 ]
 
 { #category : 'formatting' }
@@ -753,6 +753,31 @@ FormatterToolingRudesheim class >> formatMethodNode: aMethodNode [
 ]
 
 { #category : 'formatting' }
+FormatterToolingRudesheim class >> formatMultilineBinaryArgumentLines: aNode
+indent: anIndentToolingRudesheim [
+	"A binary message's argument only needs its own parentheses preserved when it is itself a
+	compound (binary/keyword) send -- anything else (a unary chain, a literal, ...) binds
+	tighter than any binary operator and is never ambiguous as a binary argument, so wrapping
+	it in parentheses here would just be visual noise instead of fixing anything. See
+	formatParenthesizedSubexpressionLines:indent: for why the compound case must always be
+	wrapped once it needs its own multiple lines."
+	(
+		self
+			needsParenthesesAsBinaryArgumentForRudesheim:	aNode
+	)
+		ifTrue:
+		[
+			^ self
+				formatParenthesizedSubexpressionLines:	aNode
+				indent:	anIndentToolingRudesheim.
+		].
+
+	^ self
+		formatSubexpressionLines:	aNode
+		indent:	anIndentToolingRudesheim.
+]
+
+{ #category : 'formatting' }
 FormatterToolingRudesheim class >> formatParenthesizedLines: aNode
 indent: anIndentToolingRudesheim [
 	|
@@ -799,7 +824,6 @@ indent: anIndentToolingRudesheim [
 	applies. formatInline: already gets case 2 right when such an argument fits on one line,
 	by relying on OCSimpleFormatter's own structural (receiver/argument-position) awareness;
 	this is the multiline counterpart."
-
 	(
 		self
 			needsMultilineFor:	aNode
@@ -819,52 +843,6 @@ indent: anIndentToolingRudesheim [
 				formatInline:	aNode
 		) , ' )'
 	}.
-]
-
-{ #category : 'formatting' }
-FormatterToolingRudesheim class >> formatMultilineBinaryArgumentLines: aNode
-indent: anIndentToolingRudesheim [
-	"A binary message's argument only needs its own parentheses preserved when it is itself a
-	compound (binary/keyword) send -- anything else (a unary chain, a literal, ...) binds
-	tighter than any binary operator and is never ambiguous as a binary argument, so wrapping
-	it in parentheses here would just be visual noise instead of fixing anything. See
-	formatParenthesizedSubexpressionLines:indent: for why the compound case must always be
-	wrapped once it needs its own multiple lines."
-
-	(
-		self
-			needsParenthesesAsBinaryArgumentForRudesheim:	aNode
-	)
-		ifTrue:
-		[
-			^ self
-				formatParenthesizedSubexpressionLines:	aNode
-				indent:	anIndentToolingRudesheim.
-		].
-
-	^ self
-		formatSubexpressionLines:	aNode
-		indent:	anIndentToolingRudesheim.
-]
-
-{ #category : 'testing' }
-FormatterToolingRudesheim class >> needsParenthesesAsBinaryArgumentForRudesheim: aNode [
-	(
-		aNode
-			isKindOf:	OCMessageNode
-	)
-		ifFalse:
-		[
-			^ false.
-		].
-
-	aNode isKeyword
-		ifTrue:
-		[
-			^ true.
-		].
-
-	^ aNode isBinary.
 ]
 
 { #category : 'formatting' }
@@ -1344,6 +1322,26 @@ FormatterToolingRudesheim class >> needsMultilineFor: aNode [
 
 	^ self
 		hasHandWrittenLineBreakFor:	aNode.
+]
+
+{ #category : 'testing' }
+FormatterToolingRudesheim class >> needsParenthesesAsBinaryArgumentForRudesheim: aNode [
+	(
+		aNode
+			isKindOf:	OCMessageNode
+	)
+		ifFalse:
+		[
+			^ false.
+		].
+
+	aNode isKeyword
+		ifTrue:
+		[
+			^ true.
+		].
+
+	^ aNode isBinary.
 ]
 
 { #category : 'accessing' }
