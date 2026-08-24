@@ -706,13 +706,23 @@ FormatterToolingRudesheim class >> formatMethodNode: aMethodNode [
 				add:	''.
 		].
 
-	comment := aMethodNode firstPrecodeComment.
+	"When there are no `| temps |`, formatSequenceLines:indent:'s own comment scan for
+	aMethodNode's body already covers this same region (everything before the first
+	statement) and finds every comment there, not just the first one -- so only handle
+	firstPrecodeComment here for the region formatSequenceLines:indent: structurally cannot
+	reach: before the temps bar."
 
-	comment notNil
-		ifTrue:
+	aMethodNode body rightBar
+		ifNotNil:
 		[
-			lines
-				add:	String tab , '"' , comment , '"'.
+			comment := aMethodNode firstPrecodeComment.
+
+			comment notNil
+				ifTrue:
+				[
+					lines
+						add:	String tab , '"' , comment , '"'.
+				].
 		].
 
 	temps := aMethodNode temporaryNames.
@@ -848,6 +858,15 @@ indent: anIndentToolingRudesheim [
 { #category : 'formatting' }
 FormatterToolingRudesheim class >> formatSequenceLines: aSequenceNode
 indent: anIndentToolingRudesheim [
+	"Comments aren't real nodes, so the only reliable way to find every comment that sits
+	before the first statement (when there's no `| temps |` rightBar to anchor the scan) or
+	after the last one is to widen the scan all the way out to aSequenceNode's own enclosing
+	OCMethodNode/OCBlockNode -- whose #sourceInterval, unlike aSequenceNode's own, actually
+	spans the pattern/block-header and the closing bracket. Scanning through the extra
+	pattern/header/bracket text this way is harmless: formatCommentLinesInSource:from:to:
+	only picks out double-quoted spans, so anything else in between (including a pragma's
+	single-quoted argument values) is simply skipped."
+
 	|
 		statements
 		lines
@@ -885,7 +904,7 @@ indent: anIndentToolingRudesheim [
 								return:	aSequenceNode parent left.
 						].
 
-					aSequenceNode sourceInterval first - 1.
+					aSequenceNode parent sourceInterval first - 1.
 				] value
 			].
 
@@ -997,6 +1016,16 @@ indent: anIndentToolingRudesheim [
 						].
 				].
 		].
+
+	lines
+		addAll:
+		(
+			self
+				formatCommentLinesInSource:	aSequenceNode source
+				from:	previousEnd + 1
+				to:	aSequenceNode parent sourceInterval last
+				indent:	anIndentToolingRudesheim
+		).
 
 	^ lines.
 ]

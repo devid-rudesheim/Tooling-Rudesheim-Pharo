@@ -473,6 +473,77 @@ FormatterToolingRudesheimTest >> testCommentsArePreserved [
 ]
 
 { #category : 'tests' }
+FormatterToolingRudesheimTest >> testCommentAfterLastStatementInBlockIsPreserved [
+	"formatSequenceLines:indent: only emits the comments that sit *before* each statement in
+	a sequence (formatCommentLinesInSource:from:to:indent:, called once per statement with the
+	source range ending right before that statement starts); nothing ever looks at the range
+	after the *last* statement, so a trailing comment -- here, inside a block -- is silently
+	dropped."
+
+	|
+		formatted
+		expected
+	|
+
+	expected := 'sample' , String cr , String tab , '[' , String cr , String tab , String tab , 'self doSomething.' , String cr , String tab , String tab , '"event wait."' , String cr , String tab , '] value'.
+
+	formatted :=
+		self targetClass
+			format:	expected.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testCommentAfterLastStatementInMethodIsPreserved [
+	"Same bug as testCommentAfterLastStatementInBlockIsPreserved, but at the method's own
+	top-level sequence instead of inside a block."
+
+	|
+		formatted
+		expected
+	|
+
+	expected := 'sample' , String cr , String tab , 'self doSomething.' , String cr , String tab , '"event wait."'.
+
+	formatted :=
+		self targetClass
+			format:	expected.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testConsecutiveCommentsBeforeAStatementAreAllPreserved [
+	"OCMethodNode>>firstPrecodeComment only exposes the first comment before the method's
+	first statement, and OCSequenceNode>>sourceInterval starts at that first statement too
+	(comments aren't real nodes, so nothing before the first statement is reflected in any
+	node's own interval unless there's a `| temps |` bar to anchor it) -- so
+	formatSequenceLines:indent:'s per-statement comment scan ends up asking for comments in an
+	empty range, and only the one comment formatMethodNode: separately grabs via
+	firstPrecodeComment survives. Every comment past the first, of any number, is dropped."
+
+	|
+		formatted
+		expected
+	|
+
+	expected := 'sample' , String cr , String tab , '"XOR=0, AND=0"' , String cr , String tab , '"XOR=1, AND=0"' , String cr , String tab , '"XOR=1, AND=0"' , String cr , String tab , '"XOR=0, AND=1"' , String cr , String tab , 'self doSomething.'.
+
+	formatted :=
+		self targetClass
+			format:	expected.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
 FormatterToolingRudesheimTest >> testDynamicArrayAlwaysUsesMultilineElements [
 	|
 		formatted
