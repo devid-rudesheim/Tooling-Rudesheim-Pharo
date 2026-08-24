@@ -99,6 +99,7 @@ indent: anIndentToolingRudesheim [
 		receiverLines
 		receiverLinesAction
 		keepWalking
+		previousEnd
 	|
 
 	formatter := Rudesheim Tooling Formatter.
@@ -199,6 +200,8 @@ indent: anIndentToolingRudesheim [
 	lines
 		addAll:	receiverLines.
 
+	previousEnd := node sourceInterval last.
+
 	steps
 		do:
 		[ :step |
@@ -206,7 +209,44 @@ indent: anIndentToolingRudesheim [
 				stepText
 				argument
 				stepAction
+				commentLines
+				appendStepTextAction
 			|
+
+			commentLines :=
+				formatter
+					formatCommentLinesInSource:	aMessageNode source
+					from:	previousEnd + 1
+					to:	step selectorInterval first - 1
+					indent:	anIndentToolingRudesheim oneLevelDeeper.
+
+			appendStepTextAction :=
+			[ :aStepTextString |
+				commentLines
+					ifEmpty:
+					[
+						lines
+							at:	lines size
+							put:	lines last , ' ' , aStepTextString.
+					]
+					ifNotEmpty:
+					[
+						"A comment sat between the previous content and this step -- e.g. `self
+						""comment"" foo` -- so this step can no longer simply be fused onto the
+						previous line; formatUnaryOrBinaryChainLines: never looked for such a
+						comment at all before, silently dropping it (comments aren't real
+						nodes, so nothing in the receiver/argument structure this method
+						reconstructs from ever reflected it). Indented one level deeper than
+						the receiver, the same as any other place a keyword part or multiline
+						argument continues past the receiver's own line."
+
+						lines
+							addAll:	commentLines.
+
+						lines
+							add:	anIndentToolingRudesheim oneLevelDeeper asString , aStepTextString.
+					].
+			].
 
 			stepAction :=
 			[
@@ -223,9 +263,8 @@ indent: anIndentToolingRudesheim [
 							).
 					].
 
-				lines
-					at:	lines size
-					put:	lines last , ' ' , stepText.
+				appendStepTextAction
+					value:	stepText.
 			].
 			[
 				|
@@ -253,9 +292,8 @@ indent: anIndentToolingRudesheim [
 
 				stepAction :=
 				[
-					lines
-						at:	lines size
-						put:	lines last , ' ' , step selector asString.
+					appendStepTextAction
+						value:	step selector asString.
 
 					lines
 						addAll:
@@ -268,6 +306,8 @@ indent: anIndentToolingRudesheim [
 			] value.
 
 			stepAction value.
+
+			previousEnd := step sourceInterval last.
 		].
 
 	^ lines.

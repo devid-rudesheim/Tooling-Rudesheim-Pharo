@@ -1023,6 +1023,88 @@ FormatterToolingRudesheimTest >> testMultilineLiteralArrayAsAssignmentValueStays
 ]
 
 { #category : 'tests' }
+FormatterToolingRudesheimTest >> testByteArrayLiteralStaysByteArrayLiteralWhenMultiline [
+	"A byte array literal (#[ ... ]) is a different type from a regular literal array
+	(#( ... )) -- LiteralArrayFormatterToolingRudesheim class>>formatLiteralArrayLines:indent:
+	used to always emit `#(` / `)` regardless of which kind aLiteralArrayNode actually was,
+	silently turning a hand-written multiline ByteArray literal into a plain Array literal
+	once it needed its own multiple lines (a short one on one line was unaffected, since that
+	stays on formatLiteralArrayInline:'s unchanged path)."
+
+	|
+		formatted
+		expected
+	|
+
+	expected := 'sample' , String cr , String tab , '^ #[' , String cr , String tab , String tab , '1' , String cr , String tab , String tab , '2' , String cr , String tab , String tab , '3' , String cr , String tab , String tab , '4' , String cr , String tab , '].'.
+
+	formatted :=
+		self targetClass
+			format:	expected.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testCommentAfterOpeningParenthesisIsPreserved [
+	"Regression test for a real-world case found while re-verifying the formatter's fixes
+	against the wider Rudesheim ecosystem: a comment right after an opening parenthesis,
+	before the wrapped expression's own first token (here, a keyword message argument
+	written as `( ""comment"" receiver keywordPart: value )`), was silently dropped.
+	FormatterToolingRudesheim class>>formatParenthesizedLines:indent: always builds its own
+	'('/')' wrapper around aNode's rendering without ever looking at the source text between
+	the parenthesis it just emitted and wherever aNode's own rendering begins -- comments
+	aren't real nodes, so nothing in that rendering ever reflected one. See
+	leadingCommentLinesInsideParenthesesFor:indent:."
+
+	|
+		formatted
+		expected
+	|
+
+	expected := 'sample' , String cr , String tab , 'self species' , String cr , String tab , String tab , 'weightsRows:' , String cr , String tab , String tab , '(' , String cr , String tab , String tab , String tab , '"delta weights"' , String cr , String tab , String tab , String tab , 'gradient' , String cr , String tab , String tab , String tab , String tab , 'collect:' , String cr , String tab , String tab , String tab , String tab , '[ :each0 |' , String cr , String tab , String tab , String tab , String tab , String tab , 'inputs * each0.' , String cr , String tab , String tab , String tab , String tab , ']' , String cr , String tab , String tab , ')' , String cr , String tab , String tab , 'biases:' , String tab , 'gradient.'.
+
+	formatted :=
+		self targetClass
+			format:	expected.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testCommentBetweenUnaryReceiverAndSelectorIsPreserved [
+	"Regression test for a real-world case found while re-verifying the formatter's fixes
+	against the wider Rudesheim ecosystem: a comment written between a unary message's
+	receiver and its own selector (`self ""comment"" foo`) was silently dropped.
+	MessageKindFormatterToolingRudesheim class>>formatUnaryOrBinaryChainLines:indent: only
+	ever fuses each step's selector (and, for a binary step, its argument) onto the previous
+	line or, when the step's own argument needs multiple lines, starts a fresh one for that
+	argument -- it never looked at the source text between the previous content and the
+	step's own selector at all, so a comment sitting there (comments aren't real nodes, so
+	nothing in the receiver/argument structure this method reconstructs from ever reflected
+	one) was silently dropped."
+
+	|
+		formatted
+		expected
+	|
+
+	expected := 'sample' , String cr , String tab , 'self' , String cr , String tab , String tab , '"testEnqueueCopyFromOffsetToForRangeAsForWait0_0;' , String cr , String tab , String tab , 'tearDown;' , String cr , String tab , String tab , 'setUp;"' , String cr , String tab , String tab , 'testEnqueueCopyFromOffsetToForRangeAsForWait1_0.'.
+
+	formatted :=
+		self targetClass
+			format:	expected.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
 FormatterToolingRudesheimTest >> testNestedConditionalInsideParenthesizedBlockConditionKeepsStructure [
 	|
 		formatted
