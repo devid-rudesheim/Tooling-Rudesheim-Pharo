@@ -137,6 +137,24 @@ indent: anIndentToolingRudesheim [
 						add:	indentString , aKeywordPart.
 				].
 			].
+
+		(
+			firstArgumentLine
+				beginsWith:	'#('
+		)
+			ifTrue:
+			[
+				"A literal array's own opening bracket is the two characters #( , so it never
+				matches the single-character isOpeningBracketCharacter: check above -- without
+				this, a multiline literal array argument would get re-indented one level
+				deeper instead of hanging at the keyword's own indent like { and [ already do."
+
+				argumentLineAction :=
+				[
+					lines
+						add:	indentString , aKeywordPart.
+				].
+			].
 	] value.
 
 	argumentLineAction value.

@@ -29,6 +29,11 @@ FormatterToolingRudesheim class >> Cascade [
 ]
 
 { #category : 'namespace' }
+FormatterToolingRudesheim class >> LiteralArray [
+	^ LiteralArrayFormatterToolingRudesheim.
+]
+
+{ #category : 'namespace' }
 FormatterToolingRudesheim class >> MessageKind [
 	^ MessageKindFormatterToolingRudesheim.
 ]
