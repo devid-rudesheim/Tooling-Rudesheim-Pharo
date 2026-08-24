@@ -2604,3 +2604,77 @@ FormatterToolingRudesheimTest >> testKeywordArgumentsInStatementAndCascadeCollap
 		assert:	formatted
 		equals:	expected.
 ]
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testParenthesizedKeywordSendWithHandWrittenMultilineReceiverAndArgumentCollapses [
+	"Regression test for a real-world case pulled from Kernel-Rudesheim-Pharo''s
+	BasicColumnRudesheimTest: two assert:equals: statements each wrapping a parenthesized
+	keyword send (`self basicTarget evaluationForRead value: self sourceValue
+	asValueHolder` and `self basicTarget read: self sourceValue asValueHolder`), where the
+	receiver''s own unary chain AND the keyword''s argument (also a unary chain) were both
+	hand-typed one selector per line. Unlike
+	testKeywordArgumentsInStatementAndCascadeCollapseWhenHandWrittenMultiline''s snippet
+	(where the hand-written break sits only *between* the keyword and its argument''s own
+	span), here the argument''s OWN internal sends (self / sourceValue / asValueHolder) are
+	each on their own line -- the exact shape
+	testKeywordArgumentUnaryChainWithHandWrittenLineBreaksCollapsesInline covers in
+	isolation, and #28 fixed. Confirmed this genuinely depends on that fix: run against
+	develop before #28, both keyword arguments stayed split onto their own line instead of
+	collapsing."
+	|
+		formatted
+		input
+		expected
+	|
+
+	input :=
+	'sample' , String cr ,
+	String tab , 'self' , String cr ,
+	String tab , String tab , 'assert:' , String tab , String cr ,
+	String tab , String tab , '(' , String cr ,
+	String tab , String tab , String tab , 'self' , String cr ,
+	String tab , String tab , String tab , String tab , 'basicTarget' , String cr ,
+	String tab , String tab , String tab , String tab , 'evaluationForRead' , String cr ,
+	String tab , String tab , String tab , String tab , 'value:' , String tab , String cr ,
+	String tab , String tab , String tab , String tab , 'self' , String cr ,
+	String tab , String tab , String tab , String tab , String tab , 'sourceValue' , String cr ,
+	String tab , String tab , String tab , String tab , String tab , 'asValueHolder' , String cr ,
+	String tab , String tab , ')' , String cr ,
+	String tab , String tab , 'equals:' , String tab , 'self expectedValue.' , String cr ,
+	'' , String cr ,
+	String tab , 'self' , String cr ,
+	String tab , String tab , 'assert:' , String tab , String cr ,
+	String tab , String tab , '(' , String cr ,
+	String tab , String tab , String tab , 'self basicTarget' , String cr ,
+	String tab , String tab , String tab , String tab , 'read:' , String tab , String cr ,
+	String tab , String tab , String tab , String tab , 'self' , String cr ,
+	String tab , String tab , String tab , String tab , String tab , 'sourceValue' , String cr ,
+	String tab , String tab , String tab , String tab , String tab , 'asValueHolder' , String cr ,
+	String tab , String tab , ')' , String cr ,
+	String tab , String tab , 'equals:' , String tab , 'self expectedValue.'.
+
+	expected :=
+	'sample' , String cr ,
+	String tab , 'self' , String cr ,
+	String tab , String tab , 'assert:' , String cr ,
+	String tab , String tab , '(' , String cr ,
+	String tab , String tab , String tab , 'self basicTarget evaluationForRead' , String cr ,
+	String tab , String tab , String tab , String tab , 'value:' , String tab , 'self sourceValue asValueHolder' , String cr ,
+	String tab , String tab , ')' , String cr ,
+	String tab , String tab , 'equals:' , String tab , 'self expectedValue.' , String cr ,
+	'' , String cr ,
+	String tab , 'self' , String cr ,
+	String tab , String tab , 'assert:' , String cr ,
+	String tab , String tab , '(' , String cr ,
+	String tab , String tab , String tab , 'self basicTarget' , String cr ,
+	String tab , String tab , String tab , String tab , 'read:' , String tab , 'self sourceValue asValueHolder' , String cr ,
+	String tab , String tab , ')' , String cr ,
+	String tab , String tab , 'equals:' , String tab , 'self expectedValue.'.
+
+	formatted :=
+		self targetClass
+			format:	input.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
