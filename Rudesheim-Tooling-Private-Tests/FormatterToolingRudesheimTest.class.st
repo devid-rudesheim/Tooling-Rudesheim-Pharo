@@ -992,6 +992,37 @@ FormatterToolingRudesheimTest >> testNestedLiteralArraysWithHandWrittenLineBreak
 ]
 
 { #category : 'tests' }
+FormatterToolingRudesheimTest >> testMultilineLiteralArrayAsAssignmentValueStaysMultiline [
+	"Regression test for a real-world case found while re-verifying
+	testNestedLiteralArraysWithHandWrittenLineBreaksStayMultiline's fix against the wider
+	Rudesheim ecosystem: that fix only reaches a literal array through
+	OCLiteralArrayNode>>acceptFormatterRudesheim:indent:, but
+	AssignmentFormatterToolingRudesheim class>>formatAssignmentLines:indent: doesn't call that
+	for its value at all unless
+	OCLiteralArrayNode>>needsExpressionLinesAsAssignmentValueForFormatterRudesheim: says so --
+	otherwise it renders the value with formatInline: unconditionally, which for a literal
+	array means the always-single-line formatLiteralArrayInline:, bypassing this class's
+	multiline support entirely regardless of how it was originally written. So
+	`x := #( ... )` (this test) needed its own fix on top of `^ #( ... )`
+	(testNestedLiteralArraysWithHandWrittenLineBreaksStayMultiline)."
+
+	|
+		formatted
+		expected
+	|
+
+	expected := 'sample' , String cr , String tab , '|' , String cr , String tab , String tab , 'source' , String cr , String tab , '|' , String cr , String cr , String tab , 'source :=' , String cr , String tab , String tab , '#(' , String cr , String tab , String tab , String tab , '#( #(0.0 0.0) #(0.0 0.0) )' , String cr , String tab , String tab , String tab , '"XOR=0, AND=0"' , String cr , String tab , String tab , String tab , '#( #(1.0 0.0) #(1.0 0.0) )' , String cr , String tab , String tab , String tab , '"XOR=1, AND=0"' , String cr , String tab , String tab , String tab , '#( #(0.0 1.0) #(1.0 0.0) )' , String cr , String tab , String tab , String tab , '"XOR=1, AND=0"' , String cr , String tab , String tab , String tab , '#( #(1.0 1.0) #(0.0 1.0) )' , String cr , String tab , String tab , String tab , '"XOR=0, AND=1"' , String cr , String tab , String tab , ').' , String cr , String cr , String tab , '^ source.'.
+
+	formatted :=
+		self targetClass
+			format:	expected.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
 FormatterToolingRudesheimTest >> testNestedConditionalInsideParenthesizedBlockConditionKeepsStructure [
 	|
 		formatted
