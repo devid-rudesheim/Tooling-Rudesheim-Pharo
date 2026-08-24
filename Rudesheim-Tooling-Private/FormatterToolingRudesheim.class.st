@@ -457,7 +457,6 @@ indent: anIndentToolingRudesheim [
 			comment's own text, so it must be doubled back up here or a comment that itself
 			documents a quoting rule like this one gets re-emitted with a bare, unescaped
 			quote character that prematurely closes the comment when reparsed."
-
 			indentString , '"' ,
 			(
 				each
@@ -732,7 +731,6 @@ FormatterToolingRudesheim class >> formatMethodNode: aMethodNode [
 	statement) and finds every comment there, not just the first one -- so only handle
 	firstPrecodeComment here for the region formatSequenceLines:indent: structurally cannot
 	reach: before the temps bar."
-
 	aMethodNode body rightBar
 		ifNotNil:
 		[
@@ -746,7 +744,6 @@ FormatterToolingRudesheim class >> formatMethodNode: aMethodNode [
 					per occurrence while extracting the comment's own text, so it must be
 					doubled back up here too -- see formatCommentLinesInSource:from:to:indent:,
 					which handles the exact same concern for every other comment position."
-
 					lines
 						add:
 							String tab , '"' ,
@@ -867,20 +864,19 @@ indent: anIndentToolingRudesheim [
 	nodes, so nothing in aNode's own structure ever reflects one -- when there really was a
 	matching source paren to look inside of, and only for message nodes, whose #receiver
 	marks where the real content begins after any such comment."
-
 	(
 		aNode
 			isKindOf:	OCMessageNode
 	)
 		ifFalse:
 		[
-			^ #().
+			^ #(  ).
 		].
 
 	aNode parentheses
 		ifEmpty:
 		[
-			^ #().
+			^ #(  ).
 		].
 
 	^ self
@@ -943,7 +939,6 @@ indent: anIndentToolingRudesheim [
 	pattern/header/bracket text this way is harmless: formatCommentLinesInSource:from:to:
 	only picks out double-quoted spans, so anything else in between (including a pragma's
 	single-quoted argument values) is simply skipped."
-
 	|
 		statements
 		lines

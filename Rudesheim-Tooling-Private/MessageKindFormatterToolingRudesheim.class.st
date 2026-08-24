@@ -239,7 +239,6 @@ indent: anIndentToolingRudesheim [
 						reconstructs from ever reflected it). Indented one level deeper than
 						the receiver, the same as any other place a keyword part or multiline
 						argument continues past the receiver's own line."
-
 						lines
 							addAll:	commentLines.
 
@@ -306,7 +305,6 @@ indent: anIndentToolingRudesheim [
 			] value.
 
 			stepAction value.
-
 			previousEnd := step sourceInterval last.
 		].
 
