@@ -473,6 +473,34 @@ FormatterToolingRudesheimTest >> testCommentsArePreserved [
 ]
 
 { #category : 'tests' }
+FormatterToolingRudesheimTest >> testCommentBeforeTempsContainingAnEscapedQuoteIsPreserved [
+	"Regression test for a real-world case found while re-verifying the formatter's fixes
+	against the wider Rudesheim ecosystem: a comment before a method's `| temps |` bar (the
+	one region formatSequenceLines:indent:'s own comment scan structurally cannot reach, so
+	formatMethodNode: still uses aMethodNode firstPrecodeComment for it -- see that method's
+	own comment) that itself contained a literal doubled quote lost its escaping when
+	re-emitted, the same way formatCommentLinesInSource:from:to:indent: used to for every
+	other comment position before it was fixed to double a comment's embedded quote
+	characters back up on the way out (see doubleQuoteCharacterAsString). An unescaped quote
+	prematurely closes the comment when reparsed, corrupting everything after it into code."
+
+	|
+		formatted
+		expected
+	|
+
+	expected := 'sample' , String cr , String tab , '"Example: write self ""x"" foo to show a comment inside an expression."' , String cr , String tab , '|' , String cr , String tab , String tab , 'value' , String cr , String tab , '|' , String cr , String cr , String tab , 'value := 1.' , String cr , String tab , '^ value.'.
+
+	formatted :=
+		self targetClass
+			format:	expected.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
 FormatterToolingRudesheimTest >> testCommentAfterLastStatementInBlockIsPreserved [
 	"formatSequenceLines:indent: only emits the comments that sit *before* each statement in
 	a sequence (formatCommentLinesInSource:from:to:indent:, called once per statement with the

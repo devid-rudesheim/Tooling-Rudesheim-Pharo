@@ -439,11 +439,9 @@ to: aStopInteger
 indent: anIndentToolingRudesheim [
 	|
 		indentString
-		quoteCharacterAsString
 	|
 
 	indentString := anIndentToolingRudesheim asString.
-	quoteCharacterAsString := Rudesheim Tooling CharacterKind DoubleQuote quoteCharacter asString.
 
 	^
 	(
@@ -463,11 +461,16 @@ indent: anIndentToolingRudesheim [
 			indentString , '"' ,
 			(
 				each
-					copyReplaceAll:	quoteCharacterAsString
-					with:	quoteCharacterAsString , quoteCharacterAsString
+					copyReplaceAll:	self doubleQuoteCharacterAsString
+					with:	self doubleQuoteCharacterAsString , self doubleQuoteCharacterAsString
 			) , '"'.
 		]
 		as:	OrderedCollection.
+]
+
+{ #category : 'accessing' }
+FormatterToolingRudesheim class >> doubleQuoteCharacterAsString [
+	^ Rudesheim Tooling CharacterKind DoubleQuote quoteCharacter asString.
 ]
 
 { #category : 'formatting' }
@@ -738,8 +741,20 @@ FormatterToolingRudesheim class >> formatMethodNode: aMethodNode [
 			comment notNil
 				ifTrue:
 				[
+					"firstPrecodeComment, like commentsInSource:from:to:, already collapsed each
+					literal doubled quote in the original source down to one quote character
+					per occurrence while extracting the comment's own text, so it must be
+					doubled back up here too -- see formatCommentLinesInSource:from:to:indent:,
+					which handles the exact same concern for every other comment position."
+
 					lines
-						add:	String tab , '"' , comment , '"'.
+						add:
+							String tab , '"' ,
+							(
+								comment
+									copyReplaceAll:	self doubleQuoteCharacterAsString
+									with:	self doubleQuoteCharacterAsString , self doubleQuoteCharacterAsString
+							) , '"'.
 				].
 		].
 
