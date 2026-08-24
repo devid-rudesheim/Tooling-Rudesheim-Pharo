@@ -917,6 +917,81 @@ FormatterToolingRudesheimTest >> testLiteralArrayKeepsInsideSpaces [
 ]
 
 { #category : 'tests' }
+FormatterToolingRudesheimTest >> testLiteralArrayAsKeywordArgumentStaysAtKeywordIndent [
+	"A literal array's own opening bracket is the two characters #( , which
+	isOpeningBracketCharacter: (a single-character check) never matches -- without
+	needsMultilineFor:-aware handling for this specific case in
+	KeywordMessageKindFormatterToolingRudesheim class>>formatKeywordPart:argument:indent:,
+	a multiline literal array keyword argument would get re-indented one level deeper
+	instead of hanging at the keyword's own indent the way { and [ already do."
+
+	|
+		formatted
+		expected
+	|
+
+	expected := 'sample' , String cr , String tab , 'self' , String cr , String tab , String tab , 'useNames:' , String cr , String tab , String tab , '#(' , String cr , String tab , String tab , String tab , '''alpha''' , String cr , String tab , String tab , String tab , '''beta''' , String cr , String tab , String tab , ').'.
+
+	formatted :=
+		self targetClass
+			format:	expected.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testNestedLiteralArraysWithoutHandWrittenLineBreaksStayInline [
+	"Unlike a dynamic array ({ ... }), a literal array must not go multiline just because it
+	is non-empty or nested -- only when it (or a literal array nested inside it) was already
+	written across multiple lines. This one has neither, at either nesting level, so it must
+	collapse to a single line same as testLiteralArrayKeepsInsideSpaces's flat case."
+
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		self targetClass
+			format:	'sample ^ #(#(1 2) #(3 4))'.
+
+	expected := 'sample' , String cr , String tab , '^ #( #(1 2) #(3 4) ).'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testNestedLiteralArraysWithHandWrittenLineBreaksStayMultiline [
+	"Regression test for a real-world case: a literal array of pairs, each pairing a
+	repository name with its own nested literal array of package names, all originally
+	hand-written across multiple lines. FormatterToolingRudesheim used to force every literal
+	array through its single-line renderer unconditionally (formatLiteralArrayInline:, the
+	only literal-array code path that existed), regardless of size or nesting -- collapsing
+	something this large onto one very long line instead of respecting the structure the
+	author wrote. See OCLiteralArrayNode.extension.st's
+	needsMultilineForFormatterRudesheim: and LiteralArrayFormatterToolingRudesheim."
+
+	|
+		formatted
+		expected
+	|
+
+	expected := 'sample' , String cr , String tab , '^ #(' , String cr , String tab , String tab , '#(' , String cr , String tab , String tab , String tab , '''Kernel-Rudesheim-Pharo''' , String cr , String tab , String tab , String tab , '#(' , String cr , String tab , String tab , String tab , String tab , '''BaselineOfRudesheimKernel''' , String cr , String tab , String tab , String tab , String tab , '''Rudesheim-Kernel-Base''' , String cr , String tab , String tab , String tab , ')' , String cr , String tab , String tab , ')' , String cr , String tab , String tab , '#(' , String cr , String tab , String tab , String tab , '''Utility-Rudesheim-Pharo''' , String cr , String tab , String tab , String tab , '#(' , String cr , String tab , String tab , String tab , String tab , '''BaselineOfRudesheimUtility''' , String cr , String tab , String tab , String tab , String tab , '''Rudesheim-Utility-Base''' , String cr , String tab , String tab , String tab , ')' , String cr , String tab , String tab , ')' , String cr , String tab , ').'.
+
+	formatted :=
+		self targetClass
+			format:	expected.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
 FormatterToolingRudesheimTest >> testNestedConditionalInsideParenthesizedBlockConditionKeepsStructure [
 	|
 		formatted
