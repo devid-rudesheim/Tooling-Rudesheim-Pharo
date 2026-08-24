@@ -2550,3 +2550,57 @@ FormatterToolingRudesheimTest >> testLargeBaselineSpecWithPragmaFormatsStably [
 		assert:	formatted
 		equals:	expected.
 ]
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testKeywordArgumentsInStatementAndCascadeCollapseWhenHandWrittenMultiline [
+	"Regression test for a real-world case pulled from Kernel-Rudesheim-Pharo:
+	BasicColumnRudesheimTest>>read: (`self basicTarget evaluationForRead value: self
+	sourceValue asValueHolder.`) and RudesheimTest>>testMembers''s cascade (`self assert:
+	root Column Basic equals: BasicColumnRudesheim; assert: root Column ForDateAndTime
+	equals: ColumnForDateAndTimeRudesheim.`) both had a keyword message argument hand-typed
+	on its own line directly below the keyword, with the argument itself -- a plain unary
+	chain -- written on a single line (unlike
+	testKeywordArgumentUnaryChainWithHandWrittenLineBreaksCollapsesInline''s case, where the
+	chain itself is *also* hand-typed across several lines). Because the hand-written break
+	here sits between the keyword and the argument''s own source span rather than inside it,
+	formatKeywordPart:argument:indent: already collapsed this particular shape correctly even
+	before that fix; this test does not exercise it. Kept anyway as real-world coverage for a
+	bare keyword send and a cascade of keyword sends collapsing together in one method."
+	|
+		formatted
+		input
+		expected
+	|
+
+	input :=
+	'sample' , String cr ,
+	String tab , String tab , String tab , 'self basicTarget evaluationForRead' , String cr ,
+	String tab , String tab , String tab , String tab , 'value:' , String cr ,
+	String tab , String tab , String tab , String tab , String tab , 'self sourceValue asValueHolder.' , String cr ,
+	'' , String cr ,
+	String tab , 'self' , String cr ,
+	String tab , String tab , 'assert:' , String cr ,
+	String tab , String tab , String tab , 'root Column Basic' , String cr ,
+	String tab , String tab , 'equals:' , String tab , 'BasicColumnRudesheim;' , String cr ,
+	String tab , String tab , 'assert:' , String cr ,
+	String tab , String tab , String tab , 'root Column ForDateAndTime' , String cr ,
+	String tab , String tab , 'equals:' , String tab , 'ColumnForDateAndTimeRudesheim.'.
+
+	expected :=
+	'sample' , String cr ,
+	String tab , 'self basicTarget evaluationForRead' , String cr ,
+	String tab , String tab , 'value:' , String tab , 'self sourceValue asValueHolder.' , String cr ,
+	'' , String cr ,
+	String tab , 'self' , String cr ,
+	String tab , String tab , 'assert:' , String tab , 'root Column Basic' , String cr ,
+	String tab , String tab , 'equals:' , String tab , 'BasicColumnRudesheim;' , String cr ,
+	String tab , String tab , 'assert:' , String tab , 'root Column ForDateAndTime' , String cr ,
+	String tab , String tab , 'equals:' , String tab , 'ColumnForDateAndTimeRudesheim.'.
+
+	formatted :=
+		self targetClass
+			format:	input.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
