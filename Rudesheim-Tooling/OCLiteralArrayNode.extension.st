@@ -20,7 +20,6 @@ OCLiteralArrayNode >> needsExpressionLinesAsAssignmentValueForFormatterRudesheim
 	goes multiline anyway; a literal array must not (a short one like `x := #( 1 2 3 )` has to
 	stay on one line, per testLiteralArrayKeepsInsideSpaces), so this defers to the very same
 	check that decides whether the array needs its own multiple lines at all."
-
 	^ aFormatter
 		needsMultilineFor:	self.
 ]
@@ -34,7 +33,6 @@ OCLiteralArrayNode >> needsMultilineForFormatterRudesheim: aFormatter [
 	on every element, not just the ones that are themselves literal arrays, both keeps this
 	recursive for arbitrarily nested arrays and costs nothing extra: a plain literal value
 	never needs multiline on its own."
-
 	^ self contents
 		anySatisfy:
 		[ :each |

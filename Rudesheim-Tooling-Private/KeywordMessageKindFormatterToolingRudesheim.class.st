@@ -82,9 +82,7 @@ indent: anIndentToolingRudesheim [
 			formatSubexpressionLines:	aNode
 			indent:	anIndentToolingRudesheim.
 
-	(
-		1 = argumentLines size
-	)
+	1 = argumentLines size
 		ifTrue:
 		[
 			"aNode's own rendering already fits on one line, so it can share the keyword's
@@ -99,7 +97,6 @@ indent: anIndentToolingRudesheim [
 			keyword gets pushed onto its own line above an argument that then renders as a
 			single line anyway, and reformatting the result collapses the two lines the first
 			pass insisted on keeping apart."
-
 			^
 			{
 				indentString , aKeywordPart , String tab ,
@@ -111,7 +108,6 @@ indent: anIndentToolingRudesheim [
 		].
 
 	lines := OrderedCollection new.
-
 	firstArgumentLine := argumentLines first trimBoth.
 
 	argumentLineAction :=
@@ -160,7 +156,6 @@ indent: anIndentToolingRudesheim [
 				matches the single-character isOpeningBracketCharacter: check above -- without
 				this, a multiline literal array argument would get re-indented one level
 				deeper instead of hanging at the keyword's own indent like { and [ already do."
-
 				argumentLineAction :=
 				[
 					lines

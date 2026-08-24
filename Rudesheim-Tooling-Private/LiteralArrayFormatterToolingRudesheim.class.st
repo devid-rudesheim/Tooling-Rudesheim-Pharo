@@ -77,7 +77,6 @@ indent: anIndentToolingRudesheim [
 	"A byte array literal (#[ ... ]) is a different type from a regular literal array
 	(#( ... )) -- using the wrong opener/closer here would silently turn a ByteArray literal
 	into an Array literal instead of just reformatting it."
-
 	openerString := '#('.
 	closerString := ')'.
 
@@ -94,10 +93,7 @@ indent: anIndentToolingRudesheim [
 	lines
 		add:	anIndentToolingRudesheim asString , openerString.
 
-	previousEnd :=
-		aLiteralArrayNode sourceInterval first +
-		aLiteralArrayNode openerSize -
-		1.
+	previousEnd := aLiteralArrayNode sourceInterval first + aLiteralArrayNode openerSize - 1.
 
 	contents
 		do:
