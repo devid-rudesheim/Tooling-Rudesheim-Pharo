@@ -51,6 +51,8 @@ indent: anIndentToolingRudesheim [
 		lines
 		elementIndent
 		previousEnd
+		openerString
+		closerString
 	|
 
 	formatter := Rudesheim Tooling Formatter.
@@ -72,11 +74,25 @@ indent: anIndentToolingRudesheim [
 			}.
 		].
 
+	"A byte array literal (#[ ... ]) is a different type from a regular literal array
+	(#( ... )) -- using the wrong opener/closer here would silently turn a ByteArray literal
+	into an Array literal instead of just reformatting it."
+
+	openerString := '#('.
+	closerString := ')'.
+
+	aLiteralArrayNode isForByteArray
+		ifTrue:
+		[
+			openerString := '#['.
+			closerString := ']'.
+		].
+
 	elementIndent := anIndentToolingRudesheim oneLevelDeeper.
 	lines := OrderedCollection new.
 
 	lines
-		add:	anIndentToolingRudesheim asString , '#('.
+		add:	anIndentToolingRudesheim asString , openerString.
 
 	previousEnd :=
 		aLiteralArrayNode sourceInterval first +
@@ -118,7 +134,7 @@ indent: anIndentToolingRudesheim [
 		).
 
 	lines
-		add:	anIndentToolingRudesheim asString , ')'.
+		add:	anIndentToolingRudesheim asString , closerString.
 
 	^ lines.
 ]

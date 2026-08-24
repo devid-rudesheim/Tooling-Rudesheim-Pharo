@@ -439,9 +439,11 @@ to: aStopInteger
 indent: anIndentToolingRudesheim [
 	|
 		indentString
+		quoteCharacterAsString
 	|
 
 	indentString := anIndentToolingRudesheim asString.
+	quoteCharacterAsString := Rudesheim Tooling CharacterKind DoubleQuote quoteCharacter asString.
 
 	^
 	(
@@ -452,7 +454,18 @@ indent: anIndentToolingRudesheim [
 	)
 		collect:
 		[ :each |
-			indentString , '"' , each , '"'.
+			"commentsInSource:from:to: already collapsed each literal doubled quote in the
+			original source down to one quote character per occurrence while extracting the
+			comment's own text, so it must be doubled back up here or a comment that itself
+			documents a quoting rule like this one gets re-emitted with a bare, unescaped
+			quote character that prematurely closes the comment when reparsed."
+
+			indentString , '"' ,
+			(
+				each
+					copyReplaceAll:	quoteCharacterAsString
+					with:	quoteCharacterAsString , quoteCharacterAsString
+			) , '"'.
 		]
 		as:	OrderedCollection.
 ]
@@ -807,6 +820,14 @@ indent: anIndentToolingRudesheim [
 	lines
 		addAll:
 		(
+			self
+				leadingCommentLinesInsideParenthesesFor:	aNode
+				indent:	anIndentToolingRudesheim oneLevelDeeper
+		).
+
+	lines
+		addAll:
+		(
 			aNode
 				acceptFormatterRudesheim:	self
 				indent:	anIndentToolingRudesheim oneLevelDeeper
@@ -816,6 +837,42 @@ indent: anIndentToolingRudesheim [
 		add:	anIndentToolingRudesheim asString , ')'.
 
 	^ lines.
+]
+
+{ #category : 'formatting' }
+FormatterToolingRudesheim class >> leadingCommentLinesInsideParenthesesFor: aNode
+indent: anIndentToolingRudesheim [
+	"aNode's own #sourceInterval starts at the opening parenthesis itself when aNode was
+	genuinely written with explicit source parentheses (confirmed by aNode parentheses being
+	non-empty and matching that same interval) -- e.g.
+	`weightsRows: ( ""comment"" gradient collect: [ ... ] )`. formatParenthesizedLines:indent:
+	always emits its own '(' / ')' wrapper whether or not aNode had explicit source
+	parentheses (a keyword message always needs one structurally, regardless of whether the
+	author also wrote one), so a comment can only be found here -- comments aren't real
+	nodes, so nothing in aNode's own structure ever reflects one -- when there really was a
+	matching source paren to look inside of, and only for message nodes, whose #receiver
+	marks where the real content begins after any such comment."
+
+	(
+		aNode
+			isKindOf:	OCMessageNode
+	)
+		ifFalse:
+		[
+			^ #().
+		].
+
+	aNode parentheses
+		ifEmpty:
+		[
+			^ #().
+		].
+
+	^ self
+		formatCommentLinesInSource:	aNode source
+		from:	aNode sourceInterval first + 1
+		to:	aNode receiver sourceInterval first - 1
+		indent:	anIndentToolingRudesheim.
 ]
 
 { #category : 'formatting' }
