@@ -812,6 +812,39 @@ FormatterToolingRudesheimTest >> testKeywordMessageArgumentUnaryChainDoesNotBrea
 ]
 
 { #category : 'tests' }
+FormatterToolingRudesheimTest >> testKeywordArgumentUnaryChainWithHandWrittenLineBreaksCollapsesInline [
+	"Regression test for a real-world case found while reviewing Kernel-Rudesheim-Pharo PR #15
+	(a repo-wide reformat with this Formatter): a keyword message argument that is a plain
+	unary message chain (e.g. `root Column ForDateAndTime`, a chain of namespace-style unary
+	sends) collapses onto one line when formatted as a bare statement or as a message
+	receiver (see testKeywordReceiverUnaryChainStaysInline) regardless of how many lines it
+	was originally hand-typed across, because a plain unary/binary chain's own
+	needsMultilineForFormatterRudesheim: never depends on hand-written line breaks -- only on
+	genuine structural need (a parenthesized receiver, etc). But
+	formatKeywordPart:argument:indent: decided whether the keyword and its argument share a
+	line via the general needsMultilineFor:, which also consults
+	hasHandWrittenLineBreakFor: on the argument's *original* source span -- still containing
+	the hand-typed breaks the argument's own rendering was about to eliminate -- so the
+	keyword was pushed onto its own line above an argument that then rendered as a single
+	line anyway. Reformatting that already-formatted result collapsed the two onto one line,
+	proving the first pass was wrong: the formatter was not idempotent for this case."
+	|
+		formatted
+		input
+	|
+
+	input := 'sample self foo: root' , String cr , String tab , 'Column' , String cr , String tab , String tab , 'ForDateAndTime.'.
+
+	formatted :=
+		self targetClass
+			format:	input.
+
+	self
+		assert:	formatted
+		equals:	'sample' , String cr , String tab , 'self' , String cr , String tab , String tab , 'foo:' , String tab , 'root Column ForDateAndTime.'.
+]
+
+{ #category : 'tests' }
 FormatterToolingRudesheimTest >> testKeywordMessageInsideBlockKeepsEachKeywordPartOnOwnLine [
 	|
 		formatted
