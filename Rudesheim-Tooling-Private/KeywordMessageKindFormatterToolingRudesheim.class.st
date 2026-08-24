@@ -77,12 +77,29 @@ indent: anIndentToolingRudesheim [
 				yourself.
 		].
 
-	(
+	argumentLines :=
 		formatter
-			needsMultilineFor:	aNode
+			formatSubexpressionLines:	aNode
+			indent:	anIndentToolingRudesheim.
+
+	(
+		1 = argumentLines size
 	)
-		ifFalse:
+		ifTrue:
 		[
+			"aNode's own rendering already fits on one line, so it can share the keyword's
+			line regardless of needsMultilineFor: aNode -- which also answers true for a node
+			that was merely hand-typed across several lines (e.g. a plain unary chain like
+			`root Column ForDateAndTime`) even though that chain's own formatting always
+			collapses it onto one line anyway (see MessageKindFormatterToolingRudesheim
+			class>>formatLines:indent:), regardless of how many lines it was hand-typed
+			across. Deciding from aNode's *actual rendered* line count instead of that
+			pre-formatting guess keeps this in sync with how the very same argument renders
+			in every other position (a bare statement, a message receiver) -- otherwise the
+			keyword gets pushed onto its own line above an argument that then renders as a
+			single line anyway, and reformatting the result collapses the two lines the first
+			pass insisted on keeping apart."
+
 			^
 			{
 				indentString , aKeywordPart , String tab ,
@@ -94,11 +111,6 @@ indent: anIndentToolingRudesheim [
 		].
 
 	lines := OrderedCollection new.
-
-	argumentLines :=
-		formatter
-			formatSubexpressionLines:	aNode
-			indent:	anIndentToolingRudesheim.
 
 	firstArgumentLine := argumentLines first trimBoth.
 
