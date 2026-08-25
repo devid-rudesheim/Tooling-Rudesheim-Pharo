@@ -2,26 +2,26 @@ Extension { #name : 'OCProgramNode' }
 
 { #category : '*Rudesheim-Tooling' }
 OCProgramNode >> acceptFormatterRudesheim: aFormatter
-indent: anIndentLevelInteger [
+indent: anIndentToolingRudesheim [
 	^ aFormatter
 		formatInlineNodeLines:	self
-		indent:	anIndentLevelInteger.
+		indent:	anIndentToolingRudesheim.
 ]
 
 { #category : '*Rudesheim-Tooling' }
 OCProgramNode >> acceptFormatterRudesheimAsStatement: aFormatter
-indent: anIndentLevelInteger [
+indent: anIndentToolingRudesheim [
 	^ self
 		acceptFormatterRudesheim:	aFormatter
-		indent:	anIndentLevelInteger.
+		indent:	anIndentToolingRudesheim.
 ]
 
 { #category : '*Rudesheim-Tooling' }
 OCProgramNode >> acceptFormatterRudesheimAsSubexpression: aFormatter
-indent: anIndentLevelInteger [
+indent: anIndentToolingRudesheim [
 	^ self
 		acceptFormatterRudesheim:	aFormatter
-		indent:	anIndentLevelInteger.
+		indent:	anIndentToolingRudesheim.
 ]
 
 { #category : '*Rudesheim-Tooling' }
@@ -37,9 +37,4 @@ OCProgramNode >> needsExpressionLinesAsAssignmentValueForFormatterRudesheim: aFo
 { #category : '*Rudesheim-Tooling' }
 OCProgramNode >> needsMultilineForFormatterRudesheim: aFormatter [
 	^ false.
-]
-
-{ #category : '*Rudesheim-Tooling' }
-OCProgramNode >> unaryBinaryChainLengthForFormatterRudesheim: aFormatter [
-	^ 0.
 ]

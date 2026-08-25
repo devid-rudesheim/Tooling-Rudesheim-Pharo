@@ -4,59 +4,9 @@ Tests formatter character kind dispatch.
 Class {
 	#name : 'CharacterKindFormatterToolingRudesheimTest',
 	#superclass : 'TestCase',
-	#category : 'Rudesheim-Tooling-Tests',
+	#category : 'Rudesheim-Tooling-Private-Tests',
 	#package : 'Rudesheim-Tooling-Private-Tests'
 }
-
-{ #category : 'tests' }
-CharacterKindFormatterToolingRudesheimTest >> testBracketKindMatchesOpeningAndClosingCharacters [
-	|
-		kind
-	|
-
-	kind := ParenthesesCharacterKindFormatterToolingRudesheim.
-
-	self
-		assert:
-		(
-			kind
-				match:	$(
-		).
-
-	self
-		assert:
-		(
-			kind
-				match:	$)
-			).
-]
-
-{ #category : 'tests' }
-CharacterKindFormatterToolingRudesheimTest >> testBracketStateCanDetectMatchingClosingCharacter [
-	|
-		braceState
-	|
-
-	braceState :=
-		(
-			FormatterToolingRudesheim
-				bracketStatesStartingWith:	( Character value: 123 )
-		) first.
-
-	self
-		assert:
-		(
-			braceState
-				isClosingBracketCharacter:	( Character value: 125 )
-		).
-
-	self
-		deny:
-		(
-			braceState
-				isClosingBracketCharacter:	$)
-		).
-]
 
 { #category : 'tests' }
 CharacterKindFormatterToolingRudesheimTest >> testAssignmentKindDetectsAssignmentToken [
@@ -84,6 +34,81 @@ CharacterKindFormatterToolingRudesheimTest >> testAssignmentKindDetectsAssignmen
 ]
 
 { #category : 'tests' }
+CharacterKindFormatterToolingRudesheimTest >> testAssignmentKindStillMatchesEqualsCharacter [
+	self
+		assert:
+		(
+			AssignmentCharacterKindFormatterToolingRudesheim
+				match:	$=
+		).
+
+	self
+		deny:
+		(
+			AssignmentCharacterKindFormatterToolingRudesheim
+				match:	$:
+		).
+]
+
+{ #category : 'tests' }
+CharacterKindFormatterToolingRudesheimTest >> testBracketKindMatchesOpeningAndClosingCharacters [
+	|
+		kind
+	|
+
+	kind := ParenthesesCharacterKindFormatterToolingRudesheim.
+
+	self
+		assert:
+		(
+			kind
+				match:	$(
+		).
+
+	self
+		assert:
+		(
+			kind
+				match:	$)
+		).
+]
+
+{ #category : 'tests' }
+CharacterKindFormatterToolingRudesheimTest >> testBracketStateCanDetectMatchingClosingCharacter [
+	|
+		braceState
+	|
+
+	braceState :=
+	(
+		FormatterToolingRudesheim
+			bracketStatesStartingWith:
+			(
+				Character
+					value:	123
+			)
+	) first.
+
+	self
+		assert:
+		(
+			braceState
+				isClosingBracketCharacter:
+				(
+					Character
+						value:	125
+				)
+		).
+
+	self
+		deny:
+		(
+			braceState
+				isClosingBracketCharacter:	$)
+		).
+]
+
+{ #category : 'tests' }
 CharacterKindFormatterToolingRudesheimTest >> testCharacterKindsCanBeSelectedAndCollectedThroughSharedInterface [
 	|
 		results
@@ -94,17 +119,43 @@ CharacterKindFormatterToolingRudesheimTest >> testCharacterKindsCanBeSelectedAnd
 			select:
 			[ :each |
 				each
-					match:	$)
+					match:	$).
 			]
 			thenCollect:
 			[ :each |
 				each
-					candidateIdentifierTerminatesWith:	$)
+					candidateIdentifierTerminatesWith:	$).
 			].
 
 	self
 		assert:	results asArray
-		equals:	{ true }.
+		equals:
+		{
+			true
+		}.
+]
+
+{ #category : 'tests' }
+CharacterKindFormatterToolingRudesheimTest >> testColonAndAssignmentKindsAreMutuallyExclusiveForBareColon [
+	|
+		matchingKinds
+	|
+
+	matchingKinds :=
+		FormatterToolingRudesheim characterKinds
+			select:
+			[ :each |
+				each
+					match:	$:.
+			].
+
+	self
+		assert:	matchingKinds size
+		equals:	1.
+
+	self
+		assert:	matchingKinds first
+		equals:	ColonCharacterKindFormatterToolingRudesheim.
 ]
 
 { #category : 'tests' }

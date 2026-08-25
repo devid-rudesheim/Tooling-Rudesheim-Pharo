@@ -32,11 +32,5 @@ followedBy: anotherCharacter [
 
 { #category : 'testing' }
 AssignmentCharacterKindFormatterToolingRudesheim class >> match: aCharacter [
-	aCharacter = self assignmentFirstCharacter
-		ifTrue:
-		[
-			^ true.
-		].
-
 	^ aCharacter = self assignmentSecondCharacter.
 ]

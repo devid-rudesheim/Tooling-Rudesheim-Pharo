@@ -10,10 +10,12 @@ Class {
 
 { #category : 'accessing' }
 CurlyBracesCharacterKindFormatterToolingRudesheim class >> closingCharacter [
-	^ Character value: 125.
+	^ Character
+		value:	125.
 ]
 
 { #category : 'accessing' }
 CurlyBracesCharacterKindFormatterToolingRudesheim class >> openingCharacter [
-	^ Character value: 123.
+	^ Character
+		value:	123.
 ]

@@ -10,5 +10,5 @@ Class {
 
 { #category : 'accessing' }
 PeriodCharacterKindFormatterToolingRudesheim class >> character [
-	^ $..
+	^ $.
 ]
