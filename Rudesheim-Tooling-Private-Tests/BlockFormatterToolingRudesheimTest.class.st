@@ -4,8 +4,9 @@ Tests BlockFormatterToolingRudesheim via FormatterToolingRudesheim's public entr
 Class {
 	#name : 'BlockFormatterToolingRudesheimTest',
 	#superclass : 'TestCase',
-	#category : 'Rudesheim-Tooling-Private-Tests',
-	#package : 'Rudesheim-Tooling-Private-Tests'
+	#category : 'Rudesheim-Tooling-Private-Tests-Formatters',
+	#package : 'Rudesheim-Tooling-Private-Tests',
+	#tag : 'Formatters'
 }
 
 { #category : 'tests' }

@@ -5,6 +5,7 @@ BinaryMessageKindFormatterToolingRudesheim via MessageKindFormatterToolingRudesh
 Class {
 	#name : 'UnaryMessageKindFormatterToolingRudesheim',
 	#superclass : 'MessageKindFormatterToolingRudesheim',
-	#category : 'Rudesheim-Tooling-Private',
-	#package : 'Rudesheim-Tooling-Private'
+	#category : 'Rudesheim-Tooling-Private-MessageKind',
+	#package : 'Rudesheim-Tooling-Private',
+	#tag : 'MessageKind'
 }

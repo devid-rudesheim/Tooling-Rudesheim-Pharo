@@ -4,8 +4,9 @@ Tests IndentToolingRudesheim.
 Class {
 	#name : 'IndentToolingRudesheimTest',
 	#superclass : 'TestCase',
-	#category : 'Rudesheim-Tooling-Private-Tests',
-	#package : 'Rudesheim-Tooling-Private-Tests'
+	#category : 'Rudesheim-Tooling-Private-Tests-Support',
+	#package : 'Rudesheim-Tooling-Private-Tests',
+	#tag : 'Support'
 }
 
 { #category : 'tests' }

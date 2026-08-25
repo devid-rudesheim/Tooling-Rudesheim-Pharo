@@ -4,8 +4,9 @@ Im namespace of the rudesheim tooling
 Class {
 	#name : 'ToolingRudesheim',
 	#superclass : 'Object',
-	#category : 'Rudesheim-Tooling',
-	#package : 'Rudesheim-Tooling'
+	#category : 'Rudesheim-Tooling-Namespace',
+	#package : 'Rudesheim-Tooling',
+	#tag : 'Namespace'
 }
 
 { #category : 'namespace' }
