@@ -6,8 +6,9 @@ Class {
 		'targetString',
 		'target'
 	],
-	#category : 'Rudesheim-Tooling-Private-Tests',
-	#package : 'Rudesheim-Tooling-Private-Tests'
+	#category : 'Rudesheim-Tooling-Private-Tests-Core',
+	#package : 'Rudesheim-Tooling-Private-Tests',
+	#tag : 'Core'
 }
 
 { #category : 'tests-data' }

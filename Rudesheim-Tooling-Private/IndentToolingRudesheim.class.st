@@ -7,8 +7,9 @@ Class {
 	#instVars : [
 		'indent'
 	],
-	#category : 'Rudesheim-Tooling-Private',
-	#package : 'Rudesheim-Tooling-Private'
+	#category : 'Rudesheim-Tooling-Private-Support',
+	#package : 'Rudesheim-Tooling-Private',
+	#tag : 'Support'
 }
 
 { #category : 'instance creation' }

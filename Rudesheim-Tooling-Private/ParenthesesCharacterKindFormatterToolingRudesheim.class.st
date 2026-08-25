@@ -4,8 +4,9 @@ Character category for parentheses.
 Class {
 	#name : 'ParenthesesCharacterKindFormatterToolingRudesheim',
 	#superclass : 'BracketPairCharacterKindFormatterToolingRudesheim',
-	#category : 'Rudesheim-Tooling-Private',
-	#package : 'Rudesheim-Tooling-Private'
+	#category : 'Rudesheim-Tooling-Private-CharacterKind',
+	#package : 'Rudesheim-Tooling-Private',
+	#tag : 'CharacterKind'
 }
 
 { #category : 'accessing' }

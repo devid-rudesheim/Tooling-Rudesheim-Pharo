@@ -4,8 +4,9 @@ Tests formatter character kind dispatch.
 Class {
 	#name : 'CharacterKindFormatterToolingRudesheimTest',
 	#superclass : 'TestCase',
-	#category : 'Rudesheim-Tooling-Private-Tests',
-	#package : 'Rudesheim-Tooling-Private-Tests'
+	#category : 'Rudesheim-Tooling-Private-Tests-CharacterKind',
+	#package : 'Rudesheim-Tooling-Private-Tests',
+	#tag : 'CharacterKind'
 }
 
 { #category : 'tests' }
