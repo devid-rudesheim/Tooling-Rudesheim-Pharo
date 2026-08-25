@@ -4,11 +4,14 @@ Represents an indent level for FormatterToolingRudesheim's line-based formatting
 Class {
 	#name : 'IndentToolingRudesheim',
 	#superclass : 'Object',
+	#traits : 'TShouldntNewRudesheim',
+	#classTraits : 'TShouldntNewRudesheim classTrait',
 	#instVars : [
 		'indent'
 	],
-	#category : 'Rudesheim-Tooling-Private',
-	#package : 'Rudesheim-Tooling-Private'
+	#category : 'Rudesheim-Tooling-Private-Support',
+	#package : 'Rudesheim-Tooling-Private',
+	#tag : 'Support'
 }
 
 { #category : 'instance creation' }
@@ -24,7 +27,7 @@ IndentToolingRudesheim class >> level: anInteger [
 				error:	'anInteger must be a number'.
 		].
 
-	instance := self new.
+	instance := super new.
 
 	instance
 		indent:

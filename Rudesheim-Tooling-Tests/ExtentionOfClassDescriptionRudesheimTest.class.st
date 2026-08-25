@@ -4,8 +4,9 @@ Class {
 	#instVars : [
 		'forTest'
 	],
-	#category : 'Rudesheim-Tooling-Tests',
-	#package : 'Rudesheim-Tooling-Tests'
+	#category : 'Rudesheim-Tooling-Tests-Extensions',
+	#package : 'Rudesheim-Tooling-Tests',
+	#tag : 'Extensions'
 }
 
 { #category : 'accessing' }

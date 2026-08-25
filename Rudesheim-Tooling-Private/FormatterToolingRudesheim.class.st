@@ -4,8 +4,9 @@ EFFormatter compatible entry point that applies tmp/format.md rules first for kn
 Class {
 	#name : 'FormatterToolingRudesheim',
 	#superclass : 'OCAbstractFormatter',
-	#category : 'Rudesheim-Tooling-Private',
-	#package : 'Rudesheim-Tooling-Private'
+	#category : 'Rudesheim-Tooling-Private-Core',
+	#package : 'Rudesheim-Tooling-Private',
+	#tag : 'Core'
 }
 
 { #category : 'namespace' }

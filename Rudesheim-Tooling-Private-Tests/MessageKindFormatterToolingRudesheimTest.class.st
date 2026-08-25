@@ -6,8 +6,9 @@ FormatterToolingRudesheim's public entry point.
 Class {
 	#name : 'MessageKindFormatterToolingRudesheimTest',
 	#superclass : 'TestCase',
-	#category : 'Rudesheim-Tooling-Private-Tests',
-	#package : 'Rudesheim-Tooling-Private-Tests'
+	#category : 'Rudesheim-Tooling-Private-Tests-MessageKind',
+	#package : 'Rudesheim-Tooling-Private-Tests',
+	#tag : 'MessageKind'
 }
 
 { #category : 'tests' }
