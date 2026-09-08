@@ -18,13 +18,13 @@ BaselineOfRudesheimTooling >> baseline: spec [
 				with:
 				[
 					spec
-						repository:	'github://devid-rudesheim/Kernel-Rudesheim-Pharo:main'.
+						repository:	'github://devid-rudesheim/Kernel-Rudesheim-Pharo:develop'.
 				];
 				baseline:	'RudesheimUtility'
 				with:
 				[
 					spec
-						repository:	'github://devid-rudesheim/Utility-Rudesheim-Pharo:main'.
+						repository:	'github://devid-rudesheim/Utility-Rudesheim-Pharo:develop'.
 				];
 				package:	'Rudesheim-Tooling-Private';
 				package:	'Rudesheim-Tooling'
