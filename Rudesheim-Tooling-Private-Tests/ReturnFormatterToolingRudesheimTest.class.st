@@ -3,11 +3,16 @@ Tests ReturnFormatterToolingRudesheim via FormatterToolingRudesheim's public ent
 "
 Class {
 	#name : 'ReturnFormatterToolingRudesheimTest',
-	#superclass : 'TestCase',
+	#superclass : 'BasicRudesheimTest',
 	#category : 'Rudesheim-Tooling-Private-Tests-Formatters',
 	#package : 'Rudesheim-Tooling-Private-Tests',
 	#tag : 'Formatters'
 }
+
+{ #category : 'accessing' }
+ReturnFormatterToolingRudesheimTest class >> targetClass [
+	^ FormatterToolingRudesheim.
+]
 
 { #category : 'tests' }
 ReturnFormatterToolingRudesheimTest >> testReturnBracketedMultilineKeepsNewlineAfterCaret [
@@ -17,7 +22,7 @@ ReturnFormatterToolingRudesheimTest >> testReturnBracketedMultilineKeepsNewlineA
 	|
 
 	formatted :=
-		Rudesheim Tooling Formatter
+		self targetClass
 			format:	'makeBlock ^ [ 1 + 1 ]'.
 
 	expected := 'makeBlock' , String cr , String tab , '^' , String cr , String tab , '[' , String cr , String tab , String tab , '1 + 1.' , String cr , String tab , '].'.
@@ -35,7 +40,7 @@ ReturnFormatterToolingRudesheimTest >> testReturnSimpleValueStaysInline [
 	|
 
 	formatted :=
-		Rudesheim Tooling Formatter
+		self targetClass
 			format:	'flag ^ true'.
 
 	expected := 'flag' , String cr , String tab , '^ true.'.
