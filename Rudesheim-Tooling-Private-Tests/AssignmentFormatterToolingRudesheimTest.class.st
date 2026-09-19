@@ -3,18 +3,23 @@ Tests AssignmentFormatterToolingRudesheim via FormatterToolingRudesheim's public
 "
 Class {
 	#name : 'AssignmentFormatterToolingRudesheimTest',
-	#superclass : 'TestCase',
+	#superclass : 'BasicRudesheimTest',
 	#category : 'Rudesheim-Tooling-Private-Tests-Formatters',
 	#package : 'Rudesheim-Tooling-Private-Tests',
 	#tag : 'Formatters'
 }
+
+{ #category : 'accessing' }
+AssignmentFormatterToolingRudesheimTest class >> targetClass [
+	^ AssignmentFormatterToolingRudesheim.
+]
 
 { #category : 'tests' }
 AssignmentFormatterToolingRudesheimTest >> testAssignmentPrefixJoinsMultipleVariablesWithColonEquals [
 	self
 		assert:
 		(
-			Rudesheim Tooling Formatter Assignment
+			self basicTarget class
 				assignmentPrefixForVariables:
 				{
 					OCParser

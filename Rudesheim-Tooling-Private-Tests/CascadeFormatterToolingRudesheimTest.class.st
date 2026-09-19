@@ -3,11 +3,16 @@ Tests CascadeFormatterToolingRudesheim via FormatterToolingRudesheim's public en
 "
 Class {
 	#name : 'CascadeFormatterToolingRudesheimTest',
-	#superclass : 'TestCase',
+	#superclass : 'BasicRudesheimTest',
 	#category : 'Rudesheim-Tooling-Private-Tests-Formatters',
 	#package : 'Rudesheim-Tooling-Private-Tests',
 	#tag : 'Formatters'
 }
+
+{ #category : 'accessing' }
+CascadeFormatterToolingRudesheimTest class >> targetClass [
+	^ CascadeFormatterToolingRudesheim.
+]
 
 { #category : 'tests' }
 CascadeFormatterToolingRudesheimTest >> testCascadeMessageStartAndEndCoverSelectorAndArguments [
@@ -25,7 +30,7 @@ CascadeFormatterToolingRudesheimTest >> testCascadeMessageStartAndEndCoverSelect
 	self
 		assert:
 		(
-			Rudesheim Tooling Formatter Cascade
+			self basicTarget class
 				cascadeMessageStartFor:	cascadeMessage
 		)
 		equals:	cascadeMessage selectorInterval first.
@@ -33,7 +38,7 @@ CascadeFormatterToolingRudesheimTest >> testCascadeMessageStartAndEndCoverSelect
 	self
 		assert:
 		(
-			Rudesheim Tooling Formatter Cascade
+			self basicTarget class
 				cascadeMessageEndFor:	cascadeMessage
 		)
 		equals:	cascadeMessage arguments first sourceInterval last.

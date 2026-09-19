@@ -3,11 +3,16 @@ Tests ArrayFormatterToolingRudesheim via FormatterToolingRudesheim's public entr
 "
 Class {
 	#name : 'ArrayFormatterToolingRudesheimTest',
-	#superclass : 'TestCase',
+	#superclass : 'BasicRudesheimTest',
 	#category : 'Rudesheim-Tooling-Private-Tests-Formatters',
 	#package : 'Rudesheim-Tooling-Private-Tests',
 	#tag : 'Formatters'
 }
+
+{ #category : 'accessing' }
+ArrayFormatterToolingRudesheimTest class >> targetClass [
+	^ FormatterToolingRudesheim.
+]
 
 { #category : 'tests' }
 ArrayFormatterToolingRudesheimTest >> testDynamicArrayAlwaysUsesMultilineElements [
@@ -17,7 +22,7 @@ ArrayFormatterToolingRudesheimTest >> testDynamicArrayAlwaysUsesMultilineElement
 	|
 
 	formatted :=
-		Rudesheim Tooling Formatter
+		self basicTarget class
 			format:	'ranges ^ { self rows. self columns }'.
 
 	expected := 'ranges' , String cr , String tab , '^' , String cr , String tab , '{' , String cr , String tab , String tab , 'self rows.' , String cr , String tab , String tab , 'self columns' , String cr , String tab , '}.'.
@@ -35,7 +40,7 @@ ArrayFormatterToolingRudesheimTest >> testEmptyDynamicArrayStaysInline [
 	|
 
 	formatted :=
-		Rudesheim Tooling Formatter
+		self basicTarget class
 			format:	'empty ^ { }'.
 
 	expected := 'empty' , String cr , String tab , '^ {}.'.

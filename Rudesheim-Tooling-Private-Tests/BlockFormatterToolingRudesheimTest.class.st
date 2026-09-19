@@ -3,11 +3,16 @@ Tests BlockFormatterToolingRudesheim via FormatterToolingRudesheim's public entr
 "
 Class {
 	#name : 'BlockFormatterToolingRudesheimTest',
-	#superclass : 'TestCase',
+	#superclass : 'BasicRudesheimTest',
 	#category : 'Rudesheim-Tooling-Private-Tests-Formatters',
 	#package : 'Rudesheim-Tooling-Private-Tests',
 	#tag : 'Formatters'
 }
+
+{ #category : 'accessing' }
+BlockFormatterToolingRudesheimTest class >> targetClass [
+	^ FormatterToolingRudesheim.
+]
 
 { #category : 'tests' }
 BlockFormatterToolingRudesheimTest >> testBlockAssignmentBreaksOntoItsOwnLines [
@@ -17,7 +22,7 @@ BlockFormatterToolingRudesheimTest >> testBlockAssignmentBreaksOntoItsOwnLines [
 	|
 
 	formatted :=
-		Rudesheim Tooling Formatter
+		self basicTarget class
 			format:	'run | block | block := [ 1 ]'.
 
 	expected := 'run' , String cr , String tab , '|' , String cr , String tab , String tab , 'block' , String cr , String tab , '|' , String cr , String cr , String tab , 'block :=' , String cr , String tab , '[' , String cr , String tab , String tab , '1.' , String cr , String tab , '].'.
