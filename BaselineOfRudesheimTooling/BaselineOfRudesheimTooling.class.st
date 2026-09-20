@@ -33,8 +33,8 @@ BaselineOfRudesheimTooling >> baseline: spec [
 					spec
 						requires:	#( 'RudesheimKernel' 'RudesheimUtility' 'Rudesheim-Tooling-Private' ).
 				];
-				project:	'RudesheimUtilityTests'
-				copyFrom:	'RudesheimUtility'
+				project:	'RudesheimKernelTests'
+				copyFrom:	'RudesheimKernel'
 				with:
 				[
 					spec
@@ -44,13 +44,13 @@ BaselineOfRudesheimTooling >> baseline: spec [
 				with:
 				[
 					spec
-						requires:	#( 'Rudesheim-Tooling' 'RudesheimUtilityTests' ).
+						requires:	#( 'Rudesheim-Tooling' 'RudesheimKernelTests' ).
 				];
 				package:	'Rudesheim-Tooling-Tests'
 				with:
 				[
 					spec
-						requires:	#( 'Rudesheim-Tooling' 'RudesheimUtilityTests' ).
+						requires:	#( 'Rudesheim-Tooling' 'RudesheimKernelTests' ).
 				];
 				group:	#core
 				with:	#( 'Rudesheim-Tooling-Private' 'Rudesheim-Tooling' );
