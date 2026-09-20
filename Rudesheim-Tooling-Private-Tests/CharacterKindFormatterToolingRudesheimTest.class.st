@@ -11,7 +11,7 @@ Class {
 
 { #category : 'accessing' }
 CharacterKindFormatterToolingRudesheimTest class >> targetClass [
-	^ FormatterToolingRudesheim.
+	^ Rudesheim Tooling CharacterKind.
 ]
 
 { #category : 'tests' }
@@ -87,7 +87,7 @@ CharacterKindFormatterToolingRudesheimTest >> testBracketStateCanDetectMatchingC
 
 	braceState :=
 	(
-		self targetClass
+		Rudesheim Tooling Formatter
 			bracketStatesStartingWith:
 			(
 				Character
@@ -121,7 +121,7 @@ CharacterKindFormatterToolingRudesheimTest >> testCharacterKindsCanBeSelectedAnd
 	|
 
 	results :=
-		self targetClass characterKinds
+		Rudesheim Tooling Formatter characterKinds
 			select:
 			[ :each |
 				each
@@ -148,7 +148,7 @@ CharacterKindFormatterToolingRudesheimTest >> testColonAndAssignmentKindsAreMutu
 	|
 
 	matchingKinds :=
-		self targetClass characterKinds
+		Rudesheim Tooling Formatter characterKinds
 			select:
 			[ :each |
 				each
