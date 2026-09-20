@@ -13,7 +13,7 @@ Class {
 
 { #category : 'accessing' }
 MessageKindFormatterToolingRudesheimTest class >> targetClass [
-	^ FormatterToolingRudesheim.
+	^ Rudesheim Tooling Formatter.
 ]
 
 { #category : 'tests' }

@@ -11,7 +11,7 @@ Class {
 
 { #category : 'accessing' }
 CascadeFormatterToolingRudesheimTest class >> targetClass [
-	^ CascadeFormatterToolingRudesheim.
+	^ Rudesheim Tooling Formatter Cascade.
 ]
 
 { #category : 'tests' }

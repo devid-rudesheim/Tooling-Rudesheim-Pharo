@@ -11,7 +11,7 @@ Class {
 
 { #category : 'accessing' }
 ArrayFormatterToolingRudesheimTest class >> targetClass [
-	^ FormatterToolingRudesheim.
+	^ Rudesheim Tooling Formatter.
 ]
 
 { #category : 'tests' }
