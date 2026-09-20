@@ -5,11 +5,16 @@ FormatterToolingRudesheim's public entry point.
 "
 Class {
 	#name : 'MessageKindFormatterToolingRudesheimTest',
-	#superclass : 'TestCase',
+	#superclass : 'BasicRudesheimTest',
 	#category : 'Rudesheim-Tooling-Private-Tests-MessageKind',
 	#package : 'Rudesheim-Tooling-Private-Tests',
 	#tag : 'MessageKind'
 }
+
+{ #category : 'accessing' }
+MessageKindFormatterToolingRudesheimTest class >> targetClass [
+	^ FormatterToolingRudesheim.
+]
 
 { #category : 'tests' }
 MessageKindFormatterToolingRudesheimTest >> testFormatterKindForRudesheimSelectsClassByMessageKind [
@@ -46,7 +51,7 @@ MessageKindFormatterToolingRudesheimTest >> testKeywordMessageReceiverKeepsOwnLi
 	|
 
 	formatted :=
-		Rudesheim Tooling Formatter
+		self targetClass
 			format:	'at: aClassSymbol ^ Smalltalk at: aClassSymbol'.
 
 	expected := 'at: aClassSymbol' , String cr , String tab , '^ Smalltalk' , String cr , String tab , String tab , 'at:' , String tab , 'aClassSymbol.'.
@@ -61,7 +66,7 @@ MessageKindFormatterToolingRudesheimTest >> testShortBinaryAndUnaryChainsStayInl
 	self
 		assert:
 		(
-			Rudesheim Tooling Formatter
+			self targetClass
 				format:	'sum ^ 1 + 2 + 3'
 		)
 		equals:	'sum' , String cr , String tab , '^ 1 + 2 + 3.'.
@@ -69,7 +74,7 @@ MessageKindFormatterToolingRudesheimTest >> testShortBinaryAndUnaryChainsStayInl
 	self
 		assert:
 		(
-			Rudesheim Tooling Formatter
+			self targetClass
 				format:	'run ^ self foo bar'
 		)
 		equals:	'run' , String cr , String tab , '^ self foo bar.'.
