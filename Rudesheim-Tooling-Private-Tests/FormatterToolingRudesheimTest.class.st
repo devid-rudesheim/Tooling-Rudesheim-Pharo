@@ -2684,9 +2684,9 @@ FormatterToolingRudesheimTest >> testParenthesizedKeywordSendWithHandWrittenMult
 FormatterToolingRudesheimTest >> testFFIPragmaLiteralArrayKeepsItsSource [
 	"An ffiCall: argument such as #(double objc_msgSend(void* aReceiver, void* aSelector))
 	is parsed as a nested literal array, and printing that tree back (OCSimpleFormatter)
-	yields `#( double objc_msgSend #(void #* aReceiver #, void #* aSelector) )`, a different
-	value. A literal array whose printed form no longer parses to the same value must keep
-	its original source text."
+	yields `#( double objc_msgSend #(void #* aReceiver #, void #* aSelector) )`: the same
+	value, but rewritten tokens. A literal array whose printed form has different tokens
+	than its source must keep its original source text."
 
 	|
 		formatted

@@ -671,12 +671,13 @@ FormatterToolingRudesheim class >> formatLiteralArrayInline: aParseNode [
 		OCSimpleFormatter
 			format:	aParseNode.
 
-	"Printing the tree back can change what the literal array means (e.g. an FFI signature
-	like #(double objc_msgSend(void* aReceiver, void* aSelector)) is printed with #* and #,
-	symbols), so a printed form that no longer parses to the same value is not used."
+	"Printing the tree back can rewrite the tokens, not only the spacing (e.g. an FFI signature
+	like #(double objc_msgSend(void* aReceiver, void* aSelector)) comes back with #* and #,
+	symbols and a # in front of the nested array), so a printed form whose tokens differ from
+	the source keeps the original source text."
 	(
 		self
-			isValuePreservedBy:	text
+			isTextPreservedBy:	text
 			for:	aParseNode
 	)
 		ifFalse:
@@ -706,20 +707,22 @@ FormatterToolingRudesheim class >> formatLiteralArrayInline: aParseNode [
 ]
 
 { #category : 'functions' }
-FormatterToolingRudesheim class >> isValuePreservedBy: aString
+FormatterToolingRudesheim class >> isTextPreservedBy: aString
 for: aLiteralArrayNode [
 	^
-	[
+	(
+		aString
+			reject:	[ :each | each isSeparator ]
+	)
+		=
 		(
-			OCParser
-				parseExpression:	aString
-		) value = aLiteralArrayNode value.
-	]
-		on:	Error
-		do:
-		[ :error |
-			false.
-		].
+			(
+				aLiteralArrayNode source
+					copyFrom:	aLiteralArrayNode sourceInterval first
+					to:	aLiteralArrayNode sourceInterval last
+			)
+				reject:	[ :each | each isSeparator ]
+		).
 ]
 
 { #category : 'formatting' }
