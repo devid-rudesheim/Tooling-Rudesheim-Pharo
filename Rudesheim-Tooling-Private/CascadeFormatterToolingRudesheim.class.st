@@ -52,8 +52,8 @@ indent: anIndentToolingRudesheim [
 		OrderedCollection
 			newFrom:
 			(
-				formatter
-					formatSubexpressionLines:	receiver
+				receiver
+					acceptFormatterRudesheimAsCascadeReceiver:	formatter
 					indent:	anIndentToolingRudesheim
 			).
 

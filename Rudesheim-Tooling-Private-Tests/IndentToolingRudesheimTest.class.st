@@ -3,20 +3,27 @@ Tests IndentToolingRudesheim.
 "
 Class {
 	#name : 'IndentToolingRudesheimTest',
-	#superclass : 'TestCase',
+	#superclass : 'BasicRudesheimTest',
 	#category : 'Rudesheim-Tooling-Private-Tests-Support',
 	#package : 'Rudesheim-Tooling-Private-Tests',
 	#tag : 'Support'
 }
 
+{ #category : 'accessing' }
+IndentToolingRudesheimTest class >> targetClass [
+	^ IndentToolingRudesheim.
+]
+
+{ #category : 'accessing' }
+IndentToolingRudesheimTest >> defaultBasicTarget [
+	^ self targetClass
+		level:	0.
+]
+
 { #category : 'tests' }
 IndentToolingRudesheimTest >> testAsStringForLevelZeroAndLevelTwo [
 	self
-		assert:
-		(
-			IndentToolingRudesheim
-				level:	0
-		) asString
+		assert:	self basicTarget asString
 		equals:	''.
 
 	self

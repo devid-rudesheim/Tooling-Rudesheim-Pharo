@@ -3,11 +3,16 @@ Tests formatter character kind dispatch.
 "
 Class {
 	#name : 'CharacterKindFormatterToolingRudesheimTest',
-	#superclass : 'TestCase',
+	#superclass : 'BasicRudesheimTest',
 	#category : 'Rudesheim-Tooling-Private-Tests-CharacterKind',
 	#package : 'Rudesheim-Tooling-Private-Tests',
 	#tag : 'CharacterKind'
 }
+
+{ #category : 'accessing' }
+CharacterKindFormatterToolingRudesheimTest class >> targetClass [
+	^ Rudesheim Tooling CharacterKind.
+]
 
 { #category : 'tests' }
 CharacterKindFormatterToolingRudesheimTest >> testAssignmentKindDetectsAssignmentToken [
@@ -82,7 +87,7 @@ CharacterKindFormatterToolingRudesheimTest >> testBracketStateCanDetectMatchingC
 
 	braceState :=
 	(
-		FormatterToolingRudesheim
+		Rudesheim Tooling Formatter
 			bracketStatesStartingWith:
 			(
 				Character
@@ -116,7 +121,7 @@ CharacterKindFormatterToolingRudesheimTest >> testCharacterKindsCanBeSelectedAnd
 	|
 
 	results :=
-		FormatterToolingRudesheim characterKinds
+		Rudesheim Tooling Formatter characterKinds
 			select:
 			[ :each |
 				each
@@ -143,7 +148,7 @@ CharacterKindFormatterToolingRudesheimTest >> testColonAndAssignmentKindsAreMutu
 	|
 
 	matchingKinds :=
-		FormatterToolingRudesheim characterKinds
+		Rudesheim Tooling Formatter characterKinds
 			select:
 			[ :each |
 				each

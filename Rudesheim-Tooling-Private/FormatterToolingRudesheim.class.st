@@ -671,6 +671,22 @@ FormatterToolingRudesheim class >> formatLiteralArrayInline: aParseNode [
 		OCSimpleFormatter
 			format:	aParseNode.
 
+	"Printing the tree back can rewrite the tokens, not only the spacing (e.g. an FFI signature
+	like #(double objc_msgSend(void* aReceiver, void* aSelector)) comes back with #* and #,
+	symbols and a # in front of the nested array), so a printed form whose tokens differ from
+	the source keeps the original source text."
+	(
+		self
+			isTextPreservedBy:	text
+			for:	aParseNode
+	)
+		ifFalse:
+		[
+			^ aParseNode source
+				copyFrom:	aParseNode sourceInterval first
+				to:	aParseNode sourceInterval last.
+		].
+
 	parenthesesCharacterKind := Rudesheim Tooling CharacterKind Parentheses.
 
 	(
@@ -688,6 +704,30 @@ FormatterToolingRudesheim class >> formatLiteralArrayInline: aParseNode [
 		].
 
 	^ text.
+]
+
+{ #category : 'functions' }
+FormatterToolingRudesheim class >> isTextPreservedBy: aString
+for: aLiteralArrayNode [
+	^
+	(
+		aString
+			reject:
+			[ :each |
+				each isSeparator.
+			]
+	) =
+	(
+		(
+			aLiteralArrayNode source
+				copyFrom:	aLiteralArrayNode sourceInterval first
+				to:	aLiteralArrayNode sourceInterval last
+		)
+			reject:
+			[ :each |
+				each isSeparator.
+			]
+	).
 ]
 
 { #category : 'formatting' }

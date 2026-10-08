@@ -17,6 +17,14 @@ indent: anIndentToolingRudesheim [
 ]
 
 { #category : '*Rudesheim-Tooling' }
+OCProgramNode >> acceptFormatterRudesheimAsCascadeReceiver: aFormatter
+indent: anIndentToolingRudesheim [
+	^ self
+		acceptFormatterRudesheimAsSubexpression:	aFormatter
+		indent:	anIndentToolingRudesheim.
+]
+
+{ #category : '*Rudesheim-Tooling' }
 OCProgramNode >> acceptFormatterRudesheimAsSubexpression: aFormatter
 indent: anIndentToolingRudesheim [
 	^ self

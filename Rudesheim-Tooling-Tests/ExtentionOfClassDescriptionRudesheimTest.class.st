@@ -1,6 +1,6 @@
 Class {
 	#name : 'ExtentionOfClassDescriptionRudesheimTest',
-	#superclass : 'TestCase',
+	#superclass : 'BasicRudesheimTest',
 	#instVars : [
 		'forTest'
 	],
@@ -8,6 +8,11 @@ Class {
 	#package : 'Rudesheim-Tooling-Tests',
 	#tag : 'Extensions'
 }
+
+{ #category : 'accessing' }
+ExtentionOfClassDescriptionRudesheimTest class >> targetClass [
+	^ Object.
+]
 
 { #category : 'accessing' }
 ExtentionOfClassDescriptionRudesheimTest >> defaultForTest [

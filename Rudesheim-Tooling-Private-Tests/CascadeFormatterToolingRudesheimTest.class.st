@@ -3,11 +3,16 @@ Tests CascadeFormatterToolingRudesheim via FormatterToolingRudesheim's public en
 "
 Class {
 	#name : 'CascadeFormatterToolingRudesheimTest',
-	#superclass : 'TestCase',
+	#superclass : 'BasicRudesheimTest',
 	#category : 'Rudesheim-Tooling-Private-Tests-Formatters',
 	#package : 'Rudesheim-Tooling-Private-Tests',
 	#tag : 'Formatters'
 }
+
+{ #category : 'accessing' }
+CascadeFormatterToolingRudesheimTest class >> targetClass [
+	^ Rudesheim Tooling Formatter Cascade.
+]
 
 { #category : 'tests' }
 CascadeFormatterToolingRudesheimTest >> testCascadeMessageStartAndEndCoverSelectorAndArguments [
@@ -25,7 +30,7 @@ CascadeFormatterToolingRudesheimTest >> testCascadeMessageStartAndEndCoverSelect
 	self
 		assert:
 		(
-			Rudesheim Tooling Formatter Cascade
+			self targetClass
 				cascadeMessageStartFor:	cascadeMessage
 		)
 		equals:	cascadeMessage selectorInterval first.
@@ -33,7 +38,7 @@ CascadeFormatterToolingRudesheimTest >> testCascadeMessageStartAndEndCoverSelect
 	self
 		assert:
 		(
-			Rudesheim Tooling Formatter Cascade
+			self targetClass
 				cascadeMessageEndFor:	cascadeMessage
 		)
 		equals:	cascadeMessage arguments first sourceInterval last.
@@ -51,6 +56,86 @@ CascadeFormatterToolingRudesheimTest >> testCascadeSeparatesMessagesWithSemicolo
 			format:	'sample | builder | builder := Object new. builder name: #Foo; yourself'.
 
 	expected := 'sample' , String cr , String tab , '|' , String cr , String tab , String tab , 'builder' , String cr , String tab , '|' , String cr , String cr , String tab , 'builder := Object new.' , String cr , String cr , String tab , 'builder' , String cr , String tab , String tab , 'name:' , String tab , '#Foo;' , String cr , String tab , String tab , 'yourself.'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
+CascadeFormatterToolingRudesheimTest >> testCascadeKeepsParenthesesOfBinaryReceiver [
+	|
+		source
+		formatted
+	|
+
+	source := 'sample: directory
+	(directory / ''PharoFiles'' / ''startup.st'')
+		ensureCreateFile;
+		writeStreamDo: [ :aStream | aStream nextPutAll: ''x'' ]'.
+
+	formatted :=
+		Rudesheim Tooling Formatter
+			format:	source.
+
+	self
+		assert:
+		(
+			(
+				OCParser
+					parseMethod:	formatted
+			) body statements first receiver
+		) isMessage.
+
+	self
+		assert:
+		(
+			OCParser
+				parseMethod:	formatted
+		) body statements first receiver selector
+		equals:	#/.
+]
+
+{ #category : 'tests' }
+CascadeFormatterToolingRudesheimTest >> testCascadeAssignmentValueIsFormattedOnItsOwnLines [
+	|
+		source
+		formatted
+		expected
+	|
+
+	source := 'sample: aViewSpPresenter titled: aTitleString
+	| worldWindow |
+	worldWindow := aViewSpPresenter asWorldWindow title: aTitleString; open.
+	^ worldWindow'.
+
+	formatted :=
+		Rudesheim Tooling Formatter
+			format:	source.
+
+	expected := 'worldWindow :=' , String cr , String tab , String tab , 'aViewSpPresenter asWorldWindow' , String cr , String tab , String tab , String tab , 'title:' , String tab , 'aTitleString;' , String cr , String tab , String tab , String tab , 'open.'.
+
+	self
+		assert:
+		(
+			formatted
+				includesSubstring:	expected
+		)
+		description:	formatted.
+]
+
+{ #category : 'tests' }
+CascadeFormatterToolingRudesheimTest >> testCascadeBinaryReceiverIsWrappedInParenthesesOnlyOnce [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		Rudesheim Tooling Formatter
+			format:	'sample: x (x + 1) foo; bar'.
+
+	expected := 'sample: x' , String cr , String tab , '( x + 1 )' , String cr , String tab , String tab , 'foo;' , String cr , String tab , String tab , 'bar.'.
 
 	self
 		assert:	formatted
