@@ -9,6 +9,40 @@ indent: anIndentToolingRudesheim [
 ]
 
 { #category : '*Rudesheim-Tooling' }
+OCMessageNode >> acceptFormatterRudesheimAsCascadeReceiver: aFormatter
+indent: anIndentToolingRudesheim [
+	self isBinary
+		ifFalse:
+		[
+			^ self
+				acceptFormatterRudesheimAsSubexpression:	aFormatter
+				indent:	anIndentToolingRudesheim.
+		].
+
+	"A binary message can only be a cascade receiver by being written in parentheses, which
+	formatInline: keeps; only a receiver that needs its own lines has to be wrapped again."
+	(
+		aFormatter
+			needsMultilineFor:	self
+	)
+		ifTrue:
+		[
+			^ aFormatter
+				formatParenthesizedLines:	self
+				indent:	anIndentToolingRudesheim.
+		].
+
+	^
+	{
+		anIndentToolingRudesheim asString ,
+		(
+			aFormatter
+				formatInline:	self
+		)
+	}.
+]
+
+{ #category : '*Rudesheim-Tooling' }
 OCMessageNode >> acceptFormatterRudesheimAsSubexpression: aFormatter
 indent: anIndentToolingRudesheim [
 	self isKeyword

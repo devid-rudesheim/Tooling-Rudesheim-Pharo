@@ -61,3 +61,83 @@ CascadeFormatterToolingRudesheimTest >> testCascadeSeparatesMessagesWithSemicolo
 		assert:	formatted
 		equals:	expected.
 ]
+
+{ #category : 'tests' }
+CascadeFormatterToolingRudesheimTest >> testCascadeKeepsParenthesesOfBinaryReceiver [
+	|
+		source
+		formatted
+	|
+
+	source := 'sample: directory
+	(directory / ''PharoFiles'' / ''startup.st'')
+		ensureCreateFile;
+		writeStreamDo: [ :aStream | aStream nextPutAll: ''x'' ]'.
+
+	formatted :=
+		Rudesheim Tooling Formatter
+			format:	source.
+
+	self
+		assert:
+		(
+			(
+				OCParser
+					parseMethod:	formatted
+			) body statements first receiver
+		) isMessage.
+
+	self
+		assert:
+		(
+			OCParser
+				parseMethod:	formatted
+		) body statements first receiver selector
+		equals:	#/.
+]
+
+{ #category : 'tests' }
+CascadeFormatterToolingRudesheimTest >> testCascadeAssignmentValueIsFormattedOnItsOwnLines [
+	|
+		source
+		formatted
+		expected
+	|
+
+	source := 'sample: aViewSpPresenter titled: aTitleString
+	| worldWindow |
+	worldWindow := aViewSpPresenter asWorldWindow title: aTitleString; open.
+	^ worldWindow'.
+
+	formatted :=
+		Rudesheim Tooling Formatter
+			format:	source.
+
+	expected := 'worldWindow :=' , String cr , String tab , String tab , 'aViewSpPresenter asWorldWindow' , String cr , String tab , String tab , String tab , 'title:' , String tab , 'aTitleString;' , String cr , String tab , String tab , String tab , 'open.'.
+
+	self
+		assert:
+		(
+			formatted
+				includesSubstring:	expected
+		)
+		description:	formatted.
+]
+
+{ #category : 'tests' }
+CascadeFormatterToolingRudesheimTest >> testCascadeBinaryReceiverIsWrappedInParenthesesOnlyOnce [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		Rudesheim Tooling Formatter
+			format:	'sample: x (x + 1) foo; bar'.
+
+	expected := 'sample: x' , String cr , String tab , '( x + 1 )' , String cr , String tab , String tab , 'foo;' , String cr , String tab , String tab , 'bar.'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
