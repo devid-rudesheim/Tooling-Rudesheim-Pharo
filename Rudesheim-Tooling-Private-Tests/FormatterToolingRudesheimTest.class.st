@@ -2679,3 +2679,45 @@ FormatterToolingRudesheimTest >> testParenthesizedKeywordSendWithHandWrittenMult
 		assert:	formatted
 		equals:	expected.
 ]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testFFIPragmaLiteralArrayKeepsItsSource [
+	"An ffiCall: argument such as #(double objc_msgSend(void* aReceiver, void* aSelector))
+	is parsed as a nested literal array, and printing that tree back (OCSimpleFormatter)
+	yields `#( double objc_msgSend #(void #* aReceiver #, void #* aSelector) )`, a different
+	value. A literal array whose printed form no longer parses to the same value must keep
+	its original source text."
+
+	|
+		formatted
+		signature
+	|
+
+	signature := '#(double objc_msgSend(void* aReceiver, void* aSelector))'.
+
+	formatted :=
+		self targetClass
+			format:	'send ^ self ffiCall: ' , signature.
+
+	self
+		assert:	( formatted includesSubstring: signature )
+		description:	formatted.
+]
+
+{ #category : 'tests' }
+FormatterToolingRudesheimTest >> testFFICallbackSignatureLiteralArrayKeepsItsSource [
+	|
+		formatted
+		signature
+	|
+
+	signature := '#(void (void* rcvr, void* sel))'.
+
+	formatted :=
+		self targetClass
+			format:	'callback ^ FFICallback signature: ' , signature , ' block: [ :r :s | r ]'.
+
+	self
+		assert:	( formatted includesSubstring: signature )
+		description:	formatted.
+]

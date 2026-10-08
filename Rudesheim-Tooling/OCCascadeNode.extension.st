@@ -20,3 +20,8 @@ indent: anIndentToolingRudesheim [
 OCCascadeNode >> needsMultilineForFormatterRudesheim: aFormatter [
 	^ true.
 ]
+
+{ #category : '*Rudesheim-Tooling' }
+OCCascadeNode >> needsExpressionLinesAsAssignmentValueForFormatterRudesheim: aFormatter [
+	^ true.
+]

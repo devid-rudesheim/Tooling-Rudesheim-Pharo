@@ -671,6 +671,21 @@ FormatterToolingRudesheim class >> formatLiteralArrayInline: aParseNode [
 		OCSimpleFormatter
 			format:	aParseNode.
 
+	"Printing the tree back can change what the literal array means (e.g. an FFI signature
+	like #(double objc_msgSend(void* aReceiver, void* aSelector)) is printed with #* and #,
+	symbols), so a printed form that no longer parses to the same value is not used."
+	(
+		self
+			isValuePreservedBy:	text
+			for:	aParseNode
+	)
+		ifFalse:
+		[
+			^ aParseNode source
+				copyFrom:	aParseNode sourceInterval first
+				to:	aParseNode sourceInterval last.
+		].
+
 	parenthesesCharacterKind := Rudesheim Tooling CharacterKind Parentheses.
 
 	(
@@ -688,6 +703,23 @@ FormatterToolingRudesheim class >> formatLiteralArrayInline: aParseNode [
 		].
 
 	^ text.
+]
+
+{ #category : 'functions' }
+FormatterToolingRudesheim class >> isValuePreservedBy: aString
+for: aLiteralArrayNode [
+	^
+	[
+		(
+			OCParser
+				parseExpression:	aString
+		) value = aLiteralArrayNode value.
+	]
+		on:	Error
+		do:
+		[ :error |
+			false.
+		].
 ]
 
 { #category : 'formatting' }

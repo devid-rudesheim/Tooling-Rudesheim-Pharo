@@ -9,6 +9,22 @@ indent: anIndentToolingRudesheim [
 ]
 
 { #category : '*Rudesheim-Tooling' }
+OCMessageNode >> acceptFormatterRudesheimAsCascadeReceiver: aFormatter
+indent: anIndentToolingRudesheim [
+	self isBinary
+		ifTrue:
+		[
+			^ aFormatter
+				formatParenthesizedSubexpressionLines:	self
+				indent:	anIndentToolingRudesheim.
+		].
+
+	^ self
+		acceptFormatterRudesheimAsSubexpression:	aFormatter
+		indent:	anIndentToolingRudesheim.
+]
+
+{ #category : '*Rudesheim-Tooling' }
 OCMessageNode >> acceptFormatterRudesheimAsSubexpression: aFormatter
 indent: anIndentToolingRudesheim [
 	self isKeyword
