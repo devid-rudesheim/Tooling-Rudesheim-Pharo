@@ -712,17 +712,22 @@ for: aLiteralArrayNode [
 	^
 	(
 		aString
-			reject:	[ :each | each isSeparator ]
-	)
-		=
+			reject:
+			[ :each |
+				each isSeparator.
+			]
+	) =
+	(
 		(
-			(
-				aLiteralArrayNode source
-					copyFrom:	aLiteralArrayNode sourceInterval first
-					to:	aLiteralArrayNode sourceInterval last
-			)
-				reject:	[ :each | each isSeparator ]
-		).
+			aLiteralArrayNode source
+				copyFrom:	aLiteralArrayNode sourceInterval first
+				to:	aLiteralArrayNode sourceInterval last
+		)
+			reject:
+			[ :each |
+				each isSeparator.
+			]
+	).
 ]
 
 { #category : 'formatting' }

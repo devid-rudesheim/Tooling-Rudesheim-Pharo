@@ -2687,7 +2687,6 @@ FormatterToolingRudesheimTest >> testFFIPragmaLiteralArrayKeepsItsSource [
 	yields `#( double objc_msgSend #(void #* aReceiver #, void #* aSelector) )`: the same
 	value, but rewritten tokens. A literal array whose printed form has different tokens
 	than its source must keep its original source text."
-
 	|
 		formatted
 		signature
@@ -2700,7 +2699,11 @@ FormatterToolingRudesheimTest >> testFFIPragmaLiteralArrayKeepsItsSource [
 			format:	'send ^ self ffiCall: ' , signature.
 
 	self
-		assert:	( formatted includesSubstring: signature )
+		assert:
+		(
+			formatted
+				includesSubstring:	signature
+		)
 		description:	formatted.
 ]
 
@@ -2718,6 +2721,10 @@ FormatterToolingRudesheimTest >> testFFICallbackSignatureLiteralArrayKeepsItsSou
 			format:	'callback ^ FFICallback signature: ' , signature , ' block: [ :r :s | r ]'.
 
 	self
-		assert:	( formatted includesSubstring: signature )
+		assert:
+		(
+			formatted
+				includesSubstring:	signature
+		)
 		description:	formatted.
 ]

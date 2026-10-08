@@ -90,11 +90,9 @@ CascadeFormatterToolingRudesheimTest >> testCascadeKeepsParenthesesOfBinaryRecei
 	self
 		assert:
 		(
-			(
-				OCParser
-					parseMethod:	formatted
-			) body statements first receiver selector
-		)
+			OCParser
+				parseMethod:	formatted
+		) body statements first receiver selector
 		equals:	#/.
 ]
 
@@ -115,14 +113,14 @@ CascadeFormatterToolingRudesheimTest >> testCascadeAssignmentValueIsFormattedOnI
 		Rudesheim Tooling Formatter
 			format:	source.
 
-	expected :=
-		'worldWindow :=' , String cr , String tab , String tab ,
-		'aViewSpPresenter asWorldWindow' , String cr , String tab , String tab , String tab ,
-		'title:' , String tab , 'aTitleString;' , String cr , String tab , String tab , String tab ,
-		'open.'.
+	expected := 'worldWindow :=' , String cr , String tab , String tab , 'aViewSpPresenter asWorldWindow' , String cr , String tab , String tab , String tab , 'title:' , String tab , 'aTitleString;' , String cr , String tab , String tab , String tab , 'open.'.
 
 	self
-		assert:	( formatted includesSubstring: expected )
+		assert:
+		(
+			formatted
+				includesSubstring:	expected
+		)
 		description:	formatted.
 ]
 
