@@ -125,3 +125,21 @@ CascadeFormatterToolingRudesheimTest >> testCascadeAssignmentValueIsFormattedOnI
 		assert:	( formatted includesSubstring: expected )
 		description:	formatted.
 ]
+
+{ #category : 'tests' }
+CascadeFormatterToolingRudesheimTest >> testCascadeBinaryReceiverIsWrappedInParenthesesOnlyOnce [
+	|
+		formatted
+		expected
+	|
+
+	formatted :=
+		Rudesheim Tooling Formatter
+			format:	'sample: x (x + 1) foo; bar'.
+
+	expected := 'sample: x' , String cr , String tab , '( x + 1 )' , String cr , String tab , String tab , 'foo;' , String cr , String tab , String tab , 'bar.'.
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
