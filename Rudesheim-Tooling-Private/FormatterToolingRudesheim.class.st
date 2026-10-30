@@ -759,7 +759,9 @@ FormatterToolingRudesheim class >> formatMethodNode: aMethodNode [
 					pragmas
 						collect:
 						[ :each |
-							String tab , each formattedCode.
+							"Not `each formattedCode`: that dispatches to OCProgramNode formatterClass, which is this
+							very class once enableAsFormatter has been sent, and re-enters formatMethodNode: forever."
+							String tab , (EFFormatter new format: each).
 						]
 				).
 
