@@ -1329,6 +1329,46 @@ FormatterToolingRudesheimTest >> testPragmaWithNoArgumentsIsPreserved [
 ]
 
 { #category : 'tests' }
+FormatterToolingRudesheimTest >> testPragmaIsPreservedWhileEnabledAsFormatter [
+	"Regression test: with this class set as OCProgramNode's formatter (enableAsFormatter),
+	formatting a method that has a pragma recursed forever, because every pragma was formatted
+	through `each formattedCode`, which dispatches back to this class. Calypso hit it when
+	opening a method such as `< script: 'self run' >` with the formatter enabled."
+	|
+		previousClass
+		expected
+		formatted
+	|
+
+	previousClass := OCProgramNode formatterClass.
+	expected := 'sample' , String cr , String tab , '<script: ''self run''>' , String cr , String cr , String tab , '^ 1.'.
+
+	[
+		self targetClass enableAsFormatter.
+
+		formatted :=
+			[
+				self targetClass
+					format:	expected.
+			]
+				valueWithin:	5 seconds
+				onTimeout:
+				[
+					self fail:	'formatting a pragma method did not finish'.
+				].
+	]
+		ensure:
+		[
+			OCProgramNode
+				formatterClass:	previousClass.
+		].
+
+	self
+		assert:	formatted
+		equals:	expected.
+]
+
+{ #category : 'tests' }
 FormatterToolingRudesheimTest >> testPragmaWithOneKeywordArgumentIsPreserved [
 	|
 		formatted
